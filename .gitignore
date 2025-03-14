@@ -1,0 +1,14 @@
+/data/
+/bin/
+*.db
+test/ui/node_modules/
+test/ui/test-results/
+test/ui/playwright-report/
+test/ui/screenshots/
+/profiles/
+deploy/e2e/.data/
+deploy/e2e/.showcase/
+deploy/e2e/.service.pid
+deploy/e2e/.service.run
+.idea/
+.DS_Store
