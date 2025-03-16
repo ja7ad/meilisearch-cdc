@@ -1,0 +1,9 @@
+.git
+data
+test/ui/node_modules
+test/ui/test-results
+test/ui/playwright-report
+test/ui/screenshots
+bin
+deploy/e2e/.data
+docs/img
