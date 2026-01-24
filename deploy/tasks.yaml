@@ -1,0 +1,29 @@
+# Declarative tasks, applied at startup (created or updated by id).
+# ${VAR} is expanded from the environment, so secrets stay out of this file.
+tasks:
+  - id: products
+    name: Postgres products
+    desiredState: running
+    source:
+      type: postgres
+      dsn: ${PG_DSN}
+      table: products
+    mapping:
+      softDeleteColumn: deleted_at
+      timeFormat: unix
+      geo: {lat: lat, lng: lng}
+    index:
+      uid: products
+      manageSettings: true
+      settings:
+        searchableAttributes: [name, description, category]
+        filterableAttributes: [category, price, in_stock, _geo, updated_at]
+        sortableAttributes: [price, updated_at, _geo]
+        typoTolerance: {enabled: true}
+    sync:
+      batchSize: 5000
+      flushInterval: 500ms
+      maxInflight: 8
+      safety:
+        maxDeleteRatio: 0.3
+        zeroDowntimeResync: true
