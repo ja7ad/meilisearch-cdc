@@ -1,0 +1,49 @@
+# Demo stack: Meilisearch + Postgres (logical replication) + meilisearch-cdc.
+#   docker compose -f deploy/docker-compose.yml up --build
+# Dashboard: http://localhost:8080 — login admin@example.com / change-me-please
+# Without MEILI_URL the service starts unconfigured and everything is set up in the dashboard.
+services:
+  meilisearch:
+    image: getmeili/meilisearch:latest
+    environment:
+      MEILI_MASTER_KEY: masterKey
+      MEILI_NO_ANALYTICS: "true"
+    ports: ["7700:7700"]
+    volumes: [meili:/meili_data]
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:7700/health"]
+      interval: 5s
+
+  postgres:
+    image: postgres:17-alpine
+    command: ["postgres", "-c", "wal_level=logical"]
+    environment:
+      POSTGRES_USER: shop
+      POSTGRES_PASSWORD: shop
+      POSTGRES_DB: shop
+    ports: ["5432:5432"]
+    volumes:
+      - pg:/var/lib/postgresql/data
+      - ./seed.sql:/docker-entrypoint-initdb.d/seed.sql:ro
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "shop"]
+      interval: 5s
+
+  cdc:
+    build: ..
+    depends_on:
+      meilisearch: {condition: service_healthy}
+      postgres: {condition: service_healthy}
+    environment:
+      MEILI_URL: http://meilisearch:7700
+      MEILI_API_KEY: masterKey
+      CDC_ADMIN_EMAIL: admin@example.com
+      CDC_ADMIN_PASSWORD: change-me-please
+      CDC_TASKS_FILE: /etc/cdc/tasks.yaml
+      PG_DSN: postgres://shop:shop@postgres:5432/shop?sslmode=disable
+    ports: ["8080:8080"]
+    volumes:
+      - cdc:/data
+      - ./tasks.yaml:/etc/cdc/tasks.yaml:ro
+
+volumes: {meili: {}, pg: {}, cdc: {}}
