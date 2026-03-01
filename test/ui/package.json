@@ -1,0 +1,13 @@
+{
+  "name": "meilisearch-cdc-ui-tests",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "mock": "node mock-server.mjs",
+    "test": "playwright test",
+    "screenshots": "SCREENSHOTS=1 playwright test screenshots"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1"
+  }
+}
