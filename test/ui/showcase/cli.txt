@@ -1,0 +1,20 @@
+$ meilisearch-cdc admin users list
+EMAIL           NAME          ROLE       OWNER  LAST SIGN-IN      CREATED
+alex@acme.io    Alex Morgan   admin      yes    2026-10-26 23:29  2026-10-26 23:24
+sam@acme.io     Sam Lee       admin             never             2026-10-26 23:24
+jordan@acme.io  Jordan Patel  moderator         never             2026-10-26 23:24
+taylor@acme.io  Taylor Kim    moderator         never             2026-10-26 23:24
+riley@acme.io   Riley Chen    viewer            never             2026-10-26 23:24
+casey@acme.io   Casey Novak   viewer            never             2026-10-26 23:24
+
+$ meilisearch-cdc admin users reset-password --email riley@acme.io --generate
+reset the password of riley@acme.io and signed them out everywhere
+Generated password (shown only once): kX9-••••••••••••••-7Qm
+
+$ meilisearch-cdc admin users set-role --email alex@acme.io --role viewer
+error: forbidden: the primary administrator's role cannot be changed; transfer ownership first with `meilisearch-cdc admin users set-owner`
+
+$ meilisearch-cdc admin purge sessions invitations --yes
+SCOPE        REMOVED
+sessions     6
+invitations  1
