@@ -1,0 +1,57 @@
+# meilisearch-cdc
+
+> meilisearch-cdc (Meili CDC) is open-source change data capture into Meilisearch: it copies a table once, then streams every insert, update and delete into one or many Meilisearch instances in near real time, managed from a live dashboard.
+
+It is a Go service with an embedded state store and dashboard. Sources: PostgreSQL (logical replication), MySQL/MariaDB (binlog), MongoDB (change streams), DynamoDB Streams, CouchDB, SQL Server CDC, CockroachDB changefeeds, Kafka (Debezium), Redis Streams, webhook push and SQL polling. It snapshots then streams with no gap, delivers at least once with idempotent writes, isolates rejected documents in a dead letter queue, resyncs with zero downtime through a shadow index swap, manages full Meilisearch index settings with drift detection, and offers roles, alerts (email, Telegram, webhook), an MCP server for AI agents, an operator CLI and Prometheus metrics. Binaries for Linux, macOS and Windows (amd64, arm64) and a Docker image (ghcr.io/ja7ad/meilisearch-cdc).
+
+## Docs
+
+- [Introduction](https://meilicdc.javad.dev/guide/): What meilisearch-cdc is, how snapshot-then-stream change data capture into Meilisearch works, the core concepts and the feature overview.
+- [Quick start](https://meilicdc.javad.dev/guide/quick-start.html): Download meilisearch-cdc, verify the checksum, start it, create the admin account and sync your first table into Meilisearch in five minutes.
+- [Install the binary](https://meilicdc.javad.dev/guide/installation.html): Install the meilisearch-cdc binary on Linux (systemd), macOS (launchd) or Windows (service or terminal) with a dedicated user and data directory.
+- [Docker and Compose](https://meilicdc.javad.dev/guide/docker.html): Run meilisearch-cdc in Docker: image tags, the /data volume, the non-root user, environment variables, secrets files and the Compose demo stack.
+- [Kubernetes](https://meilicdc.javad.dev/guide/kubernetes.html): Deploy meilisearch-cdc on Kubernetes with a single-replica Deployment, a PersistentVolumeClaim and Secrets mounted through the *_FILE variables.
+- [Reverse proxy and TLS](https://meilicdc.javad.dev/guide/reverse-proxy.html): Put meilisearch-cdc behind nginx or Caddy with TLS: Server-Sent Events settings, CDC_TRUST_PROXY, CDC_COOKIE_SECURE and CDC_PUBLIC_URL.
+- [Backups and upgrades](https://meilicdc.javad.dev/guide/backup-upgrade.html): Back up the meilisearch-cdc data directory and secret key, restore it, and upgrade the binary or the Docker image safely.
+- [Configuration reference](https://meilicdc.javad.dev/guide/configuration.html): Every meilisearch-cdc flag and environment variable with its default, the *_FILE secret variants, single-instance mode, logging, pprof and metrics.
+- [Declarative tasks file](https://meilicdc.javad.dev/guide/declarative-tasks.html): Define meilisearch-cdc sync tasks in a YAML or JSON file applied at startup (CDC_TASKS_FILE), with ${VAR} expansion for credentials.
+- [Sources and connectors](https://meilicdc.javad.dev/guide/sources.html): The eleven change data capture sources supported by meilisearch-cdc, how connectors store credentials, and what every source has in common.
+- [PostgreSQL](https://meilicdc.javad.dev/guide/source-postgres.html): Capture PostgreSQL changes with logical replication (pgoutput): wal_level, REPLICA IDENTITY, replication slots, publications and grants.
+- [MySQL and MariaDB](https://meilicdc.javad.dev/guide/source-mysql.html): Capture MySQL 8 and MariaDB changes from the binary log: binlog_format=ROW, binlog_row_image=FULL, server ids, grants and positions.
+- [MongoDB](https://meilicdc.javad.dev/guide/source-mongodb.html): Capture MongoDB changes with change streams on a replica set or sharded cluster: connection string, _id handling, resume tokens and drops.
+- [DynamoDB](https://meilicdc.javad.dev/guide/source-dynamodb.html): Capture Amazon DynamoDB changes through DynamoDB Streams with NEW_AND_OLD_IMAGES: credentials, IAM permissions, shards and 24h retention.
+- [CouchDB](https://meilicdc.javad.dev/guide/source-couchdb.html): Follow the CouchDB or Cloudant _changes feed into Meilisearch: connection URL, database permissions, deletes, design documents and sequences.
+- [SQL Server](https://meilicdc.javad.dev/guide/source-sqlserver.html): Capture SQL Server changes from native CDC change tables: sp_cdc_enable_db, sp_cdc_enable_table, SQL Server Agent, grants and retention.
+- [CockroachDB](https://meilicdc.javad.dev/guide/source-cockroachdb.html): Capture CockroachDB changes with a core changefeed: kv.rangefeed.enabled, CHANGEFEED privilege, HLC positions and gc.ttlseconds.
+- [Kafka (Debezium)](https://meilicdc.javad.dev/guide/source-kafka.html): Consume Debezium change events from Kafka with the JSON converter to sync Oracle, Db2, Cassandra and other databases into Meilisearch.
+- [Redis Streams](https://meilicdc.javad.dev/guide/source-redis.html): Push changes into a Redis stream with XADD and sync them into Meilisearch: entry format, op field, positions and trimming.
+- [SQL polling](https://meilicdc.javad.dev/guide/source-sqlpoll.html): Poll any PostgreSQL, MySQL or SQLite table with an incrementing cursor column when log-based capture is not available; soft deletes and limits.
+- [Webhook (HTTP push)](https://meilicdc.javad.dev/guide/source-webhook.html): Push changes to meilisearch-cdc over HTTP: the /api/v1/ingest endpoint, JSON, array and NDJSON payloads, responses and retries.
+- [Meilisearch destinations](https://meilicdc.javad.dev/guide/destinations.html): Add Meilisearch instances as destinations: URL, API key permissions, gzip, timeout, health checks, the default destination and per-instance pages.
+- [Create a task](https://meilicdc.javad.dev/guide/tasks.html): Every field of a meilisearch-cdc task, step by step through the wizard: source scope, mapping, primary keys, index, write mode, sync and safety.
+- [Operate tasks](https://meilicdc.javad.dev/guide/task-operations.html): Task states and lifecycle actions (start, pause, resync, reset checkpoint), editing, batch actions, import and export, and the task detail tabs.
+- [Index management](https://meilicdc.javad.dev/guide/indexes.html): Manage Meilisearch index settings from meilisearch-cdc: the settings editor, drift detection, primary keys, swap, compaction, search and documents.
+- [Data quality](https://meilicdc.javad.dev/guide/data-quality.html): Check that Meilisearch matches the source: schema check, document diff and repair, and the dead letter queue with replay and discard.
+- [Monitoring and metrics](https://meilicdc.javad.dev/guide/monitoring.html): Monitor meilisearch-cdc: the live dashboard, Server-Sent Events, Prometheus metrics with names and labels, health endpoints and logs.
+- [Alerts and notifications](https://meilicdc.javad.dev/guide/alerts.html): Alert rules (task state, lag, dead letters, errors, stalled, Meilisearch down) delivered by email (SMTP), Telegram or webhook.
+- [Team and security](https://meilicdc.javad.dev/guide/security.html): Roles and the permission matrix, invitations, password reset, the primary administrator, sessions, CSRF, rate limiting, audit log and secret encryption.
+- [AI agents (MCP)](https://meilicdc.javad.dev/guide/mcp.html): Let AI assistants manage meilisearch-cdc over the Model Context Protocol: enable /mcp, create tokens, configure clients, tools, resources and policy.
+- [Admin CLI](https://meilicdc.javad.dev/guide/cli.html): The meilisearch-cdc admin operator CLI: users, sessions, MCP and purge commands, socket and direct modes, and recovery recipes.
+- [Mobile and app install](https://meilicdc.javad.dev/guide/pwa.html): Install the meilisearch-cdc dashboard as an app on desktop or phone, how it behaves offline, and how updates are applied.
+- [REST API](https://meilicdc.javad.dev/guide/api.html): The meilisearch-cdc REST API v1: authentication, errors, tasks, data quality, indexes, destinations, connectors, accounts, alerts and live events.
+- [Performance and tuning](https://meilicdc.javad.dev/guide/performance.html): Measured meilisearch-cdc throughput, memory sizing, batch size, in-flight batches, gzip, GOMEMLIMIT and GOGC tuning, and profiling with pprof.
+- [Troubleshooting and FAQ](https://meilicdc.javad.dev/guide/troubleshooting.html): Fix common meilisearch-cdc errors: replication slots, binlog settings, replica sets, SQL Server Agent, safety holds, SMTP TLS and 409 conflicts.
+- [Changelog and upgrade notes](https://meilicdc.javad.dev/guide/changelog.html): Where to find meilisearch-cdc release notes, Docker image tags and the upgrade checklist and notes to read before moving between versions.
+- [Development](https://meilicdc.javad.dev/guide/development.html): Build meilisearch-cdc from source, run unit, integration, end-to-end and dashboard tests, the full GUI e2e environment and load tests.
+- [REST API reference](https://github.com/ja7ad/meilisearch-cdc/blob/main/docs/api.md): every /api/v1 endpoint for tasks, data quality, dead letters, indexes, destinations and settings.
+- [Operator CLI](https://github.com/ja7ad/meilisearch-cdc/blob/main/docs/cli.md): meilisearch-cdc admin commands for users, password reset, ownership, sessions, MCP and purge.
+- [Performance and tuning](https://github.com/ja7ad/meilisearch-cdc/blob/main/docs/performance.md): measured throughput, resource usage, profiling and tuning knobs.
+- [End-to-end environment](https://github.com/ja7ad/meilisearch-cdc/blob/main/docs/e2e.md): every source and two Meilisearch instances in Docker for trying and testing the dashboard.
+
+## Optional
+
+- [Landing page](https://meilicdc.javad.dev/): overview, download links and FAQ.
+- [GitHub repository](https://github.com/ja7ad/meilisearch-cdc): source code, issues and README.
+- [Releases](https://github.com/ja7ad/meilisearch-cdc/releases): binaries and checksums for every version.
+- [REST API reference (raw Markdown)](https://raw.githubusercontent.com/ja7ad/meilisearch-cdc/main/docs/api.md)
+- [Full documentation as one file](https://meilicdc.javad.dev/llms-full.txt)
