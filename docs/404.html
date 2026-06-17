@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- GitHub Pages serves this page for a missing path at any depth: every URL
+     below resolves against the project root. -->
+<base href="/">
+<title>Page not found · Meili CDC</title>
+<meta name="description" content="This page does not exist. Go to the Meili CDC home page or the documentation.">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="site/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&amp;display=swap">
+<style>
+  :root { --bg: #FFFFFF; --text: #1E1A34; --text-2: #3F3A5C; --border: #E7E2F2; --surface: #FFFFFF; --accent-2: #5634E6; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #15112A; --text: #F5F3FB; --text-2: #D3CEE6; --border: #353056; --surface: #221D3C; --accent-2: #A994FF; } }
+  :root[data-theme="dark"] { --bg: #15112A; --text: #F5F3FB; --text-2: #D3CEE6; --border: #353056; --surface: #221D3C; --accent-2: #A994FF; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 32px 16px; background: var(--bg); color: var(--text);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; text-align: center; overflow-x: hidden;
+    background-image: radial-gradient(50% 60% at 20% 0%, rgba(255, 92, 170, .18), transparent 70%), radial-gradient(50% 60% at 90% 100%, rgba(108, 71, 255, .2), transparent 70%); }
+  main { max-width: 560px; }
+  .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.15rem; color: var(--text); text-decoration: none; }
+  .brand img { width: 32px; height: 32px; border-radius: 9px; }
+  .code { margin: 36px 0 4px; font-size: clamp(4.5rem, 18vw, 8rem); font-weight: 800; letter-spacing: -.05em; line-height: 1;
+    background: linear-gradient(110deg, #E0247A, #F0405A 45%, #6C47FF); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  h1 { font-size: 1.6rem; margin: 10px 0; letter-spacing: -.02em; }
+  p { color: var(--text-2); line-height: 1.6; margin: 0; }
+  .row { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 28px; }
+  .btn { display: inline-flex; align-items: center; padding: .8em 1.3em; border-radius: 12px; font-weight: 600; text-decoration: none; }
+  .btn-p { color: #fff; background: linear-gradient(120deg, #D61F73, #6C47FF); }
+  .btn-g { color: var(--text); background: var(--surface); border: 1px solid var(--border); }
+  .btn:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 3px; }
+  .small { margin-top: 28px; font-size: .9rem; }
+  .small a { color: var(--accent-2); }
+</style>
+<script>try { var t = localStorage.getItem('mcdc-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) {}</script>
+</head>
+<body>
+<main>
+  <a class="brand" href="./"><img src="site/favicon.svg" alt="" width="32" height="32"><span>Meili CDC</span></a>
+  <p class="code" aria-hidden="true">404</p>
+  <h1>This page does not exist</h1>
+  <p>The link may be old, or the page moved when the documentation was reorganised.</p>
+  <div class="row">
+    <a class="btn btn-p" href="./">Go to the home page</a>
+    <a class="btn btn-g" href="guide/">Read the documentation</a>
+  </div>
+  <p class="small">Looking for the code? <a href="https://github.com/ja7ad/meilisearch-cdc">github.com/ja7ad/meilisearch-cdc</a></p>
+</main>
+</body>
+</html>
