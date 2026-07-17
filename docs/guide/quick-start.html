@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quick start · Meili CDC Docs</title>
+<meta name="description" content="Download meilisearch-cdc, verify the checksum, start it, create the admin account and sync your first table into Meilisearch in five minutes.">
+<link rel="canonical" href="https://meilicdc.javad.dev/guide/quick-start.html">
+<meta name="robots" content="index, follow">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15112A" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meili CDC">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Quick start · Meili CDC Docs">
+<meta property="og:description" content="Download meilisearch-cdc, verify the checksum, start it, create the admin account and sync your first table into Meilisearch in five minutes.">
+<meta property="og:url" content="https://meilicdc.javad.dev/guide/quick-start.html">
+<meta property="og:image" content="https://meilicdc.javad.dev/img/og.png">
+<meta property="og:image:alt" content="Meili CDC: change data capture into Meilisearch">
+<meta property="article:modified_time" content="2026-10-26">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Quick start · Meili CDC Docs">
+<meta name="twitter:description" content="Download meilisearch-cdc, verify the checksum, start it, create the admin account and sync your first table into Meilisearch in five minutes.">
+<meta name="twitter:image" content="https://meilicdc.javad.dev/img/og.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="assets/guide.css">
+<script>(function(){try{var t=localStorage.getItem('mcdc-guide-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<script src="assets/guide.js" defer></script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "TechArticle",
+   "headline": "Quick start",
+   "description": "Download meilisearch-cdc, verify the checksum, start it, create the admin account and sync your first table into Meilisearch in five minutes.",
+   "dateModified": "2026-10-26",
+   "inLanguage": "en",
+   "url": "https://meilicdc.javad.dev/guide/quick-start.html",
+   "mainEntityOfPage": "https://meilicdc.javad.dev/guide/quick-start.html",
+   "image": "https://meilicdc.javad.dev/img/og.png",
+   "author": {
+    "@type": "Organization",
+    "name": "meilisearch-cdc contributors",
+    "url": "https://github.com/ja7ad/meilisearch-cdc"
+   },
+   "publisher": {
+    "@type": "Organization",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   },
+   "isPartOf": {
+    "@type": "WebSite",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Meili CDC",
+     "item": "https://meilicdc.javad.dev/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Docs",
+     "item": "https://meilicdc.javad.dev/guide/index.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Quick start",
+     "item": "https://meilicdc.javad.dev/guide/quick-start.html"
+    }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+<div class="topbar-inner">
+<button type="button" class="icon-btn menu-btn" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+<a class="brand" href="../" aria-label="Meili CDC home"><img src="assets/favicon.svg" alt="" width="30" height="30"><span>Meili CDC</span></a>
+<a class="brand-docs" href="index.html">Docs</a>
+<div class="search" role="search">
+<button type="button" class="icon-btn search-toggle" aria-controls="search-input" aria-expanded="false" aria-label="Search the guide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+<div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><label class="sr-only" for="search-input">Search the guide</label><input id="search-input" type="search" placeholder="Search the guide" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="search-panel" aria-autocomplete="list"><kbd aria-hidden="true">/</kbd></div>
+<div class="search-panel" id="search-panel" hidden></div>
+</div>
+<div class="top-actions">
+<a class="top-link hide-sm" href="../">Home</a>
+<a class="top-link hide-xs" href="../#download">Download</a>
+<button type="button" class="icon-btn theme-btn" aria-label="Toggle dark theme" aria-pressed="false"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+<a class="icon-btn" href="https://github.com/ja7ad/meilisearch-cdc" aria-label="meilisearch-cdc on GitHub" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg></a>
+</div>
+</div>
+</header>
+<div class="layout">
+<nav class="sidebar" id="sidebar" aria-label="Guide">
+<div class="nav-section"><p id="nav-s0">Getting started</p><ul aria-labelledby="nav-s0">
+<li><a href="index.html">Introduction</a></li>
+<li><a href="quick-start.html" aria-current="page">Quick start</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s1">Deploy</p><ul aria-labelledby="nav-s1">
+<li><a href="installation.html">Install the binary</a></li>
+<li><a href="docker.html">Docker and Compose</a></li>
+<li><a href="kubernetes.html">Kubernetes</a></li>
+<li><a href="reverse-proxy.html">Reverse proxy and TLS</a></li>
+<li><a href="backup-upgrade.html">Backups and upgrades</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s2">Configure</p><ul aria-labelledby="nav-s2">
+<li><a href="configuration.html">Configuration reference</a></li>
+<li><a href="declarative-tasks.html">Declarative tasks file</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s3">Sources</p><ul aria-labelledby="nav-s3">
+<li><a href="sources.html">Sources and connectors</a></li>
+<li><a href="source-postgres.html">PostgreSQL</a></li>
+<li><a href="source-mysql.html">MySQL and MariaDB</a></li>
+<li><a href="source-mongodb.html">MongoDB</a></li>
+<li><a href="source-dynamodb.html">DynamoDB</a></li>
+<li><a href="source-couchdb.html">CouchDB</a></li>
+<li><a href="source-sqlserver.html">SQL Server</a></li>
+<li><a href="source-cockroachdb.html">CockroachDB</a></li>
+<li><a href="source-kafka.html">Kafka (Debezium)</a></li>
+<li><a href="source-redis.html">Redis Streams</a></li>
+<li><a href="source-sqlpoll.html">SQL polling</a></li>
+<li><a href="source-webhook.html">Webhook (HTTP push)</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s4">Sync</p><ul aria-labelledby="nav-s4">
+<li><a href="destinations.html">Meilisearch destinations</a></li>
+<li><a href="tasks.html">Create a task</a></li>
+<li><a href="task-operations.html">Operate tasks</a></li>
+<li><a href="indexes.html">Index management</a></li>
+<li><a href="data-quality.html">Data quality</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s5">Operate</p><ul aria-labelledby="nav-s5">
+<li><a href="monitoring.html">Monitoring and metrics</a></li>
+<li><a href="alerts.html">Alerts and notifications</a></li>
+<li><a href="security.html">Team and security</a></li>
+<li><a href="mcp.html">AI agents (MCP)</a></li>
+<li><a href="cli.html">Admin CLI</a></li>
+<li><a href="pwa.html">Mobile and app install</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s6">Reference</p><ul aria-labelledby="nav-s6">
+<li><a href="api.html">REST API</a></li>
+<li><a href="performance.html">Performance and tuning</a></li>
+<li><a href="troubleshooting.html">Troubleshooting and FAQ</a></li>
+<li><a href="changelog.html">Changelog and upgrade notes</a></li>
+<li><a href="development.html">Development</a></li>
+</ul></div>
+</nav>
+<main id="content" class="content" tabindex="-1">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol>
+<li><a href="../">Meili CDC</a></li>
+<li><a href="index.html">Docs</a></li>
+<li><span aria-current="page">Quick start</span></li>
+</ol></nav>
+<article class="doc">
+<h1>Quick start</h1>
+<p class="lead">Download one binary, start it, create the admin account in the browser and follow the onboarding flow: a Meilisearch destination, a connector, then your first sync task.</p>
+
+<div class="callout tip"><p class="callout-title">Just want to see it run?</p>
+<p>The <a href="#demo-stack">Docker Compose demo</a> starts Meilisearch, PostgreSQL with 10,000 products and a running sync in one command.</p></div>
+
+<h2 id="before-you-start">Before you start</h2>
+<ul>
+  <li>A reachable Meilisearch instance and an API key that can write documents and manage indexes (the master key or an admin key works; see <a href="destinations.html#api-key-permissions">API key permissions</a>).</li>
+  <li>A source prepared for change data capture. For PostgreSQL that means <code>wal_level=logical</code>; every source page lists its prerequisites, for example <a href="source-postgres.html">PostgreSQL</a> or <a href="source-mysql.html">MySQL</a>.</li>
+</ul>
+
+<h2 id="download">1. Download</h2>
+<p>Every <a href="https://github.com/ja7ad/meilisearch-cdc/releases" rel="noopener">GitHub release</a> ships one archive per platform plus a <code>checksums.txt</code> file. Archive names follow <code>meilisearch-cdc_&lt;version&gt;_&lt;os&gt;_&lt;arch&gt;</code>, where the version has no leading <code>v</code>:</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Platform</th><th>Archive</th></tr></thead>
+  <tbody>
+    <tr><td>Linux x86-64</td><td><code>meilisearch-cdc_&lt;version&gt;_linux_amd64.tar.gz</code></td></tr>
+    <tr><td>Linux ARM64</td><td><code>meilisearch-cdc_&lt;version&gt;_linux_arm64.tar.gz</code></td></tr>
+    <tr><td>macOS Intel</td><td><code>meilisearch-cdc_&lt;version&gt;_darwin_amd64.tar.gz</code></td></tr>
+    <tr><td>macOS Apple silicon</td><td><code>meilisearch-cdc_&lt;version&gt;_darwin_arm64.tar.gz</code></td></tr>
+    <tr><td>Windows x86-64</td><td><code>meilisearch-cdc_&lt;version&gt;_windows_amd64.zip</code></td></tr>
+    <tr><td>Windows ARM64</td><td><code>meilisearch-cdc_&lt;version&gt;_windows_arm64.zip</code></td></tr>
+  </tbody>
+</table></div>
+<p>Each archive contains a folder of the same name with the <code>meilisearch-cdc</code> binary (<code>meilisearch-cdc.exe</code> on Windows), <code>README.md</code> and <code>docs/api.md</code> and <code>docs/cli.md</code>. The binaries are static (built without cgo) and need nothing else.</p>
+
+<pre><code class="language-bash"># Linux or macOS: pick the version and platform you need.
+VERSION=1.2.3            # the release tag without the leading "v"
+OS=linux ARCH=amd64      # darwin / arm64 on Apple silicon
+NAME=meilisearch-cdc_${VERSION}_${OS}_${ARCH}
+curl -LO https://github.com/ja7ad/meilisearch-cdc/releases/download/v${VERSION}/${NAME}.tar.gz
+curl -LO https://github.com/ja7ad/meilisearch-cdc/releases/download/v${VERSION}/checksums.txt</code></pre>
+
+<h3 id="verify-checksums">Verify the checksum</h3>
+<p><code>checksums.txt</code> holds the SHA-256 of every archive, in the format of <code>sha256sum</code>.</p>
+
+<pre><code class="language-bash"># Linux: prints "&lt;archive&gt;: OK"
+grep " ${NAME}.tar.gz\$" checksums.txt | sha256sum --check
+
+# macOS
+grep " ${NAME}.tar.gz\$" checksums.txt | shasum -a 256 --check</code></pre>
+
+<pre><code class="language-powershell"># Windows PowerShell
+$name = "meilisearch-cdc_1.2.3_windows_amd64.zip"
+$expected = (Select-String -Path checksums.txt -Pattern $name).Line.Split(" ")[0]
+$actual = (Get-FileHash $name -Algorithm SHA256).Hash.ToLower()
+if ($actual -eq $expected) { "OK" } else { "MISMATCH" }</code></pre>
+
+<p>Then unpack it:</p>
+
+<pre><code class="language-bash">tar -xzf ${NAME}.tar.gz
+cd ${NAME}
+./meilisearch-cdc version</code></pre>
+
+<pre><code class="language-powershell">Expand-Archive meilisearch-cdc_1.2.3_windows_amd64.zip -DestinationPath .
+.\meilisearch-cdc_1.2.3_windows_amd64\meilisearch-cdc.exe version</code></pre>
+
+<p><code>meilisearch-cdc version</code> prints the release tag it was built from (a build from source prints <code>dev</code>).</p>
+
+<h2 id="first-run">2. Start it</h2>
+<p>No configuration is required. Without flags the service listens on <code>:8080</code> and keeps its state in <code>./data</code>:</p>
+
+<pre><code class="language-bash">./meilisearch-cdc
+# or choose the address and the data directory:
+./meilisearch-cdc -listen 127.0.0.1:8080 -data-dir /var/lib/meilisearch-cdc</code></pre>
+
+<p>On the first start the service creates the data directory (mode <code>0700</code>), the state database <code>cdc.db</code> and a random encryption key in <code>secret.key</code> (mode <code>0600</code>). Until an account exists it logs:</p>
+
+<pre><code class="language-text">level=WARN msg="no user exists yet: open the dashboard to create the first admin (or set CDC_ADMIN_EMAIL and CDC_ADMIN_PASSWORD)"
+level=INFO msg=listening addr=:8080 meilisearch=""</code></pre>
+
+<div class="callout warning"><p class="callout-title">Back up secret.key with the data</p>
+<p>Connector passwords and Meilisearch API keys are encrypted with this key. Losing it means re-entering every credential. See <a href="backup-upgrade.html">Backups and upgrades</a>.</p></div>
+
+<h2 id="setup">3. Create the admin account</h2>
+<p>Open <code>http://localhost:8080</code>. While no account exists, the dashboard shows the <strong>setup page</strong>: enter an email, a name and a password of 8 to 128 characters. This first account is an <code>admin</code> and the <a href="security.html#primary-administrator">primary administrator</a> of the installation.</p>
+<p>To skip the setup page (for automated deployments), set <code>CDC_ADMIN_EMAIL</code> and <code>CDC_ADMIN_PASSWORD</code> (or <code>CDC_ADMIN_PASSWORD_FILE</code>) before the first start: the account is created when no user exists yet.</p>
+
+<h2 id="onboarding">4. Follow the onboarding flow</h2>
+<p>After the first sign-in the dashboard opens an onboarding flow with three steps. Each step can be skipped and done later from the menu.</p>
+<ol class="steps">
+  <li><strong>Add a destination.</strong> Name your Meilisearch instance, enter its URL (for example <code>http://localhost:7700</code>) and API key, and test the connection. The first destination becomes the default one. Details: <a href="destinations.html">Destinations</a>.</li>
+  <li><strong>Add a connector.</strong> Choose the source type, enter the connection string and test it: the test reports the server version and the tables it can see. Details: <a href="sources.html#connectors">Connectors</a>.</li>
+  <li><strong>Create the first task.</strong> The wizard asks for the table, the mapping, the index and the sync options. <em>Test connection</em> shows the columns and five transformed sample documents before you save. Details: <a href="tasks.html">Create a task</a>.</li>
+</ol>
+<figure>
+  <img src="../img/05-wizard-source.png" width="1920" height="1080" alt="The task wizard source step with the table picker and the Test connection result showing columns and sample documents" loading="lazy">
+  <figcaption>The wizard tests the connection and previews transformed documents before anything is written.</figcaption>
+</figure>
+<p>Start the task. It moves through <code>starting</code> and <code>snapshotting</code> (with a progress bar) to <code>streaming</code>. Change a row in the source and watch the document change in the index's search tab a moment later.</p>
+
+<h2 id="docker">Docker one-liner</h2>
+<p>Images are published to the GitHub Container Registry for <code>linux/amd64</code> and <code>linux/arm64</code>:</p>
+
+<pre><code class="language-bash">docker run -d --name cdc -p 8080:8080 -v cdc-data:/data ghcr.io/ja7ad/meilisearch-cdc:latest</code></pre>
+
+<p>The image stores its state in the <code>/data</code> volume and runs as a non-root user. See <a href="docker.html">Docker and Compose</a> for tags, environment variables and secrets.</p>
+
+<h2 id="demo-stack">Docker Compose demo</h2>
+<p>The repository's <code>deploy/docker-compose.yml</code> starts Meilisearch, PostgreSQL 17 (with <code>wal_level=logical</code> and 10,000 seeded products) and meilisearch-cdc built from the source tree, with a declarative task already running:</p>
+
+<pre><code class="language-bash">git clone https://github.com/ja7ad/meilisearch-cdc.git
+cd meilisearch-cdc
+docker compose -f deploy/docker-compose.yml up --build</code></pre>
+
+<p>Open <code>http://localhost:8080</code> and sign in as <code>admin@example.com</code> with the password <code>change-me-please</code>. Meilisearch listens on <code>http://localhost:7700</code> with the master key <code>masterKey</code>. The demo pins the service to that Meilisearch with <code>MEILI_URL</code> (<a href="configuration.html#single-instance-mode">single-instance mode</a>) and applies <code>deploy/tasks.yaml</code> at startup (<a href="declarative-tasks.html">declarative tasks</a>).</p>
+<div class="callout warning"><p class="callout-title">Demo values only</p><p>The demo's passwords and keys are public. Do not reuse that file for a real deployment.</p></div>
+
+<h2 id="next-steps">Next steps</h2>
+<ul>
+  <li><a href="installation.html">Install it as a service</a> with a dedicated user and data directory.</li>
+  <li><a href="reverse-proxy.html">Put it behind TLS</a> before exposing the dashboard.</li>
+  <li><a href="security.html">Invite your team</a> with the right roles, and <a href="alerts.html">set up alerts</a>.</li>
+</ul>
+</article>
+<nav class="pager" aria-label="Previous and next page">
+<a class="prev" href="index.html" rel="prev"><span class="p-label">Previous</span><span class="p-title">Introduction</span></a>
+<a class="next" href="installation.html" rel="next"><span class="p-label">Next</span><span class="p-title">Install the binary</span></a>
+</nav>
+<footer class="site-footer">
+<p>Meili CDC user guide · last updated 2026-10-26 · <a href="https://github.com/ja7ad/meilisearch-cdc/edit/main/docs/guide/quick-start.html" rel="noopener">Edit this page on GitHub</a></p>
+<p>meilisearch-cdc is open source. Meilisearch is a trademark of Meili SAS; this project is not affiliated with it.</p>
+</footer>
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+</body>
+</html>
