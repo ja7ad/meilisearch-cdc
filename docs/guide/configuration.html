@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Configuration reference · Meili CDC Docs</title>
+<meta name="description" content="Every meilisearch-cdc flag and environment variable with its default, the *_FILE secret variants, single-instance mode, logging, pprof and metrics.">
+<link rel="canonical" href="https://meilicdc.javad.dev/guide/configuration.html">
+<meta name="robots" content="index, follow">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15112A" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meili CDC">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Configuration reference · Meili CDC Docs">
+<meta property="og:description" content="Every meilisearch-cdc flag and environment variable with its default, the *_FILE secret variants, single-instance mode, logging, pprof and metrics.">
+<meta property="og:url" content="https://meilicdc.javad.dev/guide/configuration.html">
+<meta property="og:image" content="https://meilicdc.javad.dev/img/og.png">
+<meta property="og:image:alt" content="Meili CDC: change data capture into Meilisearch">
+<meta property="article:modified_time" content="2026-10-26">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Configuration reference · Meili CDC Docs">
+<meta name="twitter:description" content="Every meilisearch-cdc flag and environment variable with its default, the *_FILE secret variants, single-instance mode, logging, pprof and metrics.">
+<meta name="twitter:image" content="https://meilicdc.javad.dev/img/og.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="assets/guide.css">
+<script>(function(){try{var t=localStorage.getItem('mcdc-guide-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<script src="assets/guide.js" defer></script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "TechArticle",
+   "headline": "Configuration reference",
+   "description": "Every meilisearch-cdc flag and environment variable with its default, the *_FILE secret variants, single-instance mode, logging, pprof and metrics.",
+   "dateModified": "2026-10-26",
+   "inLanguage": "en",
+   "url": "https://meilicdc.javad.dev/guide/configuration.html",
+   "mainEntityOfPage": "https://meilicdc.javad.dev/guide/configuration.html",
+   "image": "https://meilicdc.javad.dev/img/og.png",
+   "author": {
+    "@type": "Organization",
+    "name": "meilisearch-cdc contributors",
+    "url": "https://github.com/ja7ad/meilisearch-cdc"
+   },
+   "publisher": {
+    "@type": "Organization",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   },
+   "isPartOf": {
+    "@type": "WebSite",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Meili CDC",
+     "item": "https://meilicdc.javad.dev/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Docs",
+     "item": "https://meilicdc.javad.dev/guide/index.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Configuration reference",
+     "item": "https://meilicdc.javad.dev/guide/configuration.html"
+    }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+<div class="topbar-inner">
+<button type="button" class="icon-btn menu-btn" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+<a class="brand" href="../" aria-label="Meili CDC home"><img src="assets/favicon.svg" alt="" width="30" height="30"><span>Meili CDC</span></a>
+<a class="brand-docs" href="index.html">Docs</a>
+<div class="search" role="search">
+<button type="button" class="icon-btn search-toggle" aria-controls="search-input" aria-expanded="false" aria-label="Search the guide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+<div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><label class="sr-only" for="search-input">Search the guide</label><input id="search-input" type="search" placeholder="Search the guide" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="search-panel" aria-autocomplete="list"><kbd aria-hidden="true">/</kbd></div>
+<div class="search-panel" id="search-panel" hidden></div>
+</div>
+<div class="top-actions">
+<a class="top-link hide-sm" href="../">Home</a>
+<a class="top-link hide-xs" href="../#download">Download</a>
+<button type="button" class="icon-btn theme-btn" aria-label="Toggle dark theme" aria-pressed="false"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+<a class="icon-btn" href="https://github.com/ja7ad/meilisearch-cdc" aria-label="meilisearch-cdc on GitHub" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg></a>
+</div>
+</div>
+</header>
+<div class="layout">
+<nav class="sidebar" id="sidebar" aria-label="Guide">
+<div class="nav-section"><p id="nav-s0">Getting started</p><ul aria-labelledby="nav-s0">
+<li><a href="index.html">Introduction</a></li>
+<li><a href="quick-start.html">Quick start</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s1">Deploy</p><ul aria-labelledby="nav-s1">
+<li><a href="installation.html">Install the binary</a></li>
+<li><a href="docker.html">Docker and Compose</a></li>
+<li><a href="kubernetes.html">Kubernetes</a></li>
+<li><a href="reverse-proxy.html">Reverse proxy and TLS</a></li>
+<li><a href="backup-upgrade.html">Backups and upgrades</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s2">Configure</p><ul aria-labelledby="nav-s2">
+<li><a href="configuration.html" aria-current="page">Configuration reference</a></li>
+<li><a href="declarative-tasks.html">Declarative tasks file</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s3">Sources</p><ul aria-labelledby="nav-s3">
+<li><a href="sources.html">Sources and connectors</a></li>
+<li><a href="source-postgres.html">PostgreSQL</a></li>
+<li><a href="source-mysql.html">MySQL and MariaDB</a></li>
+<li><a href="source-mongodb.html">MongoDB</a></li>
+<li><a href="source-dynamodb.html">DynamoDB</a></li>
+<li><a href="source-couchdb.html">CouchDB</a></li>
+<li><a href="source-sqlserver.html">SQL Server</a></li>
+<li><a href="source-cockroachdb.html">CockroachDB</a></li>
+<li><a href="source-kafka.html">Kafka (Debezium)</a></li>
+<li><a href="source-redis.html">Redis Streams</a></li>
+<li><a href="source-sqlpoll.html">SQL polling</a></li>
+<li><a href="source-webhook.html">Webhook (HTTP push)</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s4">Sync</p><ul aria-labelledby="nav-s4">
+<li><a href="destinations.html">Meilisearch destinations</a></li>
+<li><a href="tasks.html">Create a task</a></li>
+<li><a href="task-operations.html">Operate tasks</a></li>
+<li><a href="indexes.html">Index management</a></li>
+<li><a href="data-quality.html">Data quality</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s5">Operate</p><ul aria-labelledby="nav-s5">
+<li><a href="monitoring.html">Monitoring and metrics</a></li>
+<li><a href="alerts.html">Alerts and notifications</a></li>
+<li><a href="security.html">Team and security</a></li>
+<li><a href="mcp.html">AI agents (MCP)</a></li>
+<li><a href="cli.html">Admin CLI</a></li>
+<li><a href="pwa.html">Mobile and app install</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s6">Reference</p><ul aria-labelledby="nav-s6">
+<li><a href="api.html">REST API</a></li>
+<li><a href="performance.html">Performance and tuning</a></li>
+<li><a href="troubleshooting.html">Troubleshooting and FAQ</a></li>
+<li><a href="changelog.html">Changelog and upgrade notes</a></li>
+<li><a href="development.html">Development</a></li>
+</ul></div>
+</nav>
+<main id="content" class="content" tabindex="-1">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol>
+<li><a href="../">Meili CDC</a></li>
+<li><a href="index.html">Docs</a></li>
+<li><span aria-current="page">Configuration reference</span></li>
+</ol></nav>
+<article class="doc">
+<h1>Configuration reference</h1>
+<p class="lead">Every setting is optional: with none, the service listens on <code>:8080</code>, stores its state in <code>./data</code> and is configured in the dashboard. Settings come from environment variables and command-line flags; a flag wins over its variable.</p>
+
+<h2 id="settings">All settings</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Environment variable</th><th>Flag</th><th>Default</th><th>Description</th></tr></thead>
+  <tbody>
+    <tr><td><code>CDC_LISTEN</code></td><td><code>-listen</code></td><td><code>:8080</code></td><td>HTTP listen address for the dashboard, API, <code>/metrics</code> and <code>/mcp</code>.</td></tr>
+    <tr><td><code>CDC_DATA_DIR</code></td><td><code>-data-dir</code></td><td><code>./data</code></td><td>Directory of the state database <code>cdc.db</code>, the generated <code>secret.key</code> and the admin socket <code>admin.sock</code>. Created with mode <code>0700</code>.</td></tr>
+    <tr><td><code>MEILI_URL</code></td><td><code>-meili-url</code></td><td>empty</td><td>Pins the service to this Meilisearch instance (<a href="#single-instance-mode">single-instance mode</a>). Leave it empty to manage destinations in the dashboard.</td></tr>
+    <tr><td><code>MEILI_API_KEY</code> (falls back to <code>MEILI_MASTER_KEY</code>)</td><td><code>-meili-api-key</code></td><td>empty</td><td>API key of the <code>MEILI_URL</code> instance. Secret: also <code>MEILI_API_KEY_FILE</code>.</td></tr>
+    <tr><td><code>MEILI_GZIP</code></td><td><code>-meili-gzip</code></td><td><code>true</code></td><td>Gzip request bodies sent to the <code>MEILI_URL</code> instance.</td></tr>
+    <tr><td><code>MEILI_TIMEOUT</code></td><td><code>-meili-timeout</code></td><td><code>30s</code></td><td>Request timeout for the <code>MEILI_URL</code> instance.</td></tr>
+    <tr><td><code>CDC_ADMIN_TOKEN</code></td><td><code>-admin-token</code></td><td>empty</td><td>Static bearer token with the admin role, for scripts, Prometheus and webhook pushers (<a href="security.html#api-token">details</a>). Only its hash is kept in memory. Secret: also <code>CDC_ADMIN_TOKEN_FILE</code>.</td></tr>
+    <tr><td><code>CDC_SECRET_KEY</code></td><td><code>-secret-key</code></td><td>generated in <code>secret.key</code></td><td>Key that encrypts stored credentials: a base64 string of exactly 32 bytes is used as the AES-256 key, anything else is a passphrase stretched with argon2id. Secret: also <code>CDC_SECRET_KEY_FILE</code>.</td></tr>
+    <tr><td><code>CDC_SECRET_KEY_PREVIOUS</code></td><td>none</td><td>empty</td><td>An older key that can still decrypt; used for <a href="security.html#key-rotation">key rotation</a>. Secret: also <code>CDC_SECRET_KEY_PREVIOUS_FILE</code>.</td></tr>
+    <tr><td><code>CDC_TASKS_FILE</code></td><td><code>-tasks</code></td><td>empty</td><td>YAML or JSON file of tasks applied at startup (<a href="declarative-tasks.html">declarative tasks</a>); <code>${VAR}</code> is expanded from the environment.</td></tr>
+    <tr><td><code>CDC_ADMIN_EMAIL</code></td><td>none</td><td>empty</td><td>With <code>CDC_ADMIN_PASSWORD</code>, creates the first admin at startup when no user exists (instead of the setup page). Its name is <code>Administrator</code>.</td></tr>
+    <tr><td><code>CDC_ADMIN_PASSWORD</code></td><td>none</td><td>empty</td><td>Password of that first admin (8 to 128 characters). Secret: also <code>CDC_ADMIN_PASSWORD_FILE</code>.</td></tr>
+    <tr><td><code>CDC_PUBLIC_URL</code></td><td><code>-public-url</code></td><td>empty</td><td>Dashboard base URL used in emailed links. The URL saved in Settings → Email takes precedence; without both, the request's origin is used.</td></tr>
+    <tr><td><code>CDC_COOKIE_SECURE</code></td><td><code>-cookie-secure</code></td><td><code>false</code></td><td>Always set the <code>Secure</code> flag on the session cookie (behind a TLS-terminating proxy).</td></tr>
+    <tr><td><code>CDC_TRUST_PROXY</code></td><td><code>-trust-proxy</code></td><td><code>false</code></td><td>Trust <code>X-Forwarded-For</code> and <code>X-Forwarded-Proto</code> from a reverse proxy.</td></tr>
+    <tr><td><code>CDC_LOG_LEVEL</code></td><td><code>-log-level</code></td><td><code>info</code></td><td><code>debug</code>, <code>info</code>, <code>warn</code> or <code>error</code>.</td></tr>
+    <tr><td><code>CDC_LOG_FORMAT</code></td><td><code>-log-format</code></td><td><code>text</code></td><td><code>text</code> or <code>json</code>. Logs go to standard error.</td></tr>
+    <tr><td><code>CDC_DISABLE_UI</code></td><td><code>-disable-ui</code></td><td><code>false</code></td><td>Do not serve the dashboard; the API, metrics and MCP keep working.</td></tr>
+    <tr><td><code>CDC_STOP_TIMEOUT</code></td><td><code>-stop-timeout</code></td><td><code>20s</code></td><td>How long a stopping task may drain pending batches before they are aborted (and replayed on the next start). The whole shutdown waits up to this plus 10 seconds.</td></tr>
+    <tr><td><code>CDC_PPROF</code></td><td><code>-pprof</code></td><td><code>false</code></td><td>Expose <code>/debug/pprof/</code> to signed-in users (<a href="#pprof">pprof</a>).</td></tr>
+    <tr><td><code>CDC_ALERT_INTERVAL</code></td><td><code>-alert-interval</code></td><td><code>5s</code></td><td>How often alert rules are evaluated.</td></tr>
+  </tbody>
+</table></div>
+
+<h3 id="value-formats">Value formats</h3>
+<ul>
+  <li><strong>Booleans</strong> accept <code>1</code>, <code>t</code>, <code>true</code>, <code>0</code>, <code>f</code>, <code>false</code> (any case). An unparsable value is ignored and the default applies.</li>
+  <li><strong>Durations</strong> use Go syntax: <code>500ms</code>, <code>30s</code>, <code>2m</code>, <code>1h30m</code>. An unparsable value is ignored and the default applies.</li>
+  <li><strong>Flags</strong> use one or two dashes: <code>-listen :9000</code> and <code>--listen=:9000</code> are the same.</li>
+</ul>
+
+<h3 id="output-of-meilisearch-cdc---help">Output of <code>meilisearch-cdc --help</code></h3>
+
+<pre><code class="language-text">Usage of meilisearch-cdc:
+  -admin-token string
+    	bearer token protecting the API and UI (CDC_ADMIN_TOKEN)
+  -alert-interval duration
+    	how often alert rules are evaluated (CDC_ALERT_INTERVAL) (default 5s)
+  -cookie-secure
+    	always set the Secure cookie flag (CDC_COOKIE_SECURE)
+  -data-dir string
+    	directory of the state database (CDC_DATA_DIR) (default "./data")
+  -disable-ui
+    	do not serve the dashboard (CDC_DISABLE_UI)
+  -listen string
+    	HTTP listen address (CDC_LISTEN) (default ":8080")
+  -log-format string
+    	text or json (CDC_LOG_FORMAT) (default "text")
+  -log-level string
+    	debug, info, warn, error (CDC_LOG_LEVEL) (default "info")
+  -meili-api-key string
+    	Meilisearch API key (MEILI_API_KEY)
+  -meili-gzip
+    	gzip request bodies sent to Meilisearch (MEILI_GZIP) (default true)
+  -meili-timeout duration
+    	Meilisearch request timeout (MEILI_TIMEOUT) (default 30s)
+  -meili-url string
+    	pin the service to this Meilisearch instance (MEILI_URL); leave empty to manage destinations in the dashboard
+  -pprof
+    	expose /debug/pprof to admins (CDC_PPROF)
+  -public-url string
+    	dashboard base URL used in emailed links (CDC_PUBLIC_URL)
+  -secret-key string
+    	passphrase encrypting stored credentials (CDC_SECRET_KEY)
+  -stop-timeout duration
+    	how long a stopping task may drain (CDC_STOP_TIMEOUT) (default 20s)
+  -tasks string
+    	YAML/JSON file of tasks applied at startup (CDC_TASKS_FILE)
+  -trust-proxy
+    	trust X-Forwarded-For/Proto from a reverse proxy (CDC_TRUST_PROXY)</code></pre>
+
+<p>The defaults shown are the effective values, so a variable already set in the environment appears as the default. <code>meilisearch-cdc version</code> (also <code>-version</code>, <code>--version</code>) prints the version, and <code>meilisearch-cdc admin …</code> runs the <a href="cli.html">admin CLI</a>.</p>
+
+<h2 id="secrets">Secrets and <code>*_FILE</code></h2>
+<p>Five settings are secrets. Each can be read from a file whose path is in <code>&lt;NAME&gt;_FILE</code>, which is how Docker and Kubernetes mount secrets. Trailing <code>\r</code> and <code>\n</code> are removed. When the variable <code>&lt;NAME&gt;_FILE</code> is set and the file is readable, it wins over <code>&lt;NAME&gt;</code>.</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Secret</th><th>File variant</th></tr></thead>
+  <tbody>
+    <tr><td><code>CDC_SECRET_KEY</code></td><td><code>CDC_SECRET_KEY_FILE</code></td></tr>
+    <tr><td><code>CDC_SECRET_KEY_PREVIOUS</code></td><td><code>CDC_SECRET_KEY_PREVIOUS_FILE</code></td></tr>
+    <tr><td><code>MEILI_API_KEY</code></td><td><code>MEILI_API_KEY_FILE</code></td></tr>
+    <tr><td><code>CDC_ADMIN_TOKEN</code></td><td><code>CDC_ADMIN_TOKEN_FILE</code></td></tr>
+    <tr><td><code>CDC_ADMIN_PASSWORD</code></td><td><code>CDC_ADMIN_PASSWORD_FILE</code></td></tr>
+  </tbody>
+</table></div>
+<p><code>MEILI_MASTER_KEY</code> (the fallback for <code>MEILI_API_KEY</code>) has no file variant.</p>
+<p>Credentials you enter in the dashboard (connector passwords, DynamoDB secret keys, Meilisearch API keys, the SMTP password, the Telegram bot token) are stored encrypted in <code>cdc.db</code> with AES-256-GCM and never returned by the API. See <a href="security.html#secrets-encryption">Secrets encryption</a>.</p>
+
+<h2 id="single-instance-mode">Single-instance mode vs. destinations in the dashboard</h2>
+<p>meilisearch-cdc can write to many Meilisearch instances (<em>destinations</em>). How they are managed depends on <code>MEILI_URL</code>:</p>
+<div class="table-wrap"><table>
+  <thead><tr><th></th><th><code>MEILI_URL</code> unset (default)</th><th><code>MEILI_URL</code> set</th></tr></thead>
+  <tbody>
+    <tr><td>Destinations</td><td>Created, edited and deleted in the dashboard or the API. The first one becomes the default.</td><td>One destination with the id <code>default</code>, marked <code>managedByEnv</code>. Its URL and key come from the environment and are refreshed at every start.</td></tr>
+    <tr><td>Other stored destinations</td><td>Visible and usable.</td><td>Hidden.</td></tr>
+    <tr><td>Creating, deleting or switching destinations</td><td>Allowed (admin).</td><td>Refused with <code>409</code>: <code>single instance mode: MEILI_URL is set, so the service writes only to that Meilisearch instance; unset it to manage destinations in the dashboard</code>.</td></tr>
+    <tr><td>Dashboard</td><td>Destinations page with add/edit.</td><td><code>GET /api/v1/auth/config</code> reports <code>"singleDestination": true</code> and the UI hides destination management.</td></tr>
+  </tbody>
+</table></div>
+<p>The service logs <code>single instance mode: writing only to MEILI_URL</code> at startup. To switch back to managed destinations, unset <code>MEILI_URL</code> and restart; the destinations stored earlier reappear.</p>
+
+<h2 id="logging">Logging</h2>
+<p>Logs are structured (Go <code>log/slog</code>) and written to standard error. Every line carries the <code>version</code> attribute.</p>
+
+<pre><code class="language-text">time=2026-10-26T23:41:57.571+03:30 level=INFO msg=listening version=v1.2.3 addr=127.0.0.1:8080 meilisearch=""</code></pre>
+
+<p>With <code>CDC_LOG_FORMAT=json</code> each line is a JSON object, convenient for Loki, Elasticsearch or CloudWatch. Per-task activity (snapshot started, streaming from a position, retries, holds) is also kept in memory, the last 1,000 entries per task, and shown on the task's <em>Logs</em> tab and streamed live.</p>
+
+<h2 id="pprof">pprof</h2>
+<p>With <code>CDC_PPROF=true</code> the Go profiler is served at <code>/debug/pprof/</code> (index, <code>profile</code>, <code>trace</code>, <code>symbol</code>, <code>cmdline</code>). It requires authentication like the API: a session cookie or the admin token.</p>
+
+<pre><code class="language-bash">curl -H "Authorization: Bearer $CDC_ADMIN_TOKEN" -o cpu.pprof \
+  "http://127.0.0.1:8080/debug/pprof/profile?seconds=30"
+go tool pprof -http=:0 cpu.pprof</code></pre>
+
+<div class="callout warning"><p class="callout-title">Who can read profiles</p>
+<p>The flag's help text says "admins", but the route is registered as a read (<code>GET</code>) route, and reads are allowed to every signed-in role, viewers included. Enable pprof only while you need it.</p></div>
+
+<h2 id="metrics">Metrics</h2>
+<p>Prometheus metrics are always served at <code>/metrics</code> and need authentication. The metric names and labels are listed under <a href="monitoring.html#prometheus">Monitoring</a>.</p>
+
+<h2 id="other-environment-variables">Other environment variables</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Variable</th><th>Effect</th></tr></thead>
+  <tbody>
+    <tr><td><code>GOMEMLIMIT</code></td><td>Go runtime soft memory limit, e.g. <code>400MiB</code>. Set it to about 80% of a container's memory limit. See <a href="performance.html">Performance</a>.</td></tr>
+    <tr><td><code>GOGC</code></td><td>Garbage collector target (default 100). Higher values trade memory for less GC CPU.</td></tr>
+    <tr><td><code>AWS_REGION</code>, <code>AWS_ACCESS_KEY_ID</code>, <code>AWS_PROFILE</code>, …</td><td>Used by <a href="source-dynamodb.html">DynamoDB</a> connectors that leave the region or keys empty (the default AWS credential chain).</td></tr>
+    <tr><td>Any variable named in a tasks file</td><td>Expanded as <code>${VAR}</code> in <code>CDC_TASKS_FILE</code>.</td></tr>
+  </tbody>
+</table></div>
+</article>
+<nav class="pager" aria-label="Previous and next page">
+<a class="prev" href="backup-upgrade.html" rel="prev"><span class="p-label">Previous</span><span class="p-title">Backups and upgrades</span></a>
+<a class="next" href="declarative-tasks.html" rel="next"><span class="p-label">Next</span><span class="p-title">Declarative tasks file</span></a>
+</nav>
+<footer class="site-footer">
+<p>Meili CDC user guide · last updated 2026-10-26 · <a href="https://github.com/ja7ad/meilisearch-cdc/edit/main/docs/guide/configuration.html" rel="noopener">Edit this page on GitHub</a></p>
+<p>meilisearch-cdc is open source. Meilisearch is a trademark of Meili SAS; this project is not affiliated with it.</p>
+</footer>
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+</body>
+</html>
