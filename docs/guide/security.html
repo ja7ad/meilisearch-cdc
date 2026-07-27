@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Team and security · Meili CDC Docs</title>
+<meta name="description" content="Roles and the permission matrix, invitations, password reset, the primary administrator, sessions, CSRF, rate limiting, audit log and secret encryption.">
+<link rel="canonical" href="https://meilicdc.javad.dev/guide/security.html">
+<meta name="robots" content="index, follow">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15112A" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meili CDC">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Team and security · Meili CDC Docs">
+<meta property="og:description" content="Roles and the permission matrix, invitations, password reset, the primary administrator, sessions, CSRF, rate limiting, audit log and secret encryption.">
+<meta property="og:url" content="https://meilicdc.javad.dev/guide/security.html">
+<meta property="og:image" content="https://meilicdc.javad.dev/img/og.png">
+<meta property="og:image:alt" content="Meili CDC: change data capture into Meilisearch">
+<meta property="article:modified_time" content="2026-10-26">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Team and security · Meili CDC Docs">
+<meta name="twitter:description" content="Roles and the permission matrix, invitations, password reset, the primary administrator, sessions, CSRF, rate limiting, audit log and secret encryption.">
+<meta name="twitter:image" content="https://meilicdc.javad.dev/img/og.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="assets/guide.css">
+<script>(function(){try{var t=localStorage.getItem('mcdc-guide-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<script src="assets/guide.js" defer></script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "TechArticle",
+   "headline": "Team and security",
+   "description": "Roles and the permission matrix, invitations, password reset, the primary administrator, sessions, CSRF, rate limiting, audit log and secret encryption.",
+   "dateModified": "2026-10-26",
+   "inLanguage": "en",
+   "url": "https://meilicdc.javad.dev/guide/security.html",
+   "mainEntityOfPage": "https://meilicdc.javad.dev/guide/security.html",
+   "image": "https://meilicdc.javad.dev/img/og.png",
+   "author": {
+    "@type": "Organization",
+    "name": "meilisearch-cdc contributors",
+    "url": "https://github.com/ja7ad/meilisearch-cdc"
+   },
+   "publisher": {
+    "@type": "Organization",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   },
+   "isPartOf": {
+    "@type": "WebSite",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Meili CDC",
+     "item": "https://meilicdc.javad.dev/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Docs",
+     "item": "https://meilicdc.javad.dev/guide/index.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Operate",
+     "item": "https://meilicdc.javad.dev/guide/monitoring.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 4,
+     "name": "Team and security",
+     "item": "https://meilicdc.javad.dev/guide/security.html"
+    }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+<div class="topbar-inner">
+<button type="button" class="icon-btn menu-btn" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+<a class="brand" href="../" aria-label="Meili CDC home"><img src="assets/favicon.svg" alt="" width="30" height="30"><span>Meili CDC</span></a>
+<a class="brand-docs" href="index.html">Docs</a>
+<div class="search" role="search">
+<button type="button" class="icon-btn search-toggle" aria-controls="search-input" aria-expanded="false" aria-label="Search the guide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+<div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><label class="sr-only" for="search-input">Search the guide</label><input id="search-input" type="search" placeholder="Search the guide" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="search-panel" aria-autocomplete="list"><kbd aria-hidden="true">/</kbd></div>
+<div class="search-panel" id="search-panel" hidden></div>
+</div>
+<div class="top-actions">
+<a class="top-link hide-sm" href="../">Home</a>
+<a class="top-link hide-xs" href="../#download">Download</a>
+<button type="button" class="icon-btn theme-btn" aria-label="Toggle dark theme" aria-pressed="false"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+<a class="icon-btn" href="https://github.com/ja7ad/meilisearch-cdc" aria-label="meilisearch-cdc on GitHub" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg></a>
+</div>
+</div>
+</header>
+<div class="layout">
+<nav class="sidebar" id="sidebar" aria-label="Guide">
+<div class="nav-section"><p id="nav-s0">Getting started</p><ul aria-labelledby="nav-s0">
+<li><a href="index.html">Introduction</a></li>
+<li><a href="quick-start.html">Quick start</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s1">Deploy</p><ul aria-labelledby="nav-s1">
+<li><a href="installation.html">Install the binary</a></li>
+<li><a href="docker.html">Docker and Compose</a></li>
+<li><a href="kubernetes.html">Kubernetes</a></li>
+<li><a href="reverse-proxy.html">Reverse proxy and TLS</a></li>
+<li><a href="backup-upgrade.html">Backups and upgrades</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s2">Configure</p><ul aria-labelledby="nav-s2">
+<li><a href="configuration.html">Configuration reference</a></li>
+<li><a href="declarative-tasks.html">Declarative tasks file</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s3">Sources</p><ul aria-labelledby="nav-s3">
+<li><a href="sources.html">Sources and connectors</a></li>
+<li><a href="source-postgres.html">PostgreSQL</a></li>
+<li><a href="source-mysql.html">MySQL and MariaDB</a></li>
+<li><a href="source-mongodb.html">MongoDB</a></li>
+<li><a href="source-dynamodb.html">DynamoDB</a></li>
+<li><a href="source-couchdb.html">CouchDB</a></li>
+<li><a href="source-sqlserver.html">SQL Server</a></li>
+<li><a href="source-cockroachdb.html">CockroachDB</a></li>
+<li><a href="source-kafka.html">Kafka (Debezium)</a></li>
+<li><a href="source-redis.html">Redis Streams</a></li>
+<li><a href="source-sqlpoll.html">SQL polling</a></li>
+<li><a href="source-webhook.html">Webhook (HTTP push)</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s4">Sync</p><ul aria-labelledby="nav-s4">
+<li><a href="destinations.html">Meilisearch destinations</a></li>
+<li><a href="tasks.html">Create a task</a></li>
+<li><a href="task-operations.html">Operate tasks</a></li>
+<li><a href="indexes.html">Index management</a></li>
+<li><a href="data-quality.html">Data quality</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s5">Operate</p><ul aria-labelledby="nav-s5">
+<li><a href="monitoring.html">Monitoring and metrics</a></li>
+<li><a href="alerts.html">Alerts and notifications</a></li>
+<li><a href="security.html" aria-current="page">Team and security</a></li>
+<li><a href="mcp.html">AI agents (MCP)</a></li>
+<li><a href="cli.html">Admin CLI</a></li>
+<li><a href="pwa.html">Mobile and app install</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s6">Reference</p><ul aria-labelledby="nav-s6">
+<li><a href="api.html">REST API</a></li>
+<li><a href="performance.html">Performance and tuning</a></li>
+<li><a href="troubleshooting.html">Troubleshooting and FAQ</a></li>
+<li><a href="changelog.html">Changelog and upgrade notes</a></li>
+<li><a href="development.html">Development</a></li>
+</ul></div>
+</nav>
+<main id="content" class="content" tabindex="-1">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol>
+<li><a href="../">Meili CDC</a></li>
+<li><a href="index.html">Docs</a></li>
+<li><a href="monitoring.html">Operate</a></li>
+<li><span aria-current="page">Team and security</span></li>
+</ol></nav>
+<article class="doc">
+<h1>Team and security</h1>
+<p class="lead">Accounts with three roles, an owner who cannot be locked out, server-side sessions with CSRF protection, brute-force limits, an audit log, and credentials encrypted at rest.</p>
+
+<h2 id="roles">Roles</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Role</th><th>Can</th></tr></thead>
+  <tbody>
+    <tr><td><code>viewer</code></td><td>Read everything except users, invitations, SMTP and Telegram settings, MCP settings and tokens, the task export and the audit log. Search indexes and preview settings.</td></tr>
+    <tr><td><code>moderator</code></td><td>Viewer, plus operate existing tasks: start, stop, pause, resume, restart, resync, reset checkpoint (one or in batch), run diffs and repairs, replay and discard dead letters, test task definitions, push to webhook tasks, cancel Meilisearch tasks, run destination health checks.</td></tr>
+    <tr><td><code>admin</code></td><td>Everything: create, edit, delete, import and export tasks; connectors and destinations; index changes (create, delete, settings, primary key, swap, compact); dumps, snapshots and experimental features; users and invitations; SMTP and Telegram; alert rules; MCP; the audit log.</td></tr>
+  </tbody>
+</table></div>
+<figure>
+  <img src="../img/18-users.png" width="1920" height="1080" alt="Settings Users tab listing members with their role, the primary administrator badge, last sign-in, and pending invitations" loading="lazy">
+  <figcaption>Members, roles and pending invitations.</figcaption>
+</figure>
+
+<h3 id="permission-matrix">Permission matrix</h3>
+<p>The server enforces a role per API route. Routes not listed below need <code>viewer</code> for <code>GET</code> and <code>admin</code> for everything else, so new routes are locked down by default. The dashboard hides or disables what your role cannot do, and the server answers <code>403 {"error":"requires role moderator"}</code> if you try anyway.</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Route</th><th>Viewer</th><th>Moderator</th><th>Admin</th></tr></thead>
+  <tbody>
+    <tr><td>Any other <code>GET</code> (tasks, logs, metrics, schema check, diff report, DLQ, indexes, settings, documents, connectors, destinations, alert rules and history, overview, <code>/metrics</code>, events)</td><td class="yes">yes</td><td class="yes">yes</td><td class="yes">yes</td></tr>
+    <tr><td><code>POST /indexes/{uid}/search</code>, <code>POST /indexes/{uid}/settings/preview</code></td><td class="yes">yes</td><td class="yes">yes</td><td class="yes">yes</td></tr>
+    <tr><td><code>GET/PATCH /auth/me</code>, <code>POST /auth/me/password</code></td><td class="yes">yes</td><td class="yes">yes</td><td class="yes">yes</td></tr>
+    <tr><td><code>POST /tasks/{id}/{action}</code>, <code>POST /tasks/batch</code> (except delete)</td><td class="no">no</td><td class="yes">yes</td><td class="yes">yes</td></tr>
+    <tr><td><code>POST /tasks/test</code> (test a task definition)</td><td class="no">no</td><td class="yes">yes</td><td class="yes">yes</td></tr>
+    <tr><td><code>POST /tasks/{id}/diff</code>, <code>POST /tasks/{id}/diff/repair</code></td><td class="no">no</td><td class="yes">yes</td><td class="yes">yes</td></tr>
+    <tr><td><code>POST /tasks/{id}/dlq/replay</code>, <code>DELETE /tasks/{id}/dlq</code></td><td class="no">no</td><td class="yes">yes</td><td class="yes">yes</td></tr>
+    <tr><td><code>POST /ingest/{id}</code> (tasks without a signing secret)</td><td class="no">no</td><td class="yes">yes</td><td class="yes">yes</td></tr>
+    <tr><td><code>POST /meili/tasks/cancel</code>, <code>POST /destinations/{id}/health/check</code></td><td class="no">no</td><td class="yes">yes</td><td class="yes">yes</td></tr>
+    <tr><td><code>GET /tasks/export</code>, <code>GET /users</code>, <code>GET /invitations</code>, <code>GET /settings/smtp</code>, <code>GET /settings/telegram</code>, <code>GET /settings/mcp</code>, <code>GET /mcp/tokens</code>, <code>GET /audit</code></td><td class="no">no</td><td class="no">no</td><td class="yes">yes</td></tr>
+    <tr><td>Every other <code>POST</code>, <code>PUT</code>, <code>PATCH</code>, <code>DELETE</code> (task create, update, delete, import; batch delete; connectors and destinations, <em>including their test endpoints</em>; indexes; dumps; snapshots; experimental features; users; invitations; settings; alert rules; MCP)</td><td class="no">no</td><td class="no">no</td><td class="yes">yes</td></tr>
+  </tbody>
+</table></div>
+<div class="callout note"><p class="callout-title">Connector and destination tests need admin</p><p><code>docs/api.md</code> and the dashboard list testing connectors and destinations as a moderator action, but the server's route table does not include <code>POST /connectors/test</code>, <code>/connectors/{id}/test</code>, <code>/destinations/test</code> or <code>/destinations/{id}/test</code>, so the default rule applies and they require <code>admin</code>; a moderator gets <code>403</code>. Moderators can still test a task's connection with <em>Test connection</em> in the task wizard.</p></div>
+<p>All routes are under <code>/api/v1</code>. Public routes (no authentication): <code>GET /health</code>, <code>GET /auth/config</code>, <code>POST /auth/setup</code>, <code>/auth/login</code>, <code>/auth/logout</code>, <code>/auth/forgot</code>, <code>/auth/reset</code>, <code>GET /auth/invite/{token}</code>, <code>POST /auth/invite/accept</code>, plus <code>/healthz</code> outside the API.</p>
+
+<h2 id="invitations">Adding people</h2>
+<ul>
+  <li><strong>Invite</strong> (Settings → Users, admin): enter an email and a role. The invitation link is valid for 7 days and works once. With SMTP configured it is emailed; otherwise (or as well) the link is shown once so you can send it yourself. The invitee chooses a name and password and is signed in.</li>
+  <li><strong>Create directly</strong>: an admin can create an account with a password (API <code>POST /api/v1/users</code>), or on the server with <code>meilisearch-cdc admin users create</code>.</li>
+  <li>Passwords have 8 to 128 characters and are hashed with argon2id.</li>
+</ul>
+
+<h2 id="password-reset">Password reset</h2>
+<ul>
+  <li><strong>Forgot password</strong> appears on the sign-in page only when SMTP is configured. It always answers the same way, whether or not the email exists, and emails a link valid for one hour. Using it sets the new password and signs the user out of other sessions.</li>
+  <li>An <strong>admin</strong> can set another user's password (that user's sessions are revoked), except the primary administrator's.</li>
+  <li>Each user can change their own password from the user menu (other sessions are revoked).</li>
+  <li>Without email, and for the primary administrator, use the CLI: <code>meilisearch-cdc admin users reset-password --email … --generate</code>. See <a href="cli.html#recovery">recovery recipes</a>.</li>
+</ul>
+
+<h2 id="primary-administrator">The primary administrator</h2>
+<p>The first admin (created by the setup page or <code>CDC_ADMIN_EMAIL</code>) is the <strong>primary administrator</strong>, or owner. On data from an older version, the oldest admin becomes the owner at startup. In the dashboard and the API, for every caller, the admin token included:</p>
+<ul>
+  <li>nobody can change their own role;</li>
+  <li>nobody can change the owner's role or delete the owner (<code>403</code>);</li>
+  <li>only the owner can set the owner's password;</li>
+  <li>the last admin cannot be demoted or deleted (<code>409</code>), and you cannot delete yourself.</li>
+</ul>
+<p>Only the server CLI transfers ownership (<code>admin users set-owner</code>, to another admin) or resets the owner's password. To demote or delete the owner, transfer ownership first.</p>
+
+<h2 id="sessions">Sessions and CSRF</h2>
+<ul>
+  <li>Signing in creates a server-side session and sets the cookie <code>cdc_session</code> (<code>HttpOnly</code>, <code>SameSite=Lax</code>, <code>Path=/</code>). It is <code>Secure</code> on HTTPS, behind a proxy that sends <code>X-Forwarded-Proto: https</code> with <code>CDC_TRUST_PROXY</code>, or always with <code>CDC_COOKIE_SECURE</code>.</li>
+  <li>Sessions last 7 days and slide: activity extends them. Signing out revokes the session.</li>
+  <li>Cookie-authenticated writes (<code>POST</code>, <code>PUT</code>, <code>PATCH</code>, <code>DELETE</code>) must come from the same origin: the <code>Origin</code> header (or <code>Referer</code>) must match the request's host, otherwise <code>403 cross-origin request refused</code>. Browsers send it automatically; bearer-token requests are not subject to it.</li>
+  <li>Admins can sign everyone out with <code>meilisearch-cdc admin sessions revoke</code>.</li>
+</ul>
+
+<h2 id="rate-limiting">Rate limiting</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>What</th><th>Limit</th></tr></thead>
+  <tbody>
+    <tr><td>Failed sign-ins per client IP</td><td>30 per 15 minutes</td></tr>
+    <tr><td>Failed sign-ins per account (email)</td><td>10 per 15 minutes; a successful sign-in resets it</td></tr>
+    <tr><td><em>Forgot password</em> requests per IP</td><td>count against the same IP limit, success or not</td></tr>
+    <tr><td>Wrong current password when changing one's own password</td><td>10 per 15 minutes per user</td></tr>
+  </tbody>
+</table></div>
+<p>A blocked request gets <code>429</code> with a <code>Retry-After</code> header and <code>{"error":"too many attempts, try again later","retryAfter":n}</code>. Behind a proxy, enable <code>CDC_TRUST_PROXY</code> so the limit applies to the real client IP.</p>
+
+<h2 id="audit-log">Audit log</h2>
+<p><strong>Settings → Audit log</strong> (admin) lists, newest first, who did what, when and from which IP:</p>
+<ul>
+  <li>sign-ins (<code>auth.login</code>), failed sign-ins (<code>auth.login_failed</code>), setup, invitation acceptance, reset requests and password resets;</li>
+  <li>every successful write through the API or the dashboard, recorded with the route as its action (for example <code>POST /api/v1/tasks/{id}/{action}</code>) and the path as its target;</li>
+  <li>every mutating MCP tool call (<code>mcp.&lt;tool&gt;</code>, with its arguments);</li>
+  <li>every CLI command, refused ones included (<code>cli.&lt;command&gt;</code>, user <code>cli</code>). Passwords are never recorded.</li>
+</ul>
+<p>The most recent 20,000 entries are kept. API: <code>GET /api/v1/audit?limit=200</code>.</p>
+
+<h2 id="api-token">The static admin token</h2>
+<p><code>CDC_ADMIN_TOKEN</code> (or <code>CDC_ADMIN_TOKEN_FILE</code>) defines one bearer token with the <strong>admin</strong> role, for scripts, CI, Prometheus and webhook pushers. It acts as a user named <em>API token</em>; the dashboard's sign-in page also offers <em>Use an API token instead</em>. The service keeps only its hash in memory. Rotate it by changing the variable and restarting. Generate a long random value:</p>
+
+<pre><code class="language-bash">openssl rand -hex 32
+curl -H "Authorization: Bearer $CDC_ADMIN_TOKEN" https://cdc.example.com/api/v1/tasks</code></pre>
+
+<p>AI agents get their own revocable, role-scoped tokens instead; see <a href="mcp.html">MCP</a>.</p>
+
+<h2 id="secrets-encryption">Secrets encryption</h2>
+<ul>
+  <li>Connector passwords (in connection strings), DynamoDB secret keys, Meilisearch API keys, the SMTP password, the Telegram bot token and webhook signing secrets are encrypted with <strong>AES-256-GCM</strong> before they are stored.</li>
+  <li>Each ciphertext is bound to its record and field (associated data such as <code>task:&lt;id&gt;:dsn</code> or <code>destination:&lt;id&gt;:apiKey</code>), so a value copied into another record cannot be decrypted there.</li>
+  <li>Secrets stay encrypted in memory and are decrypted only when a connection is opened. The API never returns them: they come back as <code>••••••</code>, and sending the mask back keeps the stored value.</li>
+  <li>The key is <code>CDC_SECRET_KEY</code> (a base64 string of exactly 32 bytes is used directly, anything else is a passphrase stretched with argon2id), or, when it is unset, a random key generated once in <code>&lt;data-dir&gt;/secret.key</code> (mode <code>0600</code>). Setting <code>CDC_SECRET_KEY</code> later makes the service ignore <code>secret.key</code>, so rotate as below rather than just switching.</li>
+  <li>Passwords of user accounts are not encrypted but hashed (argon2id); MCP tokens and the admin token are stored or held as hashes.</li>
+</ul>
+
+<h3 id="key-rotation">Rotating the key</h3>
+<p>The service holds a key ring: the current key encrypts, and <code>CDC_SECRET_KEY_PREVIOUS</code> can still decrypt. At startup every secret still encrypted with the previous key (or stored in an older format, or in plain text) is re-encrypted with the current one.</p>
+<ol class="steps">
+  <li>Generate a new key: <code>openssl rand -base64 32</code>.</li>
+  <li>Set <code>CDC_SECRET_KEY</code> to the new key and <code>CDC_SECRET_KEY_PREVIOUS</code> to the old one. If the old key was the generated file, use its content: <code>CDC_SECRET_KEY_PREVIOUS="$(cat /var/lib/meilisearch-cdc/secret.key)"</code>.</li>
+  <li>Restart. The log shows <code>re-encrypted stored secrets with the current key</code> for tasks and connectors; destinations and notification settings are re-encrypted as they load.</li>
+  <li>Check that tasks run and connectors test fine, take a backup, then remove <code>CDC_SECRET_KEY_PREVIOUS</code> and restart again.</li>
+</ol>
+<p>Only one previous key is supported at a time. A value encrypted with a key that is not configured fails with <code>value was encrypted with a key that is not configured (set CDC_SECRET_KEY_PREVIOUS)</code>. Give the <a href="cli.html">admin CLI</a> the same key variables as the service.</p>
+</article>
+<nav class="pager" aria-label="Previous and next page">
+<a class="prev" href="alerts.html" rel="prev"><span class="p-label">Previous</span><span class="p-title">Alerts and notifications</span></a>
+<a class="next" href="mcp.html" rel="next"><span class="p-label">Next</span><span class="p-title">AI agents (MCP)</span></a>
+</nav>
+<footer class="site-footer">
+<p>Meili CDC user guide · last updated 2026-10-26 · <a href="https://github.com/ja7ad/meilisearch-cdc/edit/main/docs/guide/security.html" rel="noopener">Edit this page on GitHub</a></p>
+<p>meilisearch-cdc is open source. Meilisearch is a trademark of Meili SAS; this project is not affiliated with it.</p>
+</footer>
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+</body>
+</html>
