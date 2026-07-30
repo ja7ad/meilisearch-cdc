@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monitoring and metrics · Meili CDC Docs</title>
+<meta name="description" content="Monitor meilisearch-cdc: the live dashboard, Server-Sent Events, Prometheus metrics with names and labels, health endpoints and logs.">
+<link rel="canonical" href="https://meilicdc.javad.dev/guide/monitoring.html">
+<meta name="robots" content="index, follow">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15112A" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meili CDC">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Monitoring and metrics · Meili CDC Docs">
+<meta property="og:description" content="Monitor meilisearch-cdc: the live dashboard, Server-Sent Events, Prometheus metrics with names and labels, health endpoints and logs.">
+<meta property="og:url" content="https://meilicdc.javad.dev/guide/monitoring.html">
+<meta property="og:image" content="https://meilicdc.javad.dev/img/og.png">
+<meta property="og:image:alt" content="Meili CDC: change data capture into Meilisearch">
+<meta property="article:modified_time" content="2026-10-26">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Monitoring and metrics · Meili CDC Docs">
+<meta name="twitter:description" content="Monitor meilisearch-cdc: the live dashboard, Server-Sent Events, Prometheus metrics with names and labels, health endpoints and logs.">
+<meta name="twitter:image" content="https://meilicdc.javad.dev/img/og.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="assets/guide.css">
+<script>(function(){try{var t=localStorage.getItem('mcdc-guide-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<script src="assets/guide.js" defer></script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "TechArticle",
+   "headline": "Monitoring and metrics",
+   "description": "Monitor meilisearch-cdc: the live dashboard, Server-Sent Events, Prometheus metrics with names and labels, health endpoints and logs.",
+   "dateModified": "2026-10-26",
+   "inLanguage": "en",
+   "url": "https://meilicdc.javad.dev/guide/monitoring.html",
+   "mainEntityOfPage": "https://meilicdc.javad.dev/guide/monitoring.html",
+   "image": "https://meilicdc.javad.dev/img/og.png",
+   "author": {
+    "@type": "Organization",
+    "name": "meilisearch-cdc contributors",
+    "url": "https://github.com/ja7ad/meilisearch-cdc"
+   },
+   "publisher": {
+    "@type": "Organization",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   },
+   "isPartOf": {
+    "@type": "WebSite",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Meili CDC",
+     "item": "https://meilicdc.javad.dev/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Docs",
+     "item": "https://meilicdc.javad.dev/guide/index.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Monitoring and metrics",
+     "item": "https://meilicdc.javad.dev/guide/monitoring.html"
+    }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+<div class="topbar-inner">
+<button type="button" class="icon-btn menu-btn" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+<a class="brand" href="../" aria-label="Meili CDC home"><img src="assets/favicon.svg" alt="" width="30" height="30"><span>Meili CDC</span></a>
+<a class="brand-docs" href="index.html">Docs</a>
+<div class="search" role="search">
+<button type="button" class="icon-btn search-toggle" aria-controls="search-input" aria-expanded="false" aria-label="Search the guide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+<div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><label class="sr-only" for="search-input">Search the guide</label><input id="search-input" type="search" placeholder="Search the guide" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="search-panel" aria-autocomplete="list"><kbd aria-hidden="true">/</kbd></div>
+<div class="search-panel" id="search-panel" hidden></div>
+</div>
+<div class="top-actions">
+<a class="top-link hide-sm" href="../">Home</a>
+<a class="top-link hide-xs" href="../#download">Download</a>
+<button type="button" class="icon-btn theme-btn" aria-label="Toggle dark theme" aria-pressed="false"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+<a class="icon-btn" href="https://github.com/ja7ad/meilisearch-cdc" aria-label="meilisearch-cdc on GitHub" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg></a>
+</div>
+</div>
+</header>
+<div class="layout">
+<nav class="sidebar" id="sidebar" aria-label="Guide">
+<div class="nav-section"><p id="nav-s0">Getting started</p><ul aria-labelledby="nav-s0">
+<li><a href="index.html">Introduction</a></li>
+<li><a href="quick-start.html">Quick start</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s1">Deploy</p><ul aria-labelledby="nav-s1">
+<li><a href="installation.html">Install the binary</a></li>
+<li><a href="docker.html">Docker and Compose</a></li>
+<li><a href="kubernetes.html">Kubernetes</a></li>
+<li><a href="reverse-proxy.html">Reverse proxy and TLS</a></li>
+<li><a href="backup-upgrade.html">Backups and upgrades</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s2">Configure</p><ul aria-labelledby="nav-s2">
+<li><a href="configuration.html">Configuration reference</a></li>
+<li><a href="declarative-tasks.html">Declarative tasks file</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s3">Sources</p><ul aria-labelledby="nav-s3">
+<li><a href="sources.html">Sources and connectors</a></li>
+<li><a href="source-postgres.html">PostgreSQL</a></li>
+<li><a href="source-mysql.html">MySQL and MariaDB</a></li>
+<li><a href="source-mongodb.html">MongoDB</a></li>
+<li><a href="source-dynamodb.html">DynamoDB</a></li>
+<li><a href="source-couchdb.html">CouchDB</a></li>
+<li><a href="source-sqlserver.html">SQL Server</a></li>
+<li><a href="source-cockroachdb.html">CockroachDB</a></li>
+<li><a href="source-kafka.html">Kafka (Debezium)</a></li>
+<li><a href="source-redis.html">Redis Streams</a></li>
+<li><a href="source-sqlpoll.html">SQL polling</a></li>
+<li><a href="source-webhook.html">Webhook (HTTP push)</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s4">Sync</p><ul aria-labelledby="nav-s4">
+<li><a href="destinations.html">Meilisearch destinations</a></li>
+<li><a href="tasks.html">Create a task</a></li>
+<li><a href="task-operations.html">Operate tasks</a></li>
+<li><a href="indexes.html">Index management</a></li>
+<li><a href="data-quality.html">Data quality</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s5">Operate</p><ul aria-labelledby="nav-s5">
+<li><a href="monitoring.html" aria-current="page">Monitoring and metrics</a></li>
+<li><a href="alerts.html">Alerts and notifications</a></li>
+<li><a href="security.html">Team and security</a></li>
+<li><a href="mcp.html">AI agents (MCP)</a></li>
+<li><a href="cli.html">Admin CLI</a></li>
+<li><a href="pwa.html">Mobile and app install</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s6">Reference</p><ul aria-labelledby="nav-s6">
+<li><a href="api.html">REST API</a></li>
+<li><a href="performance.html">Performance and tuning</a></li>
+<li><a href="troubleshooting.html">Troubleshooting and FAQ</a></li>
+<li><a href="changelog.html">Changelog and upgrade notes</a></li>
+<li><a href="development.html">Development</a></li>
+</ul></div>
+</nav>
+<main id="content" class="content" tabindex="-1">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol>
+<li><a href="../">Meili CDC</a></li>
+<li><a href="index.html">Docs</a></li>
+<li><span aria-current="page">Monitoring and metrics</span></li>
+</ol></nav>
+<article class="doc">
+<h1>Monitoring and metrics</h1>
+<p class="lead">Watch pipelines live in the dashboard, scrape Prometheus metrics, probe health endpoints and ship structured logs.</p>
+
+<h2 id="the-dashboard">The dashboard</h2>
+<p>The <strong>Overview</strong> page shows the tasks by state, the combined throughput (events per second across all tasks), documents written, firing alerts, dead letters, snapshot progress, each Meilisearch destination's health, and a feed of recent activity. Every page updates live; the top bar shows <em>Live</em> while the event stream is connected and reconnects by itself.</p>
+<figure>
+  <img src="../img/01-overview.png" width="1920" height="1080" alt="The overview page with task counts by state, throughput chart, document totals, alert and dead letter counters and destination health strips" loading="lazy">
+  <figcaption>The overview page.</figcaption>
+</figure>
+
+<h2 id="live-events">Live events (Server-Sent Events)</h2>
+<p>The dashboard is fed by <code>GET /api/v1/events</code>, a Server-Sent Events stream you can also consume yourself. It needs authentication; because <code>EventSource</code> cannot set headers, this endpoint also accepts the admin token as <code>?token=</code>.</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Event</th><th>Data</th><th>When</th></tr></thead>
+  <tbody>
+    <tr><td><code>status</code></td><td>A task status (state, counters, lag, rate, checkpoint…)</td><td>On every change, at most about twice per second per task; one per task when the stream opens.</td></tr>
+    <tr><td><code>log</code></td><td>A task log entry <code>{"time","taskId","level","message"}</code></td><td>As it happens.</td></tr>
+    <tr><td><code>task</code></td><td><code>{"id","action"}</code> with <code>created</code>, <code>updated</code>, <code>deleted</code> or <code>diff</code></td><td>When the task list changes or a diff finishes.</td></tr>
+    <tr><td><code>overview</code></td><td>The same object as <code>GET /api/v1/overview</code></td><td>When the stream opens, then every 2 seconds.</td></tr>
+    <tr><td><code>destination.health</code></td><td><code>{"id","health"}</code></td><td>After each destination health check.</td></tr>
+    <tr><td><code>alert</code></td><td>An alert event</td><td>When an alert fires, repeats or resolves.</td></tr>
+  </tbody>
+</table></div>
+
+<pre><code class="language-bash">curl -N -H "Authorization: Bearer $CDC_ADMIN_TOKEN" http://127.0.0.1:8080/api/v1/events
+# retry: 3000
+#
+# event: overview
+# data: {"tasks":{"total":3,"byState":{"streaming":3}}, ...}</code></pre>
+
+<p>Behind a reverse proxy, disable response buffering for this path; see <a href="reverse-proxy.html">Reverse proxy and TLS</a>.</p>
+
+<h2 id="prometheus">Prometheus metrics</h2>
+<p>Metrics are served at <code>/metrics</code> (not under <code>/api</code>) in the Prometheus text format. The endpoint <strong>requires authentication</strong>: use the static admin token (<code>CDC_ADMIN_TOKEN</code>) as a bearer token.</p>
+
+<pre><code class="language-yaml"># prometheus.yml
+scrape_configs:
+  - job_name: meilisearch-cdc
+    metrics_path: /metrics
+    authorization:
+      type: Bearer
+      credentials_file: /etc/prometheus/cdc-admin-token
+    static_configs:
+      - targets: ["cdc.internal:8080"]</code></pre>
+
+<div class="table-wrap"><table>
+  <thead><tr><th>Metric</th><th>Type</th><th>Labels</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><code>cdc_events_total</code></td><td>counter</td><td><code>task</code>, <code>op</code> (<code>upsert</code>, <code>delete</code>, <code>truncate</code>)</td><td>Change events read from sources (snapshot rows count as upserts).</td></tr>
+    <tr><td><code>cdc_documents_total</code></td><td>counter</td><td><code>task</code>, <code>kind</code> (<code>upserted</code>, <code>deleted</code>)</td><td>Documents confirmed by Meilisearch.</td></tr>
+    <tr><td><code>cdc_batches_total</code></td><td>counter</td><td><code>task</code></td><td>Batches confirmed by Meilisearch.</td></tr>
+    <tr><td><code>cdc_batch_duration_seconds</code></td><td>histogram</td><td><code>task</code></td><td>Time from enqueueing a batch to its confirmation. Buckets from 10 ms doubling to about 20 s.</td></tr>
+    <tr><td><code>cdc_errors_total</code></td><td>counter</td><td><code>task</code></td><td>Pipeline failures (each restart and each configuration failure).</td></tr>
+    <tr><td><code>cdc_retries_total</code></td><td>counter</td><td><code>task</code></td><td>Retried Meilisearch operations.</td></tr>
+    <tr><td><code>cdc_dlq_total</code></td><td>counter</td><td><code>task</code></td><td>Documents sent to the dead letter queue.</td></tr>
+    <tr><td><code>cdc_lag_seconds</code></td><td>gauge</td><td><code>task</code></td><td>Delay between the source commit and the Meilisearch confirmation of the last batch.</td></tr>
+    <tr><td><code>cdc_inflight_batches</code></td><td>gauge</td><td><code>task</code></td><td>Batches enqueued but not yet confirmed.</td></tr>
+    <tr><td><code>cdc_task_running</code></td><td>gauge</td><td><code>task</code></td><td>1 while the task's pipeline is active, 0 when it stopped.</td></tr>
+  </tbody>
+</table></div>
+<p>The <code>task</code> label is the task id. Series of a deleted task are removed. The standard Go runtime (<code>go_*</code>) and process (<code>process_*</code>) collectors are included. Counters start at zero when the service starts.</p>
+
+<h3 id="example-queries">Example queries</h3>
+
+<pre><code class="language-text"># Documents per second, per task
+sum by (task) (rate(cdc_documents_total[5m]))
+
+# Tasks lagging more than a minute
+max by (task) (cdc_lag_seconds) &gt; 60
+
+# 95th percentile batch confirmation time
+histogram_quantile(0.95, sum by (le, task) (rate(cdc_batch_duration_seconds_bucket[5m])))
+
+# New dead letters in the last hour
+increase(cdc_dlq_total[1h]) &gt; 0</code></pre>
+
+<h2 id="health-endpoints">Health endpoints</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Endpoint</th><th>Auth</th><th>Response</th></tr></thead>
+  <tbody>
+    <tr><td><code>GET /healthz</code></td><td>none</td><td><code>ok</code> while the HTTP server runs. Use it for liveness and readiness probes.</td></tr>
+    <tr><td><code>GET /api/v1/health</code></td><td>none</td><td><code>{"status":"ok","meilisearch":{"status":"available","version":"…","destination":"…"}}</code>; the status is <code>unavailable</code> (with <code>error</code>) when the default destination does not answer within 3 seconds, and <code>unconfigured</code> when there is no destination.</td></tr>
+    <tr><td><code>GET /api/v1/overview</code></td><td>viewer</td><td>Task counts by state, total counters, rate, the default instance and every destination's health, and the registered source types.</td></tr>
+    <tr><td><code>GET /api/v1/tasks/{id}/metrics</code></td><td>viewer</td><td>The task's rate, lag, upserted and deleted counts over about the last ten minutes at 2-second resolution, and its checkpoint.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="logs">Logs</h2>
+<p>Service logs go to standard error, as text or JSON (<code>CDC_LOG_FORMAT</code>), at the level of <code>CDC_LOG_LEVEL</code>. Each task also keeps its last 1,000 activity entries in memory, visible on its <em>Logs</em> tab and in the <code>log</code> events. See <a href="configuration.html#logging">Logging</a>.</p>
+
+<h2 id="alerts">Alerts</h2>
+<p>For notifications instead of dashboards, define <a href="alerts.html">alert rules</a>: task state, lag, dead letters, error bursts, stalled snapshots and Meilisearch down, delivered by email, Telegram or webhook.</p>
+</article>
+<nav class="pager" aria-label="Previous and next page">
+<a class="prev" href="data-quality.html" rel="prev"><span class="p-label">Previous</span><span class="p-title">Data quality</span></a>
+<a class="next" href="alerts.html" rel="next"><span class="p-label">Next</span><span class="p-title">Alerts and notifications</span></a>
+</nav>
+<footer class="site-footer">
+<p>Meili CDC user guide · last updated 2026-10-26 · <a href="https://github.com/ja7ad/meilisearch-cdc/edit/main/docs/guide/monitoring.html" rel="noopener">Edit this page on GitHub</a></p>
+<p>meilisearch-cdc is open source. Meilisearch is a trademark of Meili SAS; this project is not affiliated with it.</p>
+</footer>
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+</body>
+</html>
