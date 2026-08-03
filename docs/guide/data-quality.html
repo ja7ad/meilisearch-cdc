@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data quality · Meili CDC Docs</title>
+<meta name="description" content="Check that Meilisearch matches the source: schema check, document diff and repair, and the dead letter queue with replay and discard.">
+<link rel="canonical" href="https://meilicdc.javad.dev/guide/data-quality.html">
+<meta name="robots" content="index, follow">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15112A" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meili CDC">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Data quality · Meili CDC Docs">
+<meta property="og:description" content="Check that Meilisearch matches the source: schema check, document diff and repair, and the dead letter queue with replay and discard.">
+<meta property="og:url" content="https://meilicdc.javad.dev/guide/data-quality.html">
+<meta property="og:image" content="https://meilicdc.javad.dev/img/og.png">
+<meta property="og:image:alt" content="Meili CDC: change data capture into Meilisearch">
+<meta property="article:modified_time" content="2026-10-26">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Data quality · Meili CDC Docs">
+<meta name="twitter:description" content="Check that Meilisearch matches the source: schema check, document diff and repair, and the dead letter queue with replay and discard.">
+<meta name="twitter:image" content="https://meilicdc.javad.dev/img/og.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="assets/guide.css">
+<script>(function(){try{var t=localStorage.getItem('mcdc-guide-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<script src="assets/guide.js" defer></script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "TechArticle",
+   "headline": "Data quality",
+   "description": "Check that Meilisearch matches the source: schema check, document diff and repair, and the dead letter queue with replay and discard.",
+   "dateModified": "2026-10-26",
+   "inLanguage": "en",
+   "url": "https://meilicdc.javad.dev/guide/data-quality.html",
+   "mainEntityOfPage": "https://meilicdc.javad.dev/guide/data-quality.html",
+   "image": "https://meilicdc.javad.dev/img/og.png",
+   "author": {
+    "@type": "Organization",
+    "name": "meilisearch-cdc contributors",
+    "url": "https://github.com/ja7ad/meilisearch-cdc"
+   },
+   "publisher": {
+    "@type": "Organization",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   },
+   "isPartOf": {
+    "@type": "WebSite",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Meili CDC",
+     "item": "https://meilicdc.javad.dev/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Docs",
+     "item": "https://meilicdc.javad.dev/guide/index.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Sync",
+     "item": "https://meilicdc.javad.dev/guide/destinations.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 4,
+     "name": "Data quality",
+     "item": "https://meilicdc.javad.dev/guide/data-quality.html"
+    }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+<div class="topbar-inner">
+<button type="button" class="icon-btn menu-btn" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+<a class="brand" href="../" aria-label="Meili CDC home"><img src="assets/favicon.svg" alt="" width="30" height="30"><span>Meili CDC</span></a>
+<a class="brand-docs" href="index.html">Docs</a>
+<div class="search" role="search">
+<button type="button" class="icon-btn search-toggle" aria-controls="search-input" aria-expanded="false" aria-label="Search the guide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+<div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><label class="sr-only" for="search-input">Search the guide</label><input id="search-input" type="search" placeholder="Search the guide" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="search-panel" aria-autocomplete="list"><kbd aria-hidden="true">/</kbd></div>
+<div class="search-panel" id="search-panel" hidden></div>
+</div>
+<div class="top-actions">
+<a class="top-link hide-sm" href="../">Home</a>
+<a class="top-link hide-xs" href="../#download">Download</a>
+<button type="button" class="icon-btn theme-btn" aria-label="Toggle dark theme" aria-pressed="false"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+<a class="icon-btn" href="https://github.com/ja7ad/meilisearch-cdc" aria-label="meilisearch-cdc on GitHub" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg></a>
+</div>
+</div>
+</header>
+<div class="layout">
+<nav class="sidebar" id="sidebar" aria-label="Guide">
+<div class="nav-section"><p id="nav-s0">Getting started</p><ul aria-labelledby="nav-s0">
+<li><a href="index.html">Introduction</a></li>
+<li><a href="quick-start.html">Quick start</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s1">Deploy</p><ul aria-labelledby="nav-s1">
+<li><a href="installation.html">Install the binary</a></li>
+<li><a href="docker.html">Docker and Compose</a></li>
+<li><a href="kubernetes.html">Kubernetes</a></li>
+<li><a href="reverse-proxy.html">Reverse proxy and TLS</a></li>
+<li><a href="backup-upgrade.html">Backups and upgrades</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s2">Configure</p><ul aria-labelledby="nav-s2">
+<li><a href="configuration.html">Configuration reference</a></li>
+<li><a href="declarative-tasks.html">Declarative tasks file</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s3">Sources</p><ul aria-labelledby="nav-s3">
+<li><a href="sources.html">Sources and connectors</a></li>
+<li><a href="source-postgres.html">PostgreSQL</a></li>
+<li><a href="source-mysql.html">MySQL and MariaDB</a></li>
+<li><a href="source-mongodb.html">MongoDB</a></li>
+<li><a href="source-dynamodb.html">DynamoDB</a></li>
+<li><a href="source-couchdb.html">CouchDB</a></li>
+<li><a href="source-sqlserver.html">SQL Server</a></li>
+<li><a href="source-cockroachdb.html">CockroachDB</a></li>
+<li><a href="source-kafka.html">Kafka (Debezium)</a></li>
+<li><a href="source-redis.html">Redis Streams</a></li>
+<li><a href="source-sqlpoll.html">SQL polling</a></li>
+<li><a href="source-webhook.html">Webhook (HTTP push)</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s4">Sync</p><ul aria-labelledby="nav-s4">
+<li><a href="destinations.html">Meilisearch destinations</a></li>
+<li><a href="tasks.html">Create a task</a></li>
+<li><a href="task-operations.html">Operate tasks</a></li>
+<li><a href="indexes.html">Index management</a></li>
+<li><a href="data-quality.html" aria-current="page">Data quality</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s5">Operate</p><ul aria-labelledby="nav-s5">
+<li><a href="monitoring.html">Monitoring and metrics</a></li>
+<li><a href="alerts.html">Alerts and notifications</a></li>
+<li><a href="security.html">Team and security</a></li>
+<li><a href="mcp.html">AI agents (MCP)</a></li>
+<li><a href="cli.html">Admin CLI</a></li>
+<li><a href="pwa.html">Mobile and app install</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s6">Reference</p><ul aria-labelledby="nav-s6">
+<li><a href="api.html">REST API</a></li>
+<li><a href="performance.html">Performance and tuning</a></li>
+<li><a href="troubleshooting.html">Troubleshooting and FAQ</a></li>
+<li><a href="changelog.html">Changelog and upgrade notes</a></li>
+<li><a href="development.html">Development</a></li>
+</ul></div>
+</nav>
+<main id="content" class="content" tabindex="-1">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol>
+<li><a href="../">Meili CDC</a></li>
+<li><a href="index.html">Docs</a></li>
+<li><a href="destinations.html">Sync</a></li>
+<li><span aria-current="page">Data quality</span></li>
+</ol></nav>
+<article class="doc">
+<h1>Data quality</h1>
+<p class="lead">Three tools tell you whether an index really matches its source: the schema check, the document diff (with repair), and the dead letter queue of documents Meilisearch refused.</p>
+
+<h2 id="schema-check">Schema check</h2>
+<p>The <em>Schema check</em> tab of a task (any role) compares three things: the source's columns, the fields actually present in the index (with their <em>coverage</em>, the share of documents that have the field), and the index settings. Each field shows where it comes from, its source type, whether it is in the source and in the index, and which settings reference it (searchable, displayed, filterable, sortable, distinct, ranking).</p>
+<figure>
+  <img src="../img/08-schema-diff.png" width="1920" height="1080" alt="The schema check of a task listing each field with its source column and type, index coverage, the settings that use it, and issues by severity" loading="lazy">
+  <figcaption>The schema check with issues sorted by severity.</figcaption>
+</figure>
+<p>Issues it reports:</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Level</th><th>Issue</th></tr></thead>
+  <tbody>
+    <tr><td>error</td><td><code>index primary key is "sku" but the task writes "id"</code></td></tr>
+    <tr><td>error</td><td><code>the source has no primary key; set mapping.primaryKey</code></td></tr>
+    <tr><td>error</td><td><code>settings reference filterable but no document can contain it</code> (a setting names a field the mapping never produces)</td></tr>
+    <tr><td>warning</td><td><code>field exists in the index but not in the source (dropped or renamed column?); a zero-downtime resync removes it</code></td></tr>
+    <tr><td>warning</td><td><code>date stored as RFC3339 text cannot be range filtered or sorted chronologically; set mapping.timeFormat to unix</code></td></tr>
+    <tr><td>warning</td><td><code>some documents miss the primary key field</code></td></tr>
+    <tr><td>info</td><td><code>column is mapped but no indexed document has it yet</code></td></tr>
+    <tr><td>info</td><td><code>binary column is indexed as base64 text; consider excluding it</code></td></tr>
+    <tr><td>info</td><td><code>add _geo to filterable/sortable attributes to use geo search</code></td></tr>
+    <tr><td>info</td><td><code>the index does not exist yet; it is created when the task starts</code></td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="diff-and-repair">Diff and repair</h2>
+<p>The <em>Diff</em> tab (moderator to run) compares the source and the index document by document:</p>
+<ol class="steps">
+  <li><strong>Source pass.</strong> Reads every row with the task's own snapshot query, applies the mapping, and keeps a hash of each document.</li>
+  <li><strong>Index pass.</strong> Pages through every document in the index and compares hashes.</li>
+  <li><strong>Detail pass.</strong> Re-reads the source for sample documents to show which fields differ, and for repairs.</li>
+</ol>
+<p>The report counts documents in the source and the index and the <strong>missing</strong> (in the source, not in the index), <strong>extra</strong> (in the index, not in the source) and <strong>mismatched</strong> (different content) ones, with up to 50 sample ids per category (<code>sampleLimit</code>) and, for mismatches, the differing fields with both values. Floats are compared to 15 significant digits, because Meilisearch does not keep the last digit of some floats; without this, documents that are in sync would never compare equal.</p>
+<p>A diff runs in the background (at most one per task, for at most two hours) and the report is kept until the next run. It reads the whole table, so schedule large diffs outside peak hours. Memory grows with the number of documents (one hash per document).</p>
+
+<h3 id="repair">Repair</h3>
+<p><em>Repair</em> runs the diff again and fixes the index while it goes, for the categories you choose: re-send <strong>missing</strong> and <strong>mismatched</strong> documents, and delete <strong>extra</strong> ones. Deleting extras is off by default: check the sample ids first, in case another task writes to the same index. Documents Meilisearch rejects during a repair go to the dead letter queue. The log records <code>repair: 12 upserted, 3 deleted, 0 rejected</code>.</p>
+
+<pre><code class="language-bash"># API: run a diff, then read the report
+curl -X POST -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+  -d '{"sampleLimit": 50, "compareFields": true}' "$CDC/api/v1/tasks/products/diff"
+curl -H "Authorization: Bearer $TOKEN" "$CDC/api/v1/tasks/products/diff"
+
+# Repair missing and mismatched documents (runs in the background as well)
+curl -X POST -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+  -d '{"missing": true, "mismatched": true, "extra": false}' "$CDC/api/v1/tasks/products/diff/repair"</code></pre>
+
+<div class="callout tip"><p class="callout-title">Diff versus resync</p>
+<p>A repair fixes a handful of documents without rebuilding anything. When most of the index is wrong (after a mapping change, say), a zero-downtime <em>Resync</em> is faster and cleaner.</p></div>
+
+<h2 id="dead-letter-queue">Dead letter queue</h2>
+<p>When Meilisearch refuses a batch because of a document's content, the writer splits the batch in halves until it isolates the offending documents. Everything else is applied; the offenders are stored in the task's dead letter queue (DLQ) with the error, the Meilisearch error code and the number of attempts. The pipeline keeps going.</p>
+<figure>
+  <img src="../img/24-dlq.png" width="1920" height="1080" alt="The dead letter queue of a task listing rejected documents with their id, operation, Meilisearch error code and message, and replay and discard buttons" loading="lazy">
+  <figcaption>Dead letters with the reason Meilisearch gave.</figcaption>
+</figure>
+
+<h3 id="why-documents-land-there">Why documents land there</h3>
+<div class="table-wrap"><table>
+  <thead><tr><th>Operation</th><th>Typical cause</th></tr></thead>
+  <tbody>
+    <tr><td><code>upsert</code>, <code>replace</code>, <code>delete</code></td><td>Meilisearch rejected the document: an invalid or missing document id, a malformed <code>_geo</code> or GeoJSON field, the per-document field limit, an invalid <code>_vectors</code> value, a malformed payload, or a single document too large for the payload limit.</td></tr>
+    <tr><td><code>transform</code></td><td>The row could not become a document at all, usually because a primary key column has no value (<code>row has no value for a primary key column "id"</code>). The original row is stored.</td></tr>
+  </tbody>
+</table></div>
+
+<h3 id="replay-and-discard">Replay and discard</h3>
+<ul>
+  <li><strong>Replay</strong> (moderator) sends the selected entries (or all) to Meilisearch again, after you fixed the cause (for example by adjusting index settings or embedders). Entries that succeed leave the queue; the others stay with their attempt count increased. <code>transform</code> entries cannot be replayed: fix the source row or the mapping, and the next change of that row is applied normally.</li>
+  <li><strong>Discard</strong> (moderator) deletes the selected entries (or all).</li>
+</ul>
+<p>Dead letters are kept in the state store until replayed, discarded, the task is deleted, or purged with <code>meilisearch-cdc admin purge dlq</code>. The <code>cdc_dlq_total</code> metric and the <code>dlq</code> alert rule tell you when new ones arrive.</p>
+</article>
+<nav class="pager" aria-label="Previous and next page">
+<a class="prev" href="indexes.html" rel="prev"><span class="p-label">Previous</span><span class="p-title">Index management</span></a>
+<a class="next" href="monitoring.html" rel="next"><span class="p-label">Next</span><span class="p-title">Monitoring and metrics</span></a>
+</nav>
+<footer class="site-footer">
+<p>Meili CDC user guide · last updated 2026-10-26 · <a href="https://github.com/ja7ad/meilisearch-cdc/edit/main/docs/guide/data-quality.html" rel="noopener">Edit this page on GitHub</a></p>
+<p>meilisearch-cdc is open source. Meilisearch is a trademark of Meili SAS; this project is not affiliated with it.</p>
+</footer>
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+</body>
+</html>
