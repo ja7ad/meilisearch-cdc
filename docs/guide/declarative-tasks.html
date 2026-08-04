@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Declarative tasks file · Meili CDC Docs</title>
+<meta name="description" content="Define meilisearch-cdc sync tasks in a YAML or JSON file applied at startup (CDC_TASKS_FILE), with ${VAR} expansion for credentials.">
+<link rel="canonical" href="https://meilicdc.javad.dev/guide/declarative-tasks.html">
+<meta name="robots" content="index, follow">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15112A" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meili CDC">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Declarative tasks file · Meili CDC Docs">
+<meta property="og:description" content="Define meilisearch-cdc sync tasks in a YAML or JSON file applied at startup (CDC_TASKS_FILE), with ${VAR} expansion for credentials.">
+<meta property="og:url" content="https://meilicdc.javad.dev/guide/declarative-tasks.html">
+<meta property="og:image" content="https://meilicdc.javad.dev/img/og.png">
+<meta property="og:image:alt" content="Meili CDC: change data capture into Meilisearch">
+<meta property="article:modified_time" content="2026-10-26">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Declarative tasks file · Meili CDC Docs">
+<meta name="twitter:description" content="Define meilisearch-cdc sync tasks in a YAML or JSON file applied at startup (CDC_TASKS_FILE), with ${VAR} expansion for credentials.">
+<meta name="twitter:image" content="https://meilicdc.javad.dev/img/og.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="assets/guide.css">
+<script>(function(){try{var t=localStorage.getItem('mcdc-guide-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<script src="assets/guide.js" defer></script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "TechArticle",
+   "headline": "Declarative tasks file",
+   "description": "Define meilisearch-cdc sync tasks in a YAML or JSON file applied at startup (CDC_TASKS_FILE), with ${VAR} expansion for credentials.",
+   "dateModified": "2026-10-26",
+   "inLanguage": "en",
+   "url": "https://meilicdc.javad.dev/guide/declarative-tasks.html",
+   "mainEntityOfPage": "https://meilicdc.javad.dev/guide/declarative-tasks.html",
+   "image": "https://meilicdc.javad.dev/img/og.png",
+   "author": {
+    "@type": "Organization",
+    "name": "meilisearch-cdc contributors",
+    "url": "https://github.com/ja7ad/meilisearch-cdc"
+   },
+   "publisher": {
+    "@type": "Organization",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   },
+   "isPartOf": {
+    "@type": "WebSite",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Meili CDC",
+     "item": "https://meilicdc.javad.dev/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Docs",
+     "item": "https://meilicdc.javad.dev/guide/index.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Configure",
+     "item": "https://meilicdc.javad.dev/guide/configuration.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 4,
+     "name": "Declarative tasks file",
+     "item": "https://meilicdc.javad.dev/guide/declarative-tasks.html"
+    }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+<div class="topbar-inner">
+<button type="button" class="icon-btn menu-btn" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+<a class="brand" href="../" aria-label="Meili CDC home"><img src="assets/favicon.svg" alt="" width="30" height="30"><span>Meili CDC</span></a>
+<a class="brand-docs" href="index.html">Docs</a>
+<div class="search" role="search">
+<button type="button" class="icon-btn search-toggle" aria-controls="search-input" aria-expanded="false" aria-label="Search the guide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+<div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><label class="sr-only" for="search-input">Search the guide</label><input id="search-input" type="search" placeholder="Search the guide" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="search-panel" aria-autocomplete="list"><kbd aria-hidden="true">/</kbd></div>
+<div class="search-panel" id="search-panel" hidden></div>
+</div>
+<div class="top-actions">
+<a class="top-link hide-sm" href="../">Home</a>
+<a class="top-link hide-xs" href="../#download">Download</a>
+<button type="button" class="icon-btn theme-btn" aria-label="Toggle dark theme" aria-pressed="false"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+<a class="icon-btn" href="https://github.com/ja7ad/meilisearch-cdc" aria-label="meilisearch-cdc on GitHub" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg></a>
+</div>
+</div>
+</header>
+<div class="layout">
+<nav class="sidebar" id="sidebar" aria-label="Guide">
+<div class="nav-section"><p id="nav-s0">Getting started</p><ul aria-labelledby="nav-s0">
+<li><a href="index.html">Introduction</a></li>
+<li><a href="quick-start.html">Quick start</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s1">Deploy</p><ul aria-labelledby="nav-s1">
+<li><a href="installation.html">Install the binary</a></li>
+<li><a href="docker.html">Docker and Compose</a></li>
+<li><a href="kubernetes.html">Kubernetes</a></li>
+<li><a href="reverse-proxy.html">Reverse proxy and TLS</a></li>
+<li><a href="backup-upgrade.html">Backups and upgrades</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s2">Configure</p><ul aria-labelledby="nav-s2">
+<li><a href="configuration.html">Configuration reference</a></li>
+<li><a href="declarative-tasks.html" aria-current="page">Declarative tasks file</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s3">Sources</p><ul aria-labelledby="nav-s3">
+<li><a href="sources.html">Sources and connectors</a></li>
+<li><a href="source-postgres.html">PostgreSQL</a></li>
+<li><a href="source-mysql.html">MySQL and MariaDB</a></li>
+<li><a href="source-mongodb.html">MongoDB</a></li>
+<li><a href="source-dynamodb.html">DynamoDB</a></li>
+<li><a href="source-couchdb.html">CouchDB</a></li>
+<li><a href="source-sqlserver.html">SQL Server</a></li>
+<li><a href="source-cockroachdb.html">CockroachDB</a></li>
+<li><a href="source-kafka.html">Kafka (Debezium)</a></li>
+<li><a href="source-redis.html">Redis Streams</a></li>
+<li><a href="source-sqlpoll.html">SQL polling</a></li>
+<li><a href="source-webhook.html">Webhook (HTTP push)</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s4">Sync</p><ul aria-labelledby="nav-s4">
+<li><a href="destinations.html">Meilisearch destinations</a></li>
+<li><a href="tasks.html">Create a task</a></li>
+<li><a href="task-operations.html">Operate tasks</a></li>
+<li><a href="indexes.html">Index management</a></li>
+<li><a href="data-quality.html">Data quality</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s5">Operate</p><ul aria-labelledby="nav-s5">
+<li><a href="monitoring.html">Monitoring and metrics</a></li>
+<li><a href="alerts.html">Alerts and notifications</a></li>
+<li><a href="security.html">Team and security</a></li>
+<li><a href="mcp.html">AI agents (MCP)</a></li>
+<li><a href="cli.html">Admin CLI</a></li>
+<li><a href="pwa.html">Mobile and app install</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s6">Reference</p><ul aria-labelledby="nav-s6">
+<li><a href="api.html">REST API</a></li>
+<li><a href="performance.html">Performance and tuning</a></li>
+<li><a href="troubleshooting.html">Troubleshooting and FAQ</a></li>
+<li><a href="changelog.html">Changelog and upgrade notes</a></li>
+<li><a href="development.html">Development</a></li>
+</ul></div>
+</nav>
+<main id="content" class="content" tabindex="-1">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol>
+<li><a href="../">Meili CDC</a></li>
+<li><a href="index.html">Docs</a></li>
+<li><a href="configuration.html">Configure</a></li>
+<li><span aria-current="page">Declarative tasks file</span></li>
+</ol></nav>
+<article class="doc">
+<h1>Declarative tasks file</h1>
+<p class="lead">Keep sync tasks in Git: list them in a YAML or JSON file, point <code>CDC_TASKS_FILE</code> (or <code>-tasks</code>) at it, and the service creates or updates them every time it starts.</p>
+
+<h2 id="how-it-is-applied">How it is applied</h2>
+<ul>
+  <li>The file is read once at startup, after stored tasks are resumed.</li>
+  <li>Before parsing, every <code>${VAR}</code> (or <code>$VAR</code>) is replaced with the environment variable of that name, so credentials stay out of the file. An unset variable becomes an empty string. Expansion happens on the whole file, so a literal <code>$</code> written in the file (inside a password, say) is expanded too: keep such values in environment variables.</li>
+  <li>Every task needs an <code>id</code> (letters, digits, <code>-</code> and <code>_</code>, at most 64 characters). It is the key that matches a task in the file to a stored task.</li>
+  <li>A task with a new id is created; it starts right away when <code>desiredState: running</code>.</li>
+  <li>A task whose id exists is <strong>updated</strong> with the file's definition (a running task restarts). Then its <code>desiredState</code> is applied: <code>running</code> starts it, <code>stopped</code> or <code>paused</code> stops it, and an omitted value leaves it as it is.</li>
+  <li>If the source table, schema, database, connector or the index uid or destination changed, the checkpoint is cleared and the next start runs a full snapshot.</li>
+  <li>Tasks that are not in the file are left alone; removing a task from the file does not delete it.</li>
+  <li>Any error (unreadable file, invalid YAML, a missing id, a validation error) stops the startup: the service logs <code>stopped with error</code> with the reason (for example <code>task products: name is required</code>) and exits with status 1.</li>
+</ul>
+<p>Tasks created from the file are ordinary tasks: they appear in the dashboard and can be operated there. Edits made in the dashboard are overwritten by the file at the next start.</p>
+
+<h2 id="format">Format</h2>
+<p>The file has a single top-level key, <code>tasks</code>, holding a list of task definitions. The fields are the JSON fields of a task, described on <a href="tasks.html#task-json">Create a task</a>; YAML and JSON are both accepted (JSON is valid YAML). Durations are strings like <code>500ms</code> or <code>2s</code>.</p>
+
+<h3 id="the-demo-file-deploytasksyaml">The demo file (<code>deploy/tasks.yaml</code>)</h3>
+
+<pre><code class="language-yaml"># Declarative tasks, applied at startup (created or updated by id).
+# ${VAR} is expanded from the environment, so secrets stay out of this file.
+tasks:
+  - id: products
+    name: Postgres products
+    desiredState: running
+    source:
+      type: postgres
+      dsn: ${PG_DSN}
+      table: products
+    mapping:
+      softDeleteColumn: deleted_at
+      timeFormat: unix
+      geo: {lat: lat, lng: lng}
+    index:
+      uid: products
+      manageSettings: true
+      settings:
+        searchableAttributes: [name, description, category]
+        filterableAttributes: [category, price, in_stock, _geo, updated_at]
+        sortableAttributes: [price, updated_at, _geo]
+        typoTolerance: {enabled: true}
+    sync:
+      batchSize: 5000
+      flushInterval: 500ms
+      maxInflight: 8
+      safety:
+        maxDeleteRatio: 0.3
+        zeroDowntimeResync: true</code></pre>
+
+<p>The Compose demo sets <code>PG_DSN=postgres://shop:shop@postgres:5432/shop?sslmode=disable</code> and <code>CDC_TASKS_FILE=/etc/cdc/tasks.yaml</code>, and mounts the file read-only.</p>
+
+<h3 id="a-fuller-example">A fuller example</h3>
+<p>Two tasks: one using an inline connection, one reusing a connector created in the dashboard (its id is shown on the connector page), writing to a named destination.</p>
+
+<pre><code class="language-yaml">tasks:
+  - id: orders-search
+    name: MySQL orders
+    description: Orders searchable by customer and status
+    tags: [shop, mysql]
+    desiredState: running
+    source:
+      type: mysql
+      dsn: ${ORDERS_DSN}          # cdc:secret@tcp(db.internal:3306)/shop
+      table: orders
+      serverId: 4242              # unique among the server's replicas
+    mapping:
+      primaryKey: [id]
+      exclude: [internal_notes]
+      rename: {customer_email: email}
+      static: {tenant: acme}
+      timeFormat: unix
+    index:
+      uid: orders
+      writeMode: replace
+      manageSettings: true
+      settings:
+        filterableAttributes: [status, tenant, created_at]
+        sortableAttributes: [created_at]
+    sync:
+      mode: snapshot_stream
+      batchSize: 2000
+      flushInterval: 1s
+      maxInflight: 4
+      retry: {maxAttempts: 8, initialBackoff: 200ms, maxBackoff: 30s}
+      safety:
+        maxDeleteRatio: 0.2
+        minDocsForDeleteGuard: 1000
+        allowTruncate: false
+        zeroDowntimeResync: true
+        dumpBeforeResync: false
+
+  - id: catalog-eu
+    name: Catalog to the EU instance
+    desiredState: running
+    source:
+      connectorId: pg-catalog     # a saved connector
+      schema: public
+      table: products
+    index:
+      uid: products
+      destinationId: eu           # empty = the default destination</code></pre>
+
+<div class="callout tip"><p class="callout-title">Get a starting point from the dashboard</p>
+<p>Build a task in the wizard, then copy its JSON from the <em>Review</em> step or the task's <em>Config</em> tab, or export all tasks from the task list. Remove <code>createdAt</code>, <code>updatedAt</code> and anything masked (<code>••••••</code>), replace credentials with <code>${VAR}</code>, and add an <code>id</code>.</p></div>
+
+<h2 id="running-with-a-tasks-file">Running with a tasks file</h2>
+
+<pre><code class="language-bash">export ORDERS_DSN='cdc:secret@tcp(db.internal:3306)/shop'
+meilisearch-cdc -tasks /etc/meilisearch-cdc/tasks.yaml
+# or
+CDC_TASKS_FILE=/etc/meilisearch-cdc/tasks.yaml meilisearch-cdc</code></pre>
+
+<p>On success the service logs <code>applied tasks file</code> with the path and the number of tasks.</p>
+
+<h2 id="import-and-export">Import and export</h2>
+<p>Besides the startup file, tasks can be moved between installations as JSON: <code>GET /api/v1/tasks/export</code> returns every task with secrets masked, and <code>POST /api/v1/tasks/import</code> creates the tasks of a JSON array (stopped). Both are on the task list page as well. See <a href="task-operations.html#import-export">Import and export</a>.</p>
+</article>
+<nav class="pager" aria-label="Previous and next page">
+<a class="prev" href="configuration.html" rel="prev"><span class="p-label">Previous</span><span class="p-title">Configuration reference</span></a>
+<a class="next" href="sources.html" rel="next"><span class="p-label">Next</span><span class="p-title">Sources and connectors</span></a>
+</nav>
+<footer class="site-footer">
+<p>Meili CDC user guide · last updated 2026-10-26 · <a href="https://github.com/ja7ad/meilisearch-cdc/edit/main/docs/guide/declarative-tasks.html" rel="noopener">Edit this page on GitHub</a></p>
+<p>meilisearch-cdc is open source. Meilisearch is a trademark of Meili SAS; this project is not affiliated with it.</p>
+</footer>
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+</body>
+</html>
