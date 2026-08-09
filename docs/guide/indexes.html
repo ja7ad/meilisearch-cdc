@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Index management · Meili CDC Docs</title>
+<meta name="description" content="Manage Meilisearch index settings from meilisearch-cdc: the settings editor, drift detection, primary keys, swap, compaction, search and documents.">
+<link rel="canonical" href="https://meilicdc.javad.dev/guide/indexes.html">
+<meta name="robots" content="index, follow">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15112A" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meili CDC">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Index management · Meili CDC Docs">
+<meta property="og:description" content="Manage Meilisearch index settings from meilisearch-cdc: the settings editor, drift detection, primary keys, swap, compaction, search and documents.">
+<meta property="og:url" content="https://meilicdc.javad.dev/guide/indexes.html">
+<meta property="og:image" content="https://meilicdc.javad.dev/img/og.png">
+<meta property="og:image:alt" content="Meili CDC: change data capture into Meilisearch">
+<meta property="article:modified_time" content="2026-10-26">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Index management · Meili CDC Docs">
+<meta name="twitter:description" content="Manage Meilisearch index settings from meilisearch-cdc: the settings editor, drift detection, primary keys, swap, compaction, search and documents.">
+<meta name="twitter:image" content="https://meilicdc.javad.dev/img/og.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="assets/guide.css">
+<script>(function(){try{var t=localStorage.getItem('mcdc-guide-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<script src="assets/guide.js" defer></script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "TechArticle",
+   "headline": "Index management",
+   "description": "Manage Meilisearch index settings from meilisearch-cdc: the settings editor, drift detection, primary keys, swap, compaction, search and documents.",
+   "dateModified": "2026-10-26",
+   "inLanguage": "en",
+   "url": "https://meilicdc.javad.dev/guide/indexes.html",
+   "mainEntityOfPage": "https://meilicdc.javad.dev/guide/indexes.html",
+   "image": "https://meilicdc.javad.dev/img/og.png",
+   "author": {
+    "@type": "Organization",
+    "name": "meilisearch-cdc contributors",
+    "url": "https://github.com/ja7ad/meilisearch-cdc"
+   },
+   "publisher": {
+    "@type": "Organization",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   },
+   "isPartOf": {
+    "@type": "WebSite",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Meili CDC",
+     "item": "https://meilicdc.javad.dev/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Docs",
+     "item": "https://meilicdc.javad.dev/guide/index.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Sync",
+     "item": "https://meilicdc.javad.dev/guide/destinations.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 4,
+     "name": "Index management",
+     "item": "https://meilicdc.javad.dev/guide/indexes.html"
+    }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+<div class="topbar-inner">
+<button type="button" class="icon-btn menu-btn" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+<a class="brand" href="../" aria-label="Meili CDC home"><img src="assets/favicon.svg" alt="" width="30" height="30"><span>Meili CDC</span></a>
+<a class="brand-docs" href="index.html">Docs</a>
+<div class="search" role="search">
+<button type="button" class="icon-btn search-toggle" aria-controls="search-input" aria-expanded="false" aria-label="Search the guide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+<div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><label class="sr-only" for="search-input">Search the guide</label><input id="search-input" type="search" placeholder="Search the guide" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="search-panel" aria-autocomplete="list"><kbd aria-hidden="true">/</kbd></div>
+<div class="search-panel" id="search-panel" hidden></div>
+</div>
+<div class="top-actions">
+<a class="top-link hide-sm" href="../">Home</a>
+<a class="top-link hide-xs" href="../#download">Download</a>
+<button type="button" class="icon-btn theme-btn" aria-label="Toggle dark theme" aria-pressed="false"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+<a class="icon-btn" href="https://github.com/ja7ad/meilisearch-cdc" aria-label="meilisearch-cdc on GitHub" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg></a>
+</div>
+</div>
+</header>
+<div class="layout">
+<nav class="sidebar" id="sidebar" aria-label="Guide">
+<div class="nav-section"><p id="nav-s0">Getting started</p><ul aria-labelledby="nav-s0">
+<li><a href="index.html">Introduction</a></li>
+<li><a href="quick-start.html">Quick start</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s1">Deploy</p><ul aria-labelledby="nav-s1">
+<li><a href="installation.html">Install the binary</a></li>
+<li><a href="docker.html">Docker and Compose</a></li>
+<li><a href="kubernetes.html">Kubernetes</a></li>
+<li><a href="reverse-proxy.html">Reverse proxy and TLS</a></li>
+<li><a href="backup-upgrade.html">Backups and upgrades</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s2">Configure</p><ul aria-labelledby="nav-s2">
+<li><a href="configuration.html">Configuration reference</a></li>
+<li><a href="declarative-tasks.html">Declarative tasks file</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s3">Sources</p><ul aria-labelledby="nav-s3">
+<li><a href="sources.html">Sources and connectors</a></li>
+<li><a href="source-postgres.html">PostgreSQL</a></li>
+<li><a href="source-mysql.html">MySQL and MariaDB</a></li>
+<li><a href="source-mongodb.html">MongoDB</a></li>
+<li><a href="source-dynamodb.html">DynamoDB</a></li>
+<li><a href="source-couchdb.html">CouchDB</a></li>
+<li><a href="source-sqlserver.html">SQL Server</a></li>
+<li><a href="source-cockroachdb.html">CockroachDB</a></li>
+<li><a href="source-kafka.html">Kafka (Debezium)</a></li>
+<li><a href="source-redis.html">Redis Streams</a></li>
+<li><a href="source-sqlpoll.html">SQL polling</a></li>
+<li><a href="source-webhook.html">Webhook (HTTP push)</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s4">Sync</p><ul aria-labelledby="nav-s4">
+<li><a href="destinations.html">Meilisearch destinations</a></li>
+<li><a href="tasks.html">Create a task</a></li>
+<li><a href="task-operations.html">Operate tasks</a></li>
+<li><a href="indexes.html" aria-current="page">Index management</a></li>
+<li><a href="data-quality.html">Data quality</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s5">Operate</p><ul aria-labelledby="nav-s5">
+<li><a href="monitoring.html">Monitoring and metrics</a></li>
+<li><a href="alerts.html">Alerts and notifications</a></li>
+<li><a href="security.html">Team and security</a></li>
+<li><a href="mcp.html">AI agents (MCP)</a></li>
+<li><a href="cli.html">Admin CLI</a></li>
+<li><a href="pwa.html">Mobile and app install</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s6">Reference</p><ul aria-labelledby="nav-s6">
+<li><a href="api.html">REST API</a></li>
+<li><a href="performance.html">Performance and tuning</a></li>
+<li><a href="troubleshooting.html">Troubleshooting and FAQ</a></li>
+<li><a href="changelog.html">Changelog and upgrade notes</a></li>
+<li><a href="development.html">Development</a></li>
+</ul></div>
+</nav>
+<main id="content" class="content" tabindex="-1">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol>
+<li><a href="../">Meili CDC</a></li>
+<li><a href="index.html">Docs</a></li>
+<li><a href="destinations.html">Sync</a></li>
+<li><span aria-current="page">Index management</span></li>
+</ol></nav>
+<article class="doc">
+<h1>Index management</h1>
+<p class="lead">meilisearch-cdc manages the Meilisearch side too: index settings with drift detection, primary keys, swaps, compaction, a search playground and a documents browser, for every destination.</p>
+
+<figure>
+  <img src="../img/13-indexes.png" width="1920" height="1080" alt="The Indexes page grouping indexes per Meilisearch instance with document counts, indexing state and the tasks that write to each index" loading="lazy">
+  <figcaption>Indexes grouped per instance, with the tasks that write to each.</figcaption>
+</figure>
+
+<h2 id="the-indexes-page">The Indexes page</h2>
+<p>All instances are queried in parallel and their indexes listed per instance (default first). An unreachable instance is shown with its error. Each index shows its primary key, document count, whether it is indexing, and the tasks that write to it. Actions (admin):</p>
+<ul>
+  <li><strong>Create index</strong> with a uid and an optional primary key. Usually unnecessary: tasks create their index on first write.</li>
+  <li><strong>Swap indexes</strong>: exchange the contents of two indexes atomically, or <em>rename</em> one to a new uid.</li>
+  <li><strong>Compact</strong>: ask Meilisearch to compact the index's storage.</li>
+  <li><strong>Delete</strong>: type the uid to confirm. Refused with <code>409</code> while a running task writes to the index; stop the task first.</li>
+</ul>
+
+<h2 id="index-pages">An index's page</h2>
+<p>Open an index for three tabs:</p>
+<h3 id="search">Search</h3>
+<p>A playground for Meilisearch searches: query, filter expression, sort (<code>field:asc</code> or <code>field:desc</code>, comma separated), result limit, and the raw JSON response. Use it to check that a change in the source reached the index, or to try filters before building them into your application.</p>
+<figure>
+  <img src="../img/14-search.png" width="1920" height="1080" alt="The search playground of an index with a query, a filter, sorted results and the raw Meilisearch response" loading="lazy">
+  <figcaption>The search playground.</figcaption>
+</figure>
+<h3 id="documents">Documents</h3>
+<p>Browse documents page by page and open any document as JSON.</p>
+<h3 id="index-settings">Settings</h3>
+<p>The live settings in the settings editor. Changes are previewed (which keys change, from what to what) before they are applied; applying waits up to 30 seconds for Meilisearch and shows its error when it rejects the update. <em>Reset</em> restores Meilisearch's defaults. The primary key of an index can be changed here only while it holds no documents (<code>409</code> otherwise).</p>
+
+<h2 id="settings-editor">The settings editor</h2>
+<p>The same editor is used in the task wizard (desired settings) and on index pages (live settings). It has a form view and a JSON view. Only the keys you set are sent; unset keys keep Meilisearch's defaults. Sections:</p>
+<figure>
+  <img src="../img/15-index-settings.png" width="1920" height="1080" alt="The index settings editor with collapsible sections for attributes, ranking rules, typo tolerance, synonyms, words, faceting and embedders" loading="lazy">
+  <figcaption>The settings editor; a dot marks sections changed from the defaults.</figcaption>
+</figure>
+<div class="table-wrap"><table>
+  <thead><tr><th>Section</th><th>Settings</th><th>What they do</th></tr></thead>
+  <tbody>
+    <tr><td>Attributes</td><td class="wrap"><code>searchableAttributes</code>, <code>displayedAttributes</code>, <code>filterableAttributes</code>, <code>sortableAttributes</code>, <code>distinctAttribute</code></td><td>Which fields are searched (in priority order), returned, usable in filters, usable for sorting, and deduplicated. Filterable attributes can use Meilisearch's granular form (attribute patterns with per-pattern features such as facet search or equality-only filters). Field names discovered from the source are offered as suggestions.</td></tr>
+    <tr><td>Ranking rules</td><td><code>rankingRules</code></td><td>The order of relevancy criteria (<code>words</code>, <code>typo</code>, <code>proximity</code>, <code>attribute</code>, <code>sort</code>, <code>exactness</code>) and custom rules such as <code>price:asc</code>.</td></tr>
+    <tr><td>Typo tolerance</td><td><code>typoTolerance</code></td><td>On or off, minimum word sizes for one and two typos, and words, attributes and numbers where typos are not allowed.</td></tr>
+    <tr><td>Synonyms</td><td><code>synonyms</code></td><td>Words that should match each other.</td></tr>
+    <tr><td>Words &amp; tokens</td><td class="wrap"><code>stopWords</code>, <code>dictionary</code>, <code>separatorTokens</code>, <code>nonSeparatorTokens</code></td><td>Ignored words, custom dictionary entries and how text is split into words.</td></tr>
+    <tr><td>Facets, pagination &amp; search</td><td class="wrap"><code>faceting</code>, <code>pagination</code>, <code>proximityPrecision</code>, <code>searchCutoffMs</code>, <code>prefixSearch</code>, <code>facetSearch</code></td><td>Maximum values per facet and facet sorting, the maximum total hits, word-proximity precision, a search time limit, prefix search and facet search.</td></tr>
+    <tr><td>Localized attributes</td><td><code>localizedAttributes</code></td><td>Force the languages used to tokenize some fields.</td></tr>
+    <tr><td>Embedders</td><td><code>embedders</code></td><td>Vector embedders for semantic and hybrid search (source, model or user-provided dimensions, document template, binary quantization…).</td></tr>
+  </tbody>
+</table></div>
+<p>Desired settings in a task are validated when the task is saved: unknown keys are rejected so a typo cannot silently do nothing.</p>
+
+<h2 id="drift">Managed settings and drift</h2>
+<p>With <em>Manage index settings</em> on, a task owns the settings it declares:</p>
+<ul>
+  <li>When the task starts, the live settings are compared with the desired ones and only the differences are applied (<code>applying 3 changed index settings</code> in the log).</li>
+  <li>The task's <em>Index settings</em> tab shows desired versus live values, highlights <strong>drift</strong> (someone changed the index by hand, or a deployment changed the task), and applies the desired settings with one click.</li>
+  <li>Only keys present in the desired settings are compared, so settings the task does not manage never show up as drift. Lists whose order does not matter (filterable and sortable attributes, for example) are compared as sets.</li>
+  <li>If Meilisearch rejects the update when the task starts, the start fails with Meilisearch's message (<code>apply settings: …</code>) and the task keeps retrying with backoff until the settings are fixed. Desired settings that cannot be parsed fail the task outright.</li>
+</ul>
+
+<h2 id="primary-key-guard">Primary key guard</h2>
+<p>When a task starts, it makes sure its index uses the task's primary key field:</p>
+<ul>
+  <li>A missing index is created with that primary key.</li>
+  <li>An empty index with another primary key is switched to it.</li>
+  <li>An index that has documents and another primary key is <strong>refused</strong>, and the task fails: <code>index "products" uses "sku" but the task writes "id" and the index holds 1200 documents; use a new index, change mapping.primaryKeyField, or resync with zero-downtime enabled</code>. A zero-downtime resync builds a fresh shadow index with the new key and swaps it in.</li>
+</ul>
+
+<h2 id="instance-level-tools">Instance-level tools</h2>
+<p>The task queue, dumps, snapshots and experimental features belong to a whole Meilisearch instance and live on the destination's page; see <a href="destinations.html#instance-pages">per-instance pages</a>. The top-level <strong>Meilisearch tasks</strong> page shows the task queue of every instance.</p>
+<figure>
+  <img src="../img/16-meili-tasks.png" width="1920" height="1080" alt="The Meilisearch tasks page listing document additions, settings updates and swaps per instance with status, duration and the CDC task that sent them" loading="lazy">
+  <figcaption>The Meilisearch task queue, per instance.</figcaption>
+</figure>
+</article>
+<nav class="pager" aria-label="Previous and next page">
+<a class="prev" href="task-operations.html" rel="prev"><span class="p-label">Previous</span><span class="p-title">Operate tasks</span></a>
+<a class="next" href="data-quality.html" rel="next"><span class="p-label">Next</span><span class="p-title">Data quality</span></a>
+</nav>
+<footer class="site-footer">
+<p>Meili CDC user guide · last updated 2026-10-26 · <a href="https://github.com/ja7ad/meilisearch-cdc/edit/main/docs/guide/indexes.html" rel="noopener">Edit this page on GitHub</a></p>
+<p>meilisearch-cdc is open source. Meilisearch is a trademark of Meili SAS; this project is not affiliated with it.</p>
+</footer>
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+</body>
+</html>
