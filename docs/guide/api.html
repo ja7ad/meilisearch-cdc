@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>REST API · Meili CDC Docs</title>
+<meta name="description" content="The meilisearch-cdc REST API v1: authentication, errors, tasks, data quality, indexes, destinations, connectors, accounts, alerts and live events.">
+<link rel="canonical" href="https://meilicdc.javad.dev/guide/api.html">
+<meta name="robots" content="index, follow">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15112A" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meili CDC">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="REST API · Meili CDC Docs">
+<meta property="og:description" content="The meilisearch-cdc REST API v1: authentication, errors, tasks, data quality, indexes, destinations, connectors, accounts, alerts and live events.">
+<meta property="og:url" content="https://meilicdc.javad.dev/guide/api.html">
+<meta property="og:image" content="https://meilicdc.javad.dev/img/og.png">
+<meta property="og:image:alt" content="Meili CDC: change data capture into Meilisearch">
+<meta property="article:modified_time" content="2026-10-26">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="REST API · Meili CDC Docs">
+<meta name="twitter:description" content="The meilisearch-cdc REST API v1: authentication, errors, tasks, data quality, indexes, destinations, connectors, accounts, alerts and live events.">
+<meta name="twitter:image" content="https://meilicdc.javad.dev/img/og.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="assets/guide.css">
+<script>(function(){try{var t=localStorage.getItem('mcdc-guide-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<script src="assets/guide.js" defer></script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "TechArticle",
+   "headline": "REST API",
+   "description": "The meilisearch-cdc REST API v1: authentication, errors, tasks, data quality, indexes, destinations, connectors, accounts, alerts and live events.",
+   "dateModified": "2026-10-26",
+   "inLanguage": "en",
+   "url": "https://meilicdc.javad.dev/guide/api.html",
+   "mainEntityOfPage": "https://meilicdc.javad.dev/guide/api.html",
+   "image": "https://meilicdc.javad.dev/img/og.png",
+   "author": {
+    "@type": "Organization",
+    "name": "meilisearch-cdc contributors",
+    "url": "https://github.com/ja7ad/meilisearch-cdc"
+   },
+   "publisher": {
+    "@type": "Organization",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   },
+   "isPartOf": {
+    "@type": "WebSite",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Meili CDC",
+     "item": "https://meilicdc.javad.dev/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Docs",
+     "item": "https://meilicdc.javad.dev/guide/index.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "REST API",
+     "item": "https://meilicdc.javad.dev/guide/api.html"
+    }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+<div class="topbar-inner">
+<button type="button" class="icon-btn menu-btn" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+<a class="brand" href="../" aria-label="Meili CDC home"><img src="assets/favicon.svg" alt="" width="30" height="30"><span>Meili CDC</span></a>
+<a class="brand-docs" href="index.html">Docs</a>
+<div class="search" role="search">
+<button type="button" class="icon-btn search-toggle" aria-controls="search-input" aria-expanded="false" aria-label="Search the guide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+<div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><label class="sr-only" for="search-input">Search the guide</label><input id="search-input" type="search" placeholder="Search the guide" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="search-panel" aria-autocomplete="list"><kbd aria-hidden="true">/</kbd></div>
+<div class="search-panel" id="search-panel" hidden></div>
+</div>
+<div class="top-actions">
+<a class="top-link hide-sm" href="../">Home</a>
+<a class="top-link hide-xs" href="../#download">Download</a>
+<button type="button" class="icon-btn theme-btn" aria-label="Toggle dark theme" aria-pressed="false"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+<a class="icon-btn" href="https://github.com/ja7ad/meilisearch-cdc" aria-label="meilisearch-cdc on GitHub" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg></a>
+</div>
+</div>
+</header>
+<div class="layout">
+<nav class="sidebar" id="sidebar" aria-label="Guide">
+<div class="nav-section"><p id="nav-s0">Getting started</p><ul aria-labelledby="nav-s0">
+<li><a href="index.html">Introduction</a></li>
+<li><a href="quick-start.html">Quick start</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s1">Deploy</p><ul aria-labelledby="nav-s1">
+<li><a href="installation.html">Install the binary</a></li>
+<li><a href="docker.html">Docker and Compose</a></li>
+<li><a href="kubernetes.html">Kubernetes</a></li>
+<li><a href="reverse-proxy.html">Reverse proxy and TLS</a></li>
+<li><a href="backup-upgrade.html">Backups and upgrades</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s2">Configure</p><ul aria-labelledby="nav-s2">
+<li><a href="configuration.html">Configuration reference</a></li>
+<li><a href="declarative-tasks.html">Declarative tasks file</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s3">Sources</p><ul aria-labelledby="nav-s3">
+<li><a href="sources.html">Sources and connectors</a></li>
+<li><a href="source-postgres.html">PostgreSQL</a></li>
+<li><a href="source-mysql.html">MySQL and MariaDB</a></li>
+<li><a href="source-mongodb.html">MongoDB</a></li>
+<li><a href="source-dynamodb.html">DynamoDB</a></li>
+<li><a href="source-couchdb.html">CouchDB</a></li>
+<li><a href="source-sqlserver.html">SQL Server</a></li>
+<li><a href="source-cockroachdb.html">CockroachDB</a></li>
+<li><a href="source-kafka.html">Kafka (Debezium)</a></li>
+<li><a href="source-redis.html">Redis Streams</a></li>
+<li><a href="source-sqlpoll.html">SQL polling</a></li>
+<li><a href="source-webhook.html">Webhook (HTTP push)</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s4">Sync</p><ul aria-labelledby="nav-s4">
+<li><a href="destinations.html">Meilisearch destinations</a></li>
+<li><a href="tasks.html">Create a task</a></li>
+<li><a href="task-operations.html">Operate tasks</a></li>
+<li><a href="indexes.html">Index management</a></li>
+<li><a href="data-quality.html">Data quality</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s5">Operate</p><ul aria-labelledby="nav-s5">
+<li><a href="monitoring.html">Monitoring and metrics</a></li>
+<li><a href="alerts.html">Alerts and notifications</a></li>
+<li><a href="security.html">Team and security</a></li>
+<li><a href="mcp.html">AI agents (MCP)</a></li>
+<li><a href="cli.html">Admin CLI</a></li>
+<li><a href="pwa.html">Mobile and app install</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s6">Reference</p><ul aria-labelledby="nav-s6">
+<li><a href="api.html" aria-current="page">REST API</a></li>
+<li><a href="performance.html">Performance and tuning</a></li>
+<li><a href="troubleshooting.html">Troubleshooting and FAQ</a></li>
+<li><a href="changelog.html">Changelog and upgrade notes</a></li>
+<li><a href="development.html">Development</a></li>
+</ul></div>
+</nav>
+<main id="content" class="content" tabindex="-1">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol>
+<li><a href="../">Meili CDC</a></li>
+<li><a href="index.html">Docs</a></li>
+<li><span aria-current="page">REST API</span></li>
+</ol></nav>
+<article class="doc">
+<h1>REST API</h1>
+<p class="lead">Everything the dashboard does goes through a JSON API under <code>/api/v1</code>. This page covers authentication, errors and every route; the field-level reference is <a href="https://github.com/ja7ad/meilisearch-cdc/blob/main/docs/api.md" rel="noopener"><code>docs/api.md</code></a> in the repository.</p>
+
+<h2 id="basics">Basics</h2>
+<ul>
+  <li>Base path <code>/api/v1</code>; JSON in and out (<code>Content-Type: application/json</code>).</li>
+  <li>Request bodies are limited to 16 MiB (1 MiB on some account routes, 64 MiB for webhook ingest).</li>
+  <li>Durations are strings such as <code>"30s"</code>; times are RFC 3339.</li>
+  <li>Secrets are never returned: they come back as <code>"••••••"</code>, and sending the mask back keeps the stored value.</li>
+  <li>Types are defined in <code>internal/model</code> (Task, Status, TaskView, Connector, Destination, DLQEntry, LogEntry, Schema) and <code>internal/diff</code> (Report, SchemaReport).</li>
+</ul>
+
+<h2 id="authentication">Authentication</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Method</th><th>Use</th></tr></thead>
+  <tbody>
+    <tr><td>Session cookie <code>cdc_session</code></td><td>Created by <code>POST /auth/login</code>, <code>/auth/setup</code> or <code>/auth/invite/accept</code>. Valid 7 days, sliding. Cookie-authenticated writes must send an <code>Origin</code> (or <code>Referer</code>) matching the host (CSRF protection); browsers do it automatically.</td></tr>
+    <tr><td>Bearer token</td><td><code>Authorization: Bearer $CDC_ADMIN_TOKEN</code>: the static admin token, acting as an admin named "API token". <code>GET /events</code> also accepts <code>?token=</code>.</td></tr>
+    <tr><td>Webhook signature</td><td>Only for <code>POST /ingest/{id}</code> on webhook tasks with a signing secret; see <a href="source-webhook.html#authentication">Webhook</a>.</td></tr>
+  </tbody>
+</table></div>
+<p>MCP tokens (<code>cdcmcp_…</code>) authenticate only at <code>/mcp</code>, not at the REST API. The role each route needs is listed in the <a href="security.html#permission-matrix">permission matrix</a>.</p>
+
+<pre><code class="language-bash">TOKEN=$CDC_ADMIN_TOKEN
+CDC=https://cdc.example.com
+curl -s -H "Authorization: Bearer $TOKEN" "$CDC/api/v1/tasks" | jq '.[] | {id, state: .status.state}'
+
+# Or sign in and keep the cookie (send Origin on writes)
+curl -s -c jar -H 'Content-Type: application/json' -H "Origin: $CDC" \
+  -d '{"email":"you@example.com","password":"…"}' "$CDC/api/v1/auth/login"
+curl -s -b jar "$CDC/api/v1/auth/me"</code></pre>
+
+<h2 id="errors">Errors</h2>
+<p>Errors are JSON: <code>{"error": "message"}</code>, with <code>details</code> (a list of messages) for validation errors and <code>code</code> when Meilisearch reported the error.</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Status</th><th>When</th></tr></thead>
+  <tbody>
+    <tr><td><code>400</code></td><td>Invalid JSON body, unknown batch action, bad parameters, invalid webhook payload.</td></tr>
+    <tr><td><code>401</code></td><td>Not authenticated (<code>{"error":"authentication required"}</code>), or an invalid webhook signature.</td></tr>
+    <tr><td><code>403</code></td><td>Role too low (<code>{"error":"requires role moderator"}</code>), owner protection, or <code>cross-origin request refused</code>.</td></tr>
+    <tr><td><code>404</code></td><td>Unknown task, connector, destination, index or route.</td></tr>
+    <tr><td><code>409</code></td><td>Conflict: duplicate id, a resource still in use, a running task writing to an index you delete, a primary key mismatch, a diff already running, single-instance mode, the last admin.</td></tr>
+    <tr><td><code>422</code></td><td>Validation failed; <code>details</code> lists every problem, for example <code>["name is required", "index.uid is required and may only contain a-z A-Z 0-9 - _"]</code>.</td></tr>
+    <tr><td><code>429</code></td><td>Too many failed sign-ins; see the <code>Retry-After</code> header.</td></tr>
+    <tr><td><code>4xx</code> from Meilisearch</td><td>Passed through with Meilisearch's message and <code>code</code> (index and instance routes).</td></tr>
+    <tr><td><code>503</code>, <code>504</code></td><td>Webhook ingest: task not running, or confirmation took longer than 60 s.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="health">Health and overview</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Route</th><th>Result</th></tr></thead>
+  <tbody>
+    <tr><td><code>GET /health</code> (public)</td><td><code>{"status":"ok","meilisearch":{"status":"available","version":"1.x","destination":"…"}}</code></td></tr>
+    <tr><td><code>GET /overview</code></td><td>Tasks by state, totals, rate, the default instance, every destination, registered source types.</td></tr>
+    <tr><td><code>GET /events</code></td><td>Server-Sent Events; see <a href="monitoring.html#live-events">live events</a>.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="tasks">Tasks</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Route</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>GET /tasks?state=&amp;q=&amp;tag=</code></td><td><code>[TaskView]</code> (task + <code>status</code>), secrets masked.</td></tr>
+    <tr><td><code>POST /tasks[?start=true]</code></td><td>Body: a <a href="tasks.html#task-json">task</a>; without <code>id</code> one is generated. <code>201 TaskView</code>.</td></tr>
+    <tr><td><code>GET /tasks/{id}</code>, <code>PUT /tasks/{id}</code>, <code>DELETE /tasks/{id}?dropSource=true&amp;deleteIndex=&lt;uid&gt;</code></td><td>Update restarts a running task; delete returns <code>204</code>.</td></tr>
+    <tr><td><code>POST /tasks/{id}/{action}</code></td><td><code>start</code>, <code>stop</code>, <code>pause</code>, <code>resume</code>, <code>restart</code>, <code>resync</code>, <code>reset-checkpoint</code>.</td></tr>
+    <tr><td><code>POST /tasks/batch</code></td><td><code>{"ids":[…],"action":"…"}</code> (the actions above except reset-checkpoint, plus <code>delete</code>) → <code>{"results":[{"id","ok","error"}]}</code>.</td></tr>
+    <tr><td><code>POST /tasks/test</code></td><td>Body: a task → <code>{"ok","error","schema","sample":[5 docs],"primaryKey"}</code>.</td></tr>
+    <tr><td><code>GET /tasks/export</code>, <code>POST /tasks/import</code></td><td>Export with secrets masked; import <code>[Task]</code> → <code>{"created":n,"errors":[…]}</code>.</td></tr>
+    <tr><td><code>GET /tasks/{id}/logs?limit=200</code></td><td><code>[LogEntry]</code>.</td></tr>
+    <tr><td><code>GET /tasks/{id}/metrics</code></td><td><code>{"points":[{"t","rate","lagMs","upserted","deleted"}],"checkpoint":{…}}</code>: about 10 minutes at 2 s resolution.</td></tr>
+    <tr><td><code>GET /tasks/{id}/settings</code>, <code>POST /tasks/{id}/settings/apply</code></td><td>Desired versus live index settings and drift; apply the desired settings (admin).</td></tr>
+    <tr><td><code>POST /ingest/{id}</code></td><td>Push changes to a webhook task; see <a href="source-webhook.html">Webhook</a>.</td></tr>
+  </tbody>
+</table></div>
+
+<pre><code class="language-bash"># Create a task on a saved connector and start it
+curl -X POST -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' "$CDC/api/v1/tasks?start=true" -d '{
+  "id": "products", "name": "Products",
+  "source": {"connectorId": "pg-main", "table": "products"},
+  "index": {"uid": "products"},
+  "sync": {"safety": {"maxDeleteRatio": 0.2, "zeroDowntimeResync": true}}
+}'
+
+# Resync it
+curl -X POST -H "Authorization: Bearer $TOKEN" "$CDC/api/v1/tasks/products/resync"</code></pre>
+
+<h2 id="data-quality">Data quality</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Route</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>GET /tasks/{id}/schema-check</code></td><td>SchemaReport: primary key check, fields with coverage and settings, issues.</td></tr>
+    <tr><td><code>POST /tasks/{id}/diff</code></td><td><code>{"sampleLimit":50,"compareFields":true}</code> → <code>202 {"status":"running"}</code>.</td></tr>
+    <tr><td><code>GET /tasks/{id}/diff</code></td><td>The last Report: status, counts, <code>missing</code>, <code>extra</code>, <code>mismatched</code>, <code>inSync</code>, samples, and repair counts when it repaired.</td></tr>
+    <tr><td><code>POST /tasks/{id}/diff/repair</code></td><td><code>{"missing":true,"mismatched":true,"extra":false}</code> → <code>202 {"status":"running"}</code>; poll <code>GET /tasks/{id}/diff</code> for the result. (<code>docs/api.md</code> describes a synchronous <code>{"upserted","deleted"}</code> response; the server runs it in the background.)</td></tr>
+    <tr><td><code>GET /tasks/{id}/dlq?limit=100</code></td><td><code>[DLQEntry]</code>.</td></tr>
+    <tr><td><code>POST /tasks/{id}/dlq/replay</code></td><td><code>{"ids":[…]}</code> (empty = all) → <code>{"replayed":n,"failed":n}</code>.</td></tr>
+    <tr><td><code>DELETE /tasks/{id}/dlq</code></td><td><code>{"ids":[…]}</code> (empty = all) → <code>{"deleted":n}</code>.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="indexes">Indexes and Meilisearch instances</h2>
+<p>Every index and instance route takes <code>?destination=&lt;id&gt;</code> (the default destination when omitted).</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Route</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>GET /indexes</code></td><td>Indexes with document counts and <code>managedBy</code> tasks. <code>?destination=*</code> returns every instance, grouped.</td></tr>
+    <tr><td><code>POST /indexes</code>, <code>GET /indexes/{uid}</code>, <code>DELETE /indexes/{uid}?confirm={uid}</code></td><td>Delete is <code>409</code> while a running task writes to the index.</td></tr>
+    <tr><td><code>GET /indexes/{uid}/settings</code>, <code>POST …/settings/preview</code>, <code>PATCH …/settings</code>, <code>POST …/settings/reset</code></td><td>PATCH waits up to 30 s and returns <code>{"taskUid","status","error"}</code>.</td></tr>
+    <tr><td><code>PUT /indexes/{uid}/primary-key</code></td><td><code>409</code> when the index has documents.</td></tr>
+    <tr><td><code>POST /indexes/{uid}/search</code></td><td><code>{"q","filter","sort","limit","facets","hybrid"}</code> → Meilisearch's response.</td></tr>
+    <tr><td><code>GET /indexes/{uid}/documents?limit=20&amp;offset=0</code></td><td><code>{"results":[…],"total":n}</code>.</td></tr>
+    <tr><td><code>POST /indexes/swap</code>, <code>POST /indexes/{uid}/compact</code></td><td>Swap: <code>{"a","b","rename"}</code>.</td></tr>
+    <tr><td><code>GET /meili/tasks</code>, <code>POST /meili/tasks/cancel</code>, <code>GET /meili/stats</code></td><td>The instance's task queue (<code>indexUid</code>, <code>status</code>, <code>type</code>, <code>limit</code>, <code>from</code>).</td></tr>
+    <tr><td><code>POST /meili/dumps</code>, <code>POST /meili/snapshots</code>, <code>GET/PATCH /meili/experimental-features</code></td><td>Instance administration.</td></tr>
+  </tbody>
+</table></div>
+
+<pre><code class="language-bash">curl -X POST -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
+  "$CDC/api/v1/indexes/products/search?destination=eu" -d '{"q":"lamp","filter":"price &lt; 50","limit":5}'</code></pre>
+
+<h2 id="connectors-destinations">Connectors and destinations</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Route</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>GET/POST /connectors</code>, <code>GET/PUT/DELETE /connectors/{id}</code></td><td>Delete is <code>409</code> while tasks use it.</td></tr>
+    <tr><td><code>POST /connectors/test</code>, <code>POST /connectors/{id}/test</code></td><td>Test unsaved values or a saved connector → <code>{"ok","error","latencyMs","version","tables"}</code>.</td></tr>
+    <tr><td><code>GET /connectors/{id}/tables?q=</code></td><td>Discovered tables, collections, topics or streams (max 1,000).</td></tr>
+    <tr><td><code>GET/POST /destinations</code>, <code>GET/PUT/DELETE /destinations/{id}</code></td><td>DestinationView with <code>health</code>, <code>usedBy</code>, <code>sync</code>. <code>409</code> in single-instance mode.</td></tr>
+    <tr><td><code>POST /destinations/{id}/default</code>, <code>POST /destinations/test</code>, <code>POST /destinations/{id}/test</code>, <code>POST /destinations/{id}/health/check</code></td><td>Make default; test; check health now.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="accounts">Accounts and settings</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Route</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>GET /auth/config</code> (public)</td><td><code>{"setupRequired","smtpConfigured","passwordLogin"}</code>; signed-in callers also get <code>singleDestination</code>, <code>telegramConfigured</code> and <code>onboarding</code> counts.</td></tr>
+    <tr><td><code>POST /auth/setup</code>, <code>/auth/login</code>, <code>/auth/logout</code>, <code>/auth/forgot</code>, <code>/auth/reset</code></td><td>Setup returns <code>409</code> once a user exists; forgot always answers <code>202</code> (or <code>409</code> without SMTP).</td></tr>
+    <tr><td><code>GET /auth/invite/{token}</code>, <code>POST /auth/invite/accept</code></td><td>Invitation details and acceptance.</td></tr>
+    <tr><td><code>GET/PATCH /auth/me</code>, <code>POST /auth/me/password</code></td><td>The current user.</td></tr>
+    <tr><td><code>GET/POST /users</code>, <code>PATCH/DELETE /users/{id}</code>, <code>POST /users/{id}/password</code></td><td>Admin; owner rules apply.</td></tr>
+    <tr><td><code>GET/POST /invitations</code>, <code>DELETE /invitations/{id}</code></td><td>The link is returned once.</td></tr>
+    <tr><td><code>GET/PUT /settings/smtp</code>, <code>POST /settings/smtp/test</code></td><td><code>{"host","port","username","password","from","tls","publicUrl"}</code>.</td></tr>
+    <tr><td><code>GET/PUT /settings/telegram</code>, <code>POST /settings/telegram/test</code></td><td><code>{"botToken","apiUrl"}</code>; test with <code>{"chatId"}</code>.</td></tr>
+    <tr><td><code>GET/POST /alerts/rules</code>, <code>PUT/DELETE /alerts/rules/{id}</code>, <code>POST /alerts/rules/{id}/test</code></td><td>See <a href="alerts.html">Alerts</a>.</td></tr>
+    <tr><td><code>GET /alerts/channels</code>, <code>GET /alerts/events</code>, <code>GET /alerts/active</code></td><td>Configured channels, history, firing alerts.</td></tr>
+    <tr><td><code>GET/PUT /settings/mcp</code>, <code>POST /settings/mcp/reset-policy</code>, <code>GET/POST /mcp/tokens</code>, <code>POST /mcp/tokens/{id}/rotate</code>, <code>DELETE /mcp/tokens/{id}</code></td><td>See <a href="mcp.html">MCP</a>.</td></tr>
+    <tr><td><code>GET /audit?limit=200</code></td><td>Audit entries, newest first.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="outside-apiv1">Outside <code>/api/v1</code></h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Path</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>/metrics</code></td><td>Prometheus metrics (authenticated).</td></tr>
+    <tr><td><code>/healthz</code></td><td><code>ok</code>, public.</td></tr>
+    <tr><td><code>/mcp</code></td><td>MCP endpoint, <code>cdcmcp_</code> tokens.</td></tr>
+    <tr><td><code>/debug/pprof/</code></td><td>With <code>CDC_PPROF=true</code>.</td></tr>
+    <tr><td><code>/</code></td><td>The dashboard (unless <code>CDC_DISABLE_UI</code>).</td></tr>
+  </tbody>
+</table></div>
+</article>
+<nav class="pager" aria-label="Previous and next page">
+<a class="prev" href="pwa.html" rel="prev"><span class="p-label">Previous</span><span class="p-title">Mobile and app install</span></a>
+<a class="next" href="performance.html" rel="next"><span class="p-label">Next</span><span class="p-title">Performance and tuning</span></a>
+</nav>
+<footer class="site-footer">
+<p>Meili CDC user guide · last updated 2026-10-26 · <a href="https://github.com/ja7ad/meilisearch-cdc/edit/main/docs/guide/api.html" rel="noopener">Edit this page on GitHub</a></p>
+<p>meilisearch-cdc is open source. Meilisearch is a trademark of Meili SAS; this project is not affiliated with it.</p>
+</footer>
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+</body>
+</html>
