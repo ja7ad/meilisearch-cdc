@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin CLI · Meili CDC Docs</title>
+<meta name="description" content="The meilisearch-cdc admin operator CLI: users, sessions, MCP and purge commands, socket and direct modes, and recovery recipes.">
+<link rel="canonical" href="https://meilicdc.javad.dev/guide/cli.html">
+<meta name="robots" content="index, follow">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15112A" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meili CDC">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Admin CLI · Meili CDC Docs">
+<meta property="og:description" content="The meilisearch-cdc admin operator CLI: users, sessions, MCP and purge commands, socket and direct modes, and recovery recipes.">
+<meta property="og:url" content="https://meilicdc.javad.dev/guide/cli.html">
+<meta property="og:image" content="https://meilicdc.javad.dev/img/og.png">
+<meta property="og:image:alt" content="Meili CDC: change data capture into Meilisearch">
+<meta property="article:modified_time" content="2026-10-26">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Admin CLI · Meili CDC Docs">
+<meta name="twitter:description" content="The meilisearch-cdc admin operator CLI: users, sessions, MCP and purge commands, socket and direct modes, and recovery recipes.">
+<meta name="twitter:image" content="https://meilicdc.javad.dev/img/og.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="assets/guide.css">
+<script>(function(){try{var t=localStorage.getItem('mcdc-guide-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<script src="assets/guide.js" defer></script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "TechArticle",
+   "headline": "Admin CLI",
+   "description": "The meilisearch-cdc admin operator CLI: users, sessions, MCP and purge commands, socket and direct modes, and recovery recipes.",
+   "dateModified": "2026-10-26",
+   "inLanguage": "en",
+   "url": "https://meilicdc.javad.dev/guide/cli.html",
+   "mainEntityOfPage": "https://meilicdc.javad.dev/guide/cli.html",
+   "image": "https://meilicdc.javad.dev/img/og.png",
+   "author": {
+    "@type": "Organization",
+    "name": "meilisearch-cdc contributors",
+    "url": "https://github.com/ja7ad/meilisearch-cdc"
+   },
+   "publisher": {
+    "@type": "Organization",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   },
+   "isPartOf": {
+    "@type": "WebSite",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Meili CDC",
+     "item": "https://meilicdc.javad.dev/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Docs",
+     "item": "https://meilicdc.javad.dev/guide/index.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Operate",
+     "item": "https://meilicdc.javad.dev/guide/monitoring.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 4,
+     "name": "Admin CLI",
+     "item": "https://meilicdc.javad.dev/guide/cli.html"
+    }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+<div class="topbar-inner">
+<button type="button" class="icon-btn menu-btn" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+<a class="brand" href="../" aria-label="Meili CDC home"><img src="assets/favicon.svg" alt="" width="30" height="30"><span>Meili CDC</span></a>
+<a class="brand-docs" href="index.html">Docs</a>
+<div class="search" role="search">
+<button type="button" class="icon-btn search-toggle" aria-controls="search-input" aria-expanded="false" aria-label="Search the guide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+<div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><label class="sr-only" for="search-input">Search the guide</label><input id="search-input" type="search" placeholder="Search the guide" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="search-panel" aria-autocomplete="list"><kbd aria-hidden="true">/</kbd></div>
+<div class="search-panel" id="search-panel" hidden></div>
+</div>
+<div class="top-actions">
+<a class="top-link hide-sm" href="../">Home</a>
+<a class="top-link hide-xs" href="../#download">Download</a>
+<button type="button" class="icon-btn theme-btn" aria-label="Toggle dark theme" aria-pressed="false"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+<a class="icon-btn" href="https://github.com/ja7ad/meilisearch-cdc" aria-label="meilisearch-cdc on GitHub" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg></a>
+</div>
+</div>
+</header>
+<div class="layout">
+<nav class="sidebar" id="sidebar" aria-label="Guide">
+<div class="nav-section"><p id="nav-s0">Getting started</p><ul aria-labelledby="nav-s0">
+<li><a href="index.html">Introduction</a></li>
+<li><a href="quick-start.html">Quick start</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s1">Deploy</p><ul aria-labelledby="nav-s1">
+<li><a href="installation.html">Install the binary</a></li>
+<li><a href="docker.html">Docker and Compose</a></li>
+<li><a href="kubernetes.html">Kubernetes</a></li>
+<li><a href="reverse-proxy.html">Reverse proxy and TLS</a></li>
+<li><a href="backup-upgrade.html">Backups and upgrades</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s2">Configure</p><ul aria-labelledby="nav-s2">
+<li><a href="configuration.html">Configuration reference</a></li>
+<li><a href="declarative-tasks.html">Declarative tasks file</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s3">Sources</p><ul aria-labelledby="nav-s3">
+<li><a href="sources.html">Sources and connectors</a></li>
+<li><a href="source-postgres.html">PostgreSQL</a></li>
+<li><a href="source-mysql.html">MySQL and MariaDB</a></li>
+<li><a href="source-mongodb.html">MongoDB</a></li>
+<li><a href="source-dynamodb.html">DynamoDB</a></li>
+<li><a href="source-couchdb.html">CouchDB</a></li>
+<li><a href="source-sqlserver.html">SQL Server</a></li>
+<li><a href="source-cockroachdb.html">CockroachDB</a></li>
+<li><a href="source-kafka.html">Kafka (Debezium)</a></li>
+<li><a href="source-redis.html">Redis Streams</a></li>
+<li><a href="source-sqlpoll.html">SQL polling</a></li>
+<li><a href="source-webhook.html">Webhook (HTTP push)</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s4">Sync</p><ul aria-labelledby="nav-s4">
+<li><a href="destinations.html">Meilisearch destinations</a></li>
+<li><a href="tasks.html">Create a task</a></li>
+<li><a href="task-operations.html">Operate tasks</a></li>
+<li><a href="indexes.html">Index management</a></li>
+<li><a href="data-quality.html">Data quality</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s5">Operate</p><ul aria-labelledby="nav-s5">
+<li><a href="monitoring.html">Monitoring and metrics</a></li>
+<li><a href="alerts.html">Alerts and notifications</a></li>
+<li><a href="security.html">Team and security</a></li>
+<li><a href="mcp.html">AI agents (MCP)</a></li>
+<li><a href="cli.html" aria-current="page">Admin CLI</a></li>
+<li><a href="pwa.html">Mobile and app install</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s6">Reference</p><ul aria-labelledby="nav-s6">
+<li><a href="api.html">REST API</a></li>
+<li><a href="performance.html">Performance and tuning</a></li>
+<li><a href="troubleshooting.html">Troubleshooting and FAQ</a></li>
+<li><a href="changelog.html">Changelog and upgrade notes</a></li>
+<li><a href="development.html">Development</a></li>
+</ul></div>
+</nav>
+<main id="content" class="content" tabindex="-1">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol>
+<li><a href="../">Meili CDC</a></li>
+<li><a href="index.html">Docs</a></li>
+<li><a href="monitoring.html">Operate</a></li>
+<li><span aria-current="page">Admin CLI</span></li>
+</ol></nav>
+<article class="doc">
+<h1>Admin CLI</h1>
+<p class="lead"><code>meilisearch-cdc admin</code> is the operator CLI, run on the server: recover accounts, transfer the primary administrator, sign everyone out, turn MCP off, and purge stored data. It uses the same binary as the service.</p>
+
+<figure>
+  <img src="../img/23-cli.png" width="1920" height="1080" alt="A terminal running meilisearch-cdc admin commands: listing users, creating a user with a generated password and purging sessions" loading="lazy">
+  <figcaption>The admin CLI in a terminal.</figcaption>
+</figure>
+
+<h2 id="usage">Usage</h2>
+
+<pre><code class="language-text">$ meilisearch-cdc admin --help
+Usage: meilisearch-cdc admin [config flags] &lt;command&gt; [flags]
+
+Operator commands, run on the server. They go through the running service
+(its admin socket &lt;data-dir&gt;/admin.sock) or, while it is stopped, work on
+the data directory directly. Every command is recorded in the audit log
+with the actor "cli".
+
+Commands:
+  users list            list accounts
+  users create          add an account
+  users reset-password  set a new password and sign the user out everywhere
+  users set-role        change an account's role
+  users set-owner       make an admin the primary administrator
+  users delete          delete an account and its sessions
+  sessions revoke       sign one user, or everyone, out
+  mcp disable           turn the MCP server off (tokens and policy stay)
+  mcp revoke-tokens     revoke every MCP token
+  purge &lt;scope&gt;...      permanently delete stored data
+
+Config flags are the service's own, with the same environment variables, so
+the CLI finds the same data directory and key: -data-dir (CDC_DATA_DIR),
+-secret-key (CDC_SECRET_KEY), -meili-url (MEILI_URL), ...
+  -json    print machine readable JSON
+
+Run "meilisearch-cdc admin &lt;command&gt; --help" for a command's flags.</code></pre>
+
+<p>Config flags go <em>before</em> the command; <code>-json</code> may go before or after it. The exit code is <code>0</code> on success, <code>1</code> when the command failed and <code>2</code> for usage errors. <code>meilisearch-cdc</code> without <code>admin</code> runs the service.</p>
+
+<h2 id="how-it-connects">How it reaches the data</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Situation</th><th>What happens</th></tr></thead>
+  <tbody>
+    <tr><td>The service is running</td><td>The CLI sends the command to the service's Unix socket <code>&lt;data-dir&gt;/admin.sock</code> (mode <code>0600</code>, removed on shutdown), and the running service applies it: a purge stops the affected tasks cleanly and dashboards see the change at once. File permissions are the authorization: whoever can open the socket can read the data directory anyway.</td></tr>
+    <tr><td>The service is stopped</td><td>The CLI opens <code>cdc.db</code> itself and runs the same code.</td></tr>
+    <tr><td>The database is locked but nothing answers on the socket</td><td>The CLI stops with <code>… is locked by a running service that does not answer on … (an older version, or the socket could not be created; see its log): stop the service and retry</code>.</td></tr>
+  </tbody>
+</table></div>
+<p>The CLI reads the service's configuration (flags and environment variables), so give it the same <code>CDC_DATA_DIR</code>, and the same <code>CDC_SECRET_KEY</code> if the service does not use the generated <code>secret.key</code>. Without a key it refuses to open the data directory, and without a database it says <code>no database at data/cdc.db: check -data-dir (CDC_DATA_DIR)</code>; the service must have started once.</p>
+
+<pre><code class="language-bash">CDC_DATA_DIR=/var/lib/meilisearch-cdc meilisearch-cdc admin users list
+CDC_SECRET_KEY_FILE=/run/secrets/cdc-key meilisearch-cdc admin -data-dir /var/lib/meilisearch-cdc users list
+docker exec -it cdc meilisearch-cdc admin users list
+kubectl -n cdc exec -it deploy/meilisearch-cdc -- meilisearch-cdc admin users list</code></pre>
+
+<div class="callout warning"><p class="callout-title">Socket path length</p>
+<p>Unix socket paths are limited to about 100 characters. With a longer data directory path the service logs <code>admin socket unavailable</code> and runs without it. In our test on macOS the CLI then failed even while the service was stopped (<code>connect to the admin socket …: connect: invalid argument</code>). Keep the data directory path short, or run the CLI from inside the directory: <code>cd /very/long/path &amp;&amp; CDC_DATA_DIR=. meilisearch-cdc admin …</code>.</p></div>
+
+<h2 id="commands">Commands</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Command</th><th>Flags</th><th>What it does</th></tr></thead>
+  <tbody>
+    <tr><td><code>users list</code></td><td></td><td>Accounts, oldest first, with the primary administrator marked.</td></tr>
+    <tr><td><code>users create</code></td><td><code>--email</code> (required), <code>--name</code> (default: the part of the email before <code>@</code>), <code>--role</code> (<code>viewer</code> by default), password flags</td><td>Add an account. The first admin of an empty installation becomes the primary administrator.</td></tr>
+    <tr><td><code>users reset-password</code></td><td><code>--email</code>, password flags</td><td>Set a new password and sign the user out everywhere. Works for the primary administrator too.</td></tr>
+    <tr><td><code>users set-role</code></td><td><code>--email</code>, <code>--role</code> (both required)</td><td>Change a role. The primary administrator's role cannot change, and the last admin cannot be demoted.</td></tr>
+    <tr><td><code>users set-owner</code></td><td><code>--email</code></td><td>Make an admin the primary administrator.</td></tr>
+    <tr><td><code>users delete</code></td><td><code>--email</code></td><td>Delete an account and its sessions. Not the primary administrator, not the last admin.</td></tr>
+    <tr><td><code>sessions revoke</code></td><td><code>--email</code> (optional)</td><td>Sign one user out, or everyone without <code>--email</code>.</td></tr>
+    <tr><td><code>mcp disable</code></td><td></td><td>Turn the MCP server off; tokens and the policy stay.</td></tr>
+    <tr><td><code>mcp revoke-tokens</code></td><td></td><td>Revoke every MCP token.</td></tr>
+    <tr><td><code>purge &lt;scope&gt;…</code></td><td><code>--yes</code>, <code>--indexes</code></td><td>Delete stored data; see <a href="#purge">Purge</a>.</td></tr>
+  </tbody>
+</table></div>
+<p>Every command also accepts <code>-json</code>. Passwords for <code>users create</code> and <code>users reset-password</code> (8 to 128 characters):</p>
+<ul>
+  <li><code>--generate</code> creates a strong random password and prints it once;</li>
+  <li><code>--password-file F</code> reads it from a file (<code>-</code> for standard input);</li>
+  <li>otherwise, on a terminal, a prompt asks twice without echo; with standard input redirected (and always on Windows), its first line is used.</li>
+</ul>
+
+<h3 id="help-of-one-command">Help of one command</h3>
+
+<pre><code class="language-text">$ meilisearch-cdc admin users create --help
+Usage: meilisearch-cdc admin users create [flags]
+
+Add an account.
+
+Creates an account. The first admin of an empty installation becomes the
+primary administrator.
+
+The password comes from --password-file, --generate, or a prompt (asked
+twice, not echoed) when stdin is a terminal; otherwise the first line of
+stdin is used. Passwords have 8 to 128 characters.
+
+Flags:
+  -email string
+    	the account's email address (required)
+  -generate
+    	generate a strong random password and print it once
+  -json
+    	print machine readable JSON
+  -name string
+    	display name (default: the part of the email before @)
+  -password-file string
+    	read the password from this file (- for stdin)
+  -role string
+    	viewer, moderator or admin (default "viewer")</code></pre>
+
+<h2 id="example-session">Example session</h2>
+<p>Real output (passwords shortened):</p>
+
+<pre><code class="language-text">$ meilisearch-cdc admin users list
+No users: the dashboard shows the setup page.
+
+$ meilisearch-cdc admin users create --email owner@example.com --name Administrator --role admin --generate
+created owner@example.com (admin) as the primary administrator
+Generated password (shown only once): AhRWasEcShykjavJ1uBg…
+
+$ meilisearch-cdc admin users create --email ops@example.com --role admin --generate
+created ops@example.com (admin)
+Generated password (shown only once): goKSegGfcxHwW65dOo7Q…
+
+$ meilisearch-cdc admin users create --email viewer@example.com --name Vera --generate
+created viewer@example.com (viewer)
+Generated password (shown only once): ArbMHpOz8BY-1ToWQWzu…
+
+$ meilisearch-cdc admin users list
+EMAIL               NAME           ROLE    OWNER  LAST SIGN-IN  CREATED
+owner@example.com   Administrator  admin   yes    never         2026-10-26 23:42
+ops@example.com     ops            admin          never         2026-10-26 23:42
+viewer@example.com  Vera           viewer         never         2026-10-26 23:42
+
+$ meilisearch-cdc admin users set-role --email owner@example.com --role viewer
+error: forbidden: the primary administrator's role cannot be changed; transfer ownership first with `meilisearch-cdc admin users set-owner`
+
+$ meilisearch-cdc admin users delete --email owner@example.com
+error: forbidden: the primary administrator cannot be deleted; transfer ownership first with `meilisearch-cdc admin users set-owner`
+
+$ meilisearch-cdc admin users set-owner --email viewer@example.com
+error: conflict: the primary administrator must be an admin; viewer@example.com is a viewer
+
+$ meilisearch-cdc admin users set-owner --email ops@example.com
+ops@example.com is now the primary administrator
+
+$ meilisearch-cdc admin sessions revoke --email viewer@example.com
+revoked 0 sessions of viewer@example.com
+
+$ meilisearch-cdc admin sessions revoke
+revoked 0 sessions: everyone is signed out
+
+$ meilisearch-cdc admin mcp disable
+the MCP server is disabled; tokens and the policy are kept
+
+$ meilisearch-cdc admin mcp revoke-tokens
+revoked 0 MCP tokens
+
+$ printf 'short\n' | meilisearch-cdc admin users reset-password --email viewer@example.com
+error: password must be 8 to 128 characters
+
+$ meilisearch-cdc admin users reset-password --email viewer@example.com --generate
+reset the password of viewer@example.com and signed them out everywhere
+Generated password (shown only once): Q-GZlarCaf9cHosL7buK…</code></pre>
+
+<p>With <code>-json</code>:</p>
+
+<pre><code class="language-json">{
+  "users": [
+    {
+      "id": "74e7560236f73f46",
+      "email": "ops@example.com",
+      "name": "ops",
+      "role": "admin",
+      "createdAt": "2026-10-26T20:12:00.239497Z",
+      "updatedAt": "2026-10-26T20:12:00.542017Z",
+      "owner": true
+    }
+  ]
+}</code></pre>
+
+<p>Every command, refused ones included, is recorded in the audit log with the user <code>cli</code> and the action <code>cli.&lt;command&gt;</code>, for example <code>cli.users.reset-password</code>. Passwords never are.</p>
+
+<h2 id="purge">Purge</h2>
+<p><code>admin purge</code> permanently deletes exactly the data of the scopes you name. It asks you to type <code>purge</code> unless <code>--yes</code> is given. Scopes run in this order:</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Scope</th><th>Deletes</th></tr></thead>
+  <tbody>
+    <tr><td><code>tasks</code></td><td>Every task with its checkpoint, status, dead letters and diff report; running tasks stop first. Meilisearch indexes stay unless <code>--indexes</code> is given, then each task's index is deleted on its destination (a task whose index cannot be deleted is kept and reported). Source resources such as replication slots are <strong>not</strong> dropped.</td></tr>
+    <tr><td><code>checkpoints</code></td><td>Sync progress: every task runs a full snapshot on its next start. Running tasks restart now.</td></tr>
+    <tr><td><code>dlq</code></td><td>Dead letters of every task.</td></tr>
+    <tr><td><code>diffs</code></td><td>Diff reports; running diffs are cancelled.</td></tr>
+    <tr><td><code>logs</code></td><td>The task activity log. It is kept in memory, so only a running service has one.</td></tr>
+    <tr><td><code>connectors</code></td><td>Saved source connections. Refused while tasks exist, unless <code>tasks</code> is purged in the same command.</td></tr>
+    <tr><td><code>destinations</code></td><td>Meilisearch destinations, with the same rule. With <code>MEILI_URL</code> set, its destination is recreated.</td></tr>
+    <tr><td><code>alert-rules</code></td><td>Alert rules and their alert state; the history stays.</td></tr>
+    <tr><td><code>alert-events</code></td><td>Alert history and alert state; rules stay.</td></tr>
+    <tr><td><code>mcp-tokens</code></td><td>MCP bearer tokens.</td></tr>
+    <tr><td><code>settings</code></td><td>SMTP, Telegram and the MCP settings (MCP is disabled and the default policy applies).</td></tr>
+    <tr><td><code>sessions</code></td><td>Every sign-in session: everyone is signed out.</td></tr>
+    <tr><td><code>invitations</code></td><td>Pending invitations.</td></tr>
+    <tr><td><code>users</code></td><td>Every account with its sessions, invitations and password resets; the next visit shows the setup page (or <code>CDC_ADMIN_EMAIL</code> creates the admin on the next start).</td></tr>
+    <tr><td><code>audit</code></td><td>The audit log. The purge itself is recorded afterwards.</td></tr>
+    <tr><td><code>all</code></td><td>Everything: the data directory is as good as new, except that the secret key file stays.</td></tr>
+  </tbody>
+</table></div>
+
+<pre><code class="language-text">$ meilisearch-cdc admin purge dlq diffs alert-events --yes
+SCOPE         REMOVED
+dlq           0
+diffs         0
+alert-events  0
+
+$ meilisearch-cdc admin purge dlq
+This permanently deletes from /var/lib/meilisearch-cdc:
+  dlq  dead letters of every task
+Type "purge" to confirm:
+error: purge cancelled: nothing was deleted
+
+$ meilisearch-cdc admin purge bogus --yes
+error: unknown scope "bogus" (tasks, checkpoints, dlq, diffs, logs, connectors, destinations, alert-rules, alert-events, mcp-tokens, settings, sessions, invitations, users, audit or all)
+Run "meilisearch-cdc admin purge --help" for usage.</code></pre>
+
+<p>Purge is not available in the REST API: it is a destructive, server-side operator action.</p>
+
+<h2 id="recovery">Recovery recipes</h2>
+<h3 id="forgot-admin-password">Forgot the admin password</h3>
+
+<pre><code class="language-bash">meilisearch-cdc admin users list                                   # find the email
+meilisearch-cdc admin users reset-password --email admin@example.com --generate</code></pre>
+
+<p>This works for the primary administrator too, and signs the user out everywhere.</p>
+
+<h3 id="locked-out">Locked out of the dashboard</h3>
+<ul>
+  <li><strong>Too many failed sign-ins</strong> (<code>429</code>): wait 15 minutes, or restart the service, which clears the in-memory rate limits.</li>
+  <li><strong>No admin left you can sign in as</strong>: create one with <code>users create --email you@example.com --role admin --generate</code>, or promote an account with <code>users set-role --email you@example.com --role admin</code>.</li>
+  <li><strong>Every session must go</strong> (a lost device, a leaked cookie): <code>sessions revoke</code>, then rotate <code>CDC_ADMIN_TOKEN</code> and <code>mcp revoke-tokens</code> if they may be exposed too.</li>
+</ul>
+
+<h3 id="rotate-ownership">Transfer ownership</h3>
+
+<pre><code class="language-bash">meilisearch-cdc admin users set-role --email new-owner@example.com --role admin   # if not admin yet
+meilisearch-cdc admin users set-owner --email new-owner@example.com
+meilisearch-cdc admin users set-role --email old-owner@example.com --role viewer  # now allowed</code></pre>
+
+<h3 id="wipe-and-start-over">Wipe and start over</h3>
+
+<pre><code class="language-bash">meilisearch-cdc admin purge all                 # asks you to type "purge"
+meilisearch-cdc admin purge tasks --indexes --yes   # tasks and their Meilisearch indexes only</code></pre>
+
+<p>After <code>purge all</code> the next visit shows the setup page. Drop replication slots in your databases yourself (see <a href="source-postgres.html#deleting-a-task">PostgreSQL</a>), since purging does not touch sources. To also discard the encryption key, stop the service and delete the whole data directory instead.</p>
+</article>
+<nav class="pager" aria-label="Previous and next page">
+<a class="prev" href="mcp.html" rel="prev"><span class="p-label">Previous</span><span class="p-title">AI agents (MCP)</span></a>
+<a class="next" href="pwa.html" rel="next"><span class="p-label">Next</span><span class="p-title">Mobile and app install</span></a>
+</nav>
+<footer class="site-footer">
+<p>Meili CDC user guide · last updated 2026-10-26 · <a href="https://github.com/ja7ad/meilisearch-cdc/edit/main/docs/guide/cli.html" rel="noopener">Edit this page on GitHub</a></p>
+<p>meilisearch-cdc is open source. Meilisearch is a trademark of Meili SAS; this project is not affiliated with it.</p>
+</footer>
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+</body>
+</html>
