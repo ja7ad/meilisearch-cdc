@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sources and connectors · Meili CDC Docs</title>
+<meta name="description" content="The eleven change data capture sources supported by meilisearch-cdc, how connectors store credentials, and what every source has in common.">
+<link rel="canonical" href="https://meilicdc.javad.dev/guide/sources.html">
+<meta name="robots" content="index, follow">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15112A" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meili CDC">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Sources and connectors · Meili CDC Docs">
+<meta property="og:description" content="The eleven change data capture sources supported by meilisearch-cdc, how connectors store credentials, and what every source has in common.">
+<meta property="og:url" content="https://meilicdc.javad.dev/guide/sources.html">
+<meta property="og:image" content="https://meilicdc.javad.dev/img/og.png">
+<meta property="og:image:alt" content="Meili CDC: change data capture into Meilisearch">
+<meta property="article:modified_time" content="2026-10-26">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sources and connectors · Meili CDC Docs">
+<meta name="twitter:description" content="The eleven change data capture sources supported by meilisearch-cdc, how connectors store credentials, and what every source has in common.">
+<meta name="twitter:image" content="https://meilicdc.javad.dev/img/og.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="assets/guide.css">
+<script>(function(){try{var t=localStorage.getItem('mcdc-guide-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<script src="assets/guide.js" defer></script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "TechArticle",
+   "headline": "Sources and connectors",
+   "description": "The eleven change data capture sources supported by meilisearch-cdc, how connectors store credentials, and what every source has in common.",
+   "dateModified": "2026-10-26",
+   "inLanguage": "en",
+   "url": "https://meilicdc.javad.dev/guide/sources.html",
+   "mainEntityOfPage": "https://meilicdc.javad.dev/guide/sources.html",
+   "image": "https://meilicdc.javad.dev/img/og.png",
+   "author": {
+    "@type": "Organization",
+    "name": "meilisearch-cdc contributors",
+    "url": "https://github.com/ja7ad/meilisearch-cdc"
+   },
+   "publisher": {
+    "@type": "Organization",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   },
+   "isPartOf": {
+    "@type": "WebSite",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Meili CDC",
+     "item": "https://meilicdc.javad.dev/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Docs",
+     "item": "https://meilicdc.javad.dev/guide/index.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Sources and connectors",
+     "item": "https://meilicdc.javad.dev/guide/sources.html"
+    }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+<div class="topbar-inner">
+<button type="button" class="icon-btn menu-btn" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+<a class="brand" href="../" aria-label="Meili CDC home"><img src="assets/favicon.svg" alt="" width="30" height="30"><span>Meili CDC</span></a>
+<a class="brand-docs" href="index.html">Docs</a>
+<div class="search" role="search">
+<button type="button" class="icon-btn search-toggle" aria-controls="search-input" aria-expanded="false" aria-label="Search the guide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+<div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><label class="sr-only" for="search-input">Search the guide</label><input id="search-input" type="search" placeholder="Search the guide" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="search-panel" aria-autocomplete="list"><kbd aria-hidden="true">/</kbd></div>
+<div class="search-panel" id="search-panel" hidden></div>
+</div>
+<div class="top-actions">
+<a class="top-link hide-sm" href="../">Home</a>
+<a class="top-link hide-xs" href="../#download">Download</a>
+<button type="button" class="icon-btn theme-btn" aria-label="Toggle dark theme" aria-pressed="false"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+<a class="icon-btn" href="https://github.com/ja7ad/meilisearch-cdc" aria-label="meilisearch-cdc on GitHub" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg></a>
+</div>
+</div>
+</header>
+<div class="layout">
+<nav class="sidebar" id="sidebar" aria-label="Guide">
+<div class="nav-section"><p id="nav-s0">Getting started</p><ul aria-labelledby="nav-s0">
+<li><a href="index.html">Introduction</a></li>
+<li><a href="quick-start.html">Quick start</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s1">Deploy</p><ul aria-labelledby="nav-s1">
+<li><a href="installation.html">Install the binary</a></li>
+<li><a href="docker.html">Docker and Compose</a></li>
+<li><a href="kubernetes.html">Kubernetes</a></li>
+<li><a href="reverse-proxy.html">Reverse proxy and TLS</a></li>
+<li><a href="backup-upgrade.html">Backups and upgrades</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s2">Configure</p><ul aria-labelledby="nav-s2">
+<li><a href="configuration.html">Configuration reference</a></li>
+<li><a href="declarative-tasks.html">Declarative tasks file</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s3">Sources</p><ul aria-labelledby="nav-s3">
+<li><a href="sources.html" aria-current="page">Sources and connectors</a></li>
+<li><a href="source-postgres.html">PostgreSQL</a></li>
+<li><a href="source-mysql.html">MySQL and MariaDB</a></li>
+<li><a href="source-mongodb.html">MongoDB</a></li>
+<li><a href="source-dynamodb.html">DynamoDB</a></li>
+<li><a href="source-couchdb.html">CouchDB</a></li>
+<li><a href="source-sqlserver.html">SQL Server</a></li>
+<li><a href="source-cockroachdb.html">CockroachDB</a></li>
+<li><a href="source-kafka.html">Kafka (Debezium)</a></li>
+<li><a href="source-redis.html">Redis Streams</a></li>
+<li><a href="source-sqlpoll.html">SQL polling</a></li>
+<li><a href="source-webhook.html">Webhook (HTTP push)</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s4">Sync</p><ul aria-labelledby="nav-s4">
+<li><a href="destinations.html">Meilisearch destinations</a></li>
+<li><a href="tasks.html">Create a task</a></li>
+<li><a href="task-operations.html">Operate tasks</a></li>
+<li><a href="indexes.html">Index management</a></li>
+<li><a href="data-quality.html">Data quality</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s5">Operate</p><ul aria-labelledby="nav-s5">
+<li><a href="monitoring.html">Monitoring and metrics</a></li>
+<li><a href="alerts.html">Alerts and notifications</a></li>
+<li><a href="security.html">Team and security</a></li>
+<li><a href="mcp.html">AI agents (MCP)</a></li>
+<li><a href="cli.html">Admin CLI</a></li>
+<li><a href="pwa.html">Mobile and app install</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s6">Reference</p><ul aria-labelledby="nav-s6">
+<li><a href="api.html">REST API</a></li>
+<li><a href="performance.html">Performance and tuning</a></li>
+<li><a href="troubleshooting.html">Troubleshooting and FAQ</a></li>
+<li><a href="changelog.html">Changelog and upgrade notes</a></li>
+<li><a href="development.html">Development</a></li>
+</ul></div>
+</nav>
+<main id="content" class="content" tabindex="-1">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol>
+<li><a href="../">Meili CDC</a></li>
+<li><a href="index.html">Docs</a></li>
+<li><span aria-current="page">Sources and connectors</span></li>
+</ol></nav>
+<article class="doc">
+<h1>Sources and connectors</h1>
+<p class="lead">meilisearch-cdc reads changes from eleven kinds of sources. A connector stores how to reach one source; tasks pick a connector and add the table.</p>
+
+<h2 id="supported-sources">Supported sources</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Source</th><th>Type id</th><th>Capture method</th><th>Snapshot</th><th>TRUNCATE / drop</th></tr></thead>
+  <tbody>
+    <tr><td><a href="source-postgres.html">PostgreSQL</a></td><td><code>postgres</code></td><td>Logical replication, <code>pgoutput</code></td><td>Keyset pages of 5,000 rows</td><td>Captured</td></tr>
+    <tr><td><a href="source-mysql.html">MySQL 8</a></td><td><code>mysql</code></td><td>Binary log (as a replica)</td><td>Keyset pages of 5,000 rows</td><td>Captured</td></tr>
+    <tr><td><a href="source-mysql.html">MariaDB</a></td><td><code>mariadb</code></td><td>Binary log (as a replica)</td><td>Keyset pages of 5,000 rows</td><td>Captured</td></tr>
+    <tr><td><a href="source-mongodb.html">MongoDB</a></td><td><code>mongodb</code></td><td>Change streams</td><td>Collection scan</td><td>Drop, rename, dropDatabase</td></tr>
+    <tr><td><a href="source-dynamodb.html">DynamoDB</a></td><td><code>dynamodb</code></td><td>DynamoDB Streams</td><td>Parallel scan (4 segments)</td><td>No</td></tr>
+    <tr><td><a href="source-couchdb.html">CouchDB / Cloudant</a></td><td><code>couchdb</code></td><td><code>_changes</code> feed (longpoll)</td><td><code>_all_docs</code> pages</td><td>No</td></tr>
+    <tr><td><a href="source-sqlserver.html">SQL Server</a></td><td><code>sqlserver</code></td><td>Native CDC change tables</td><td>Keyset pages of 5,000 rows</td><td>No</td></tr>
+    <tr><td><a href="source-cockroachdb.html">CockroachDB</a></td><td><code>cockroachdb</code></td><td>Core (sinkless) changefeed</td><td>Consistent read <code>AS OF SYSTEM TIME</code></td><td>No</td></tr>
+    <tr><td><a href="source-kafka.html">Kafka (Debezium)</a></td><td><code>kafka</code></td><td>Debezium JSON envelopes</td><td>Topic replay, folded per key</td><td>Debezium <code>op: t</code></td></tr>
+    <tr><td><a href="source-redis.html">Redis Streams</a></td><td><code>redis</code></td><td><code>XREAD</code></td><td>Stream replay, folded per key</td><td><code>op truncate</code> entries</td></tr>
+    <tr><td><a href="source-sqlpoll.html">SQL polling</a></td><td><code>sqlpoll</code></td><td>Incremental cursor column (PostgreSQL, MySQL, SQLite drivers)</td><td>Keyset pages of 1,000 rows</td><td>No</td></tr>
+    <tr><td><a href="source-webhook.html">Webhook</a></td><td><code>webhook</code></td><td>HTTP push to <code>/api/v1/ingest/{task}</code></td><td>None (push only)</td><td><code>{"op":"truncate"}</code></td></tr>
+  </tbody>
+</table></div>
+<p>When a source reports a truncate, the task is <strong>held</strong> unless the task allows it (<code>sync.safety.allowTruncate</code>); with it allowed, every document of the index is deleted. See <a href="tasks.html#safety">safety guards</a>.</p>
+
+<h2 id="connectors">Connectors</h2>
+<p>A connector is a saved source connection: its type and the connection fields of that type. Credentials are stored once, encrypted, and never returned by the API (passwords in connection strings and DynamoDB secret keys come back masked as <code>••••••</code>). Tasks reference a connector with <code>source.connectorId</code> and add only table-level fields.</p>
+<figure>
+  <img src="../img/09-connectors.png" width="1920" height="1080" alt="The Connectors page listing saved source connections with their type, host, last test result and the tasks that use them" loading="lazy">
+  <figcaption>Connectors with their last test result and the tasks using them.</figcaption>
+</figure>
+<div class="table-wrap"><table>
+  <thead><tr><th>Type</th><th>Connection fields (connector)</th><th>Table-level fields (task)</th></tr></thead>
+  <tbody>
+    <tr><td><code>postgres</code></td><td><code>dsn</code></td><td><code>schema</code>, <code>table</code>, <code>slot</code>, <code>publication</code></td></tr>
+    <tr><td><code>mysql</code>, <code>mariadb</code></td><td><code>dsn</code>, <code>database</code></td><td><code>database</code>, <code>table</code>, <code>serverId</code></td></tr>
+    <tr><td><code>mongodb</code></td><td><code>dsn</code>, <code>database</code></td><td><code>database</code>, <code>table</code> (collection)</td></tr>
+    <tr><td><code>dynamodb</code></td><td><code>region</code>, <code>endpoint</code>, <code>accessKeyId</code>, <code>secretAccessKey</code></td><td><code>table</code></td></tr>
+    <tr><td><code>kafka</code></td><td><code>brokers</code></td><td><code>groupId</code>, <code>table</code> (topic)</td></tr>
+    <tr><td><code>sqlpoll</code></td><td><code>driver</code>, <code>dsn</code></td><td><code>table</code>, <code>cursorColumn</code>, <code>pollInterval</code></td></tr>
+    <tr><td><code>couchdb</code></td><td><code>dsn</code></td><td><code>table</code> (database)</td></tr>
+    <tr><td><code>sqlserver</code></td><td><code>dsn</code></td><td><code>schema</code>, <code>table</code> (and <code>slot</code>, the capture instance, through the API)</td></tr>
+    <tr><td><code>cockroachdb</code></td><td><code>dsn</code></td><td><code>table</code> (and <code>schema</code> through the API)</td></tr>
+    <tr><td><code>redis</code></td><td><code>dsn</code></td><td><code>table</code> (stream key)</td></tr>
+    <tr><td><code>webhook</code></td><td>none</td><td><code>table</code> (a name for the feed)</td></tr>
+  </tbody>
+</table></div>
+<p>A task's <code>database</code> overrides the connector's, so one MySQL or MongoDB connector can serve several databases on the same server.</p>
+
+<h3 id="testing-and-browsing">Testing and browsing</h3>
+<ul>
+  <li>A connector is tested in the background when it is created or saved, and on demand with <em>Test</em>. The result (OK or the error, latency, server version, number of tables) is kept and shown as the last test.</li>
+  <li>The connector page lists what the connector can see: tables and views, collections, topics, streams or databases, with row estimates when the source provides them (at most 1,000 entries, filterable). Creating a task from a listed table pre-fills the wizard.</li>
+  <li>Creating, editing, deleting and testing connectors needs the <code>admin</code> role (the route table does not grant connector tests to moderators).</li>
+</ul>
+
+<h3 id="changing-and-deleting">Changing and deleting</h3>
+<ul>
+  <li>Saving a connector with the masked password keeps the stored one. Changing a password restarts the running tasks that use the connector.</li>
+  <li>A connector that tasks still use cannot be deleted (<code>409</code> with the list of tasks).</li>
+</ul>
+
+<h3 id="inline-connections">Inline connections</h3>
+<p>The API and the <a href="declarative-tasks.html">tasks file</a> also accept the connection fields directly in a task's <code>source</code> (<code>type</code>, <code>dsn</code>, …) without a connector. The dashboard's wizard always works through a connector.</p>
+
+<h2 id="what-every-source-has-in-common">What every source has in common</h2>
+<ul>
+  <li><strong>Validation first.</strong> Each source checks its prerequisites when the task starts and fails with a message saying what to change. These are permanent errors: the task goes to <code>failed</code> instead of retrying.</li>
+  <li><strong>Position before snapshot.</strong> The stream position is captured before the snapshot, so changes made during the copy are replayed afterwards.</li>
+  <li><strong>Lost position → resync.</strong> If the stored position no longer exists on the source (purged log, dropped slot, expired shard, trimmed stream), the task logs <code>source position lost</code> and runs a full snapshot again by itself.</li>
+  <li><strong>A primary key.</strong> Documents need an id. It comes from the table's primary key, or from <code>mapping.primaryKey</code> when the source has none or you want another one.</li>
+  <li><strong>Value conversion.</strong> Times become RFC 3339 strings (or Unix seconds or milliseconds, per task), binary values become base64 strings, <code>NaN</code> and infinities become <code>null</code>, and nested JSON stays nested.</li>
+</ul>
+</article>
+<nav class="pager" aria-label="Previous and next page">
+<a class="prev" href="declarative-tasks.html" rel="prev"><span class="p-label">Previous</span><span class="p-title">Declarative tasks file</span></a>
+<a class="next" href="source-postgres.html" rel="next"><span class="p-label">Next</span><span class="p-title">PostgreSQL</span></a>
+</nav>
+<footer class="site-footer">
+<p>Meili CDC user guide · last updated 2026-10-26 · <a href="https://github.com/ja7ad/meilisearch-cdc/edit/main/docs/guide/sources.html" rel="noopener">Edit this page on GitHub</a></p>
+<p>meilisearch-cdc is open source. Meilisearch is a trademark of Meili SAS; this project is not affiliated with it.</p>
+</footer>
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+</body>
+</html>
