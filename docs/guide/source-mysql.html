@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MySQL and MariaDB · Meili CDC Docs</title>
+<meta name="description" content="Capture MySQL 8 and MariaDB changes from the binary log: binlog_format=ROW, binlog_row_image=FULL, server ids, grants and positions.">
+<link rel="canonical" href="https://meilicdc.javad.dev/guide/source-mysql.html">
+<meta name="robots" content="index, follow">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15112A" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meili CDC">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="MySQL and MariaDB · Meili CDC Docs">
+<meta property="og:description" content="Capture MySQL 8 and MariaDB changes from the binary log: binlog_format=ROW, binlog_row_image=FULL, server ids, grants and positions.">
+<meta property="og:url" content="https://meilicdc.javad.dev/guide/source-mysql.html">
+<meta property="og:image" content="https://meilicdc.javad.dev/img/og.png">
+<meta property="og:image:alt" content="Meili CDC: change data capture into Meilisearch">
+<meta property="article:modified_time" content="2026-10-26">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MySQL and MariaDB · Meili CDC Docs">
+<meta name="twitter:description" content="Capture MySQL 8 and MariaDB changes from the binary log: binlog_format=ROW, binlog_row_image=FULL, server ids, grants and positions.">
+<meta name="twitter:image" content="https://meilicdc.javad.dev/img/og.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="assets/guide.css">
+<script>(function(){try{var t=localStorage.getItem('mcdc-guide-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<script src="assets/guide.js" defer></script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "TechArticle",
+   "headline": "MySQL and MariaDB",
+   "description": "Capture MySQL 8 and MariaDB changes from the binary log: binlog_format=ROW, binlog_row_image=FULL, server ids, grants and positions.",
+   "dateModified": "2026-10-26",
+   "inLanguage": "en",
+   "url": "https://meilicdc.javad.dev/guide/source-mysql.html",
+   "mainEntityOfPage": "https://meilicdc.javad.dev/guide/source-mysql.html",
+   "image": "https://meilicdc.javad.dev/img/og.png",
+   "author": {
+    "@type": "Organization",
+    "name": "meilisearch-cdc contributors",
+    "url": "https://github.com/ja7ad/meilisearch-cdc"
+   },
+   "publisher": {
+    "@type": "Organization",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   },
+   "isPartOf": {
+    "@type": "WebSite",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Meili CDC",
+     "item": "https://meilicdc.javad.dev/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Docs",
+     "item": "https://meilicdc.javad.dev/guide/index.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Sources",
+     "item": "https://meilicdc.javad.dev/guide/sources.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 4,
+     "name": "MySQL and MariaDB",
+     "item": "https://meilicdc.javad.dev/guide/source-mysql.html"
+    }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+<div class="topbar-inner">
+<button type="button" class="icon-btn menu-btn" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+<a class="brand" href="../" aria-label="Meili CDC home"><img src="assets/favicon.svg" alt="" width="30" height="30"><span>Meili CDC</span></a>
+<a class="brand-docs" href="index.html">Docs</a>
+<div class="search" role="search">
+<button type="button" class="icon-btn search-toggle" aria-controls="search-input" aria-expanded="false" aria-label="Search the guide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+<div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><label class="sr-only" for="search-input">Search the guide</label><input id="search-input" type="search" placeholder="Search the guide" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="search-panel" aria-autocomplete="list"><kbd aria-hidden="true">/</kbd></div>
+<div class="search-panel" id="search-panel" hidden></div>
+</div>
+<div class="top-actions">
+<a class="top-link hide-sm" href="../">Home</a>
+<a class="top-link hide-xs" href="../#download">Download</a>
+<button type="button" class="icon-btn theme-btn" aria-label="Toggle dark theme" aria-pressed="false"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+<a class="icon-btn" href="https://github.com/ja7ad/meilisearch-cdc" aria-label="meilisearch-cdc on GitHub" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg></a>
+</div>
+</div>
+</header>
+<div class="layout">
+<nav class="sidebar" id="sidebar" aria-label="Guide">
+<div class="nav-section"><p id="nav-s0">Getting started</p><ul aria-labelledby="nav-s0">
+<li><a href="index.html">Introduction</a></li>
+<li><a href="quick-start.html">Quick start</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s1">Deploy</p><ul aria-labelledby="nav-s1">
+<li><a href="installation.html">Install the binary</a></li>
+<li><a href="docker.html">Docker and Compose</a></li>
+<li><a href="kubernetes.html">Kubernetes</a></li>
+<li><a href="reverse-proxy.html">Reverse proxy and TLS</a></li>
+<li><a href="backup-upgrade.html">Backups and upgrades</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s2">Configure</p><ul aria-labelledby="nav-s2">
+<li><a href="configuration.html">Configuration reference</a></li>
+<li><a href="declarative-tasks.html">Declarative tasks file</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s3">Sources</p><ul aria-labelledby="nav-s3">
+<li><a href="sources.html">Sources and connectors</a></li>
+<li><a href="source-postgres.html">PostgreSQL</a></li>
+<li><a href="source-mysql.html" aria-current="page">MySQL and MariaDB</a></li>
+<li><a href="source-mongodb.html">MongoDB</a></li>
+<li><a href="source-dynamodb.html">DynamoDB</a></li>
+<li><a href="source-couchdb.html">CouchDB</a></li>
+<li><a href="source-sqlserver.html">SQL Server</a></li>
+<li><a href="source-cockroachdb.html">CockroachDB</a></li>
+<li><a href="source-kafka.html">Kafka (Debezium)</a></li>
+<li><a href="source-redis.html">Redis Streams</a></li>
+<li><a href="source-sqlpoll.html">SQL polling</a></li>
+<li><a href="source-webhook.html">Webhook (HTTP push)</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s4">Sync</p><ul aria-labelledby="nav-s4">
+<li><a href="destinations.html">Meilisearch destinations</a></li>
+<li><a href="tasks.html">Create a task</a></li>
+<li><a href="task-operations.html">Operate tasks</a></li>
+<li><a href="indexes.html">Index management</a></li>
+<li><a href="data-quality.html">Data quality</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s5">Operate</p><ul aria-labelledby="nav-s5">
+<li><a href="monitoring.html">Monitoring and metrics</a></li>
+<li><a href="alerts.html">Alerts and notifications</a></li>
+<li><a href="security.html">Team and security</a></li>
+<li><a href="mcp.html">AI agents (MCP)</a></li>
+<li><a href="cli.html">Admin CLI</a></li>
+<li><a href="pwa.html">Mobile and app install</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s6">Reference</p><ul aria-labelledby="nav-s6">
+<li><a href="api.html">REST API</a></li>
+<li><a href="performance.html">Performance and tuning</a></li>
+<li><a href="troubleshooting.html">Troubleshooting and FAQ</a></li>
+<li><a href="changelog.html">Changelog and upgrade notes</a></li>
+<li><a href="development.html">Development</a></li>
+</ul></div>
+</nav>
+<main id="content" class="content" tabindex="-1">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol>
+<li><a href="../">Meili CDC</a></li>
+<li><a href="index.html">Docs</a></li>
+<li><a href="sources.html">Sources</a></li>
+<li><span aria-current="page">MySQL and MariaDB</span></li>
+</ol></nav>
+<article class="doc">
+<h1>MySQL and MariaDB</h1>
+<p class="lead">The <code>mysql</code> and <code>mariadb</code> sources read the binary log the way a replica does. Use <code>mysql</code> for MySQL 8 and <code>mariadb</code> for MariaDB; the configuration is the same.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+<h3 id="server-settings">Server settings</h3>
+<p>Binary logging must be on, in row format, with full row images. In <code>my.cnf</code>:</p>
+
+<pre><code class="language-ini">[mysqld]
+server-id        = 1          # any id, unique in your replication topology
+log-bin          = mysql-bin
+binlog_format    = ROW
+binlog_row_image = FULL
+# Keep binlogs long enough to cover a stopped task (7 days here).
+binlog_expire_logs_seconds = 604800</code></pre>
+
+<p>MySQL 8 enables binary logging and row format by default; check the values with:</p>
+
+<pre><code class="language-sql">SELECT @@GLOBAL.log_bin, @@GLOBAL.binlog_format, @@GLOBAL.binlog_row_image;
+-- MySQL only: must not contain PARTIAL_JSON
+SELECT @@GLOBAL.binlog_row_value_options;</code></pre>
+
+<p>The task fails with a precise message when a setting is wrong, for example:</p>
+
+<pre><code class="language-text">mysql: binlog_format is MIXED but change capture needs ROW; run SET GLOBAL binlog_format = 'ROW' and persist it in the server config
+mysql: binlog_row_image is MINIMAL but change capture needs FULL; run SET GLOBAL binlog_row_image = 'FULL' and persist it in the server config
+mysql: binlog_row_value_options = PARTIAL_JSON logs JSON diffs; set it to '' so full values are logged
+mysql: binary logging is disabled; start the server with --log-bin (and --server-id)</code></pre>
+
+<p>On Amazon RDS for MySQL or MariaDB, automated backups enable the binary log; set <code>binlog_format = ROW</code> in the parameter group and extend retention with <code>CALL mysql.rds_set_configuration('binlog retention hours', 168);</code>.</p>
+
+<h3 id="a-dedicated-user">A dedicated user</h3>
+
+<pre><code class="language-sql">CREATE USER 'cdc'@'%' IDENTIFIED BY 'change-me';
+GRANT REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO 'cdc'@'%';
+GRANT SELECT ON shop.products TO 'cdc'@'%';</code></pre>
+
+<p><code>REPLICATION SLAVE</code> lets the task stream the binlog; <code>REPLICATION CLIENT</code> lets it read the current binlog position and list binlog files; <code>SELECT</code> serves the snapshot and the schema. Missing grants fail the task with the grant to add, for example <code>(grant REPLICATION SLAVE, REPLICATION CLIENT ON *.*)</code>.</p>
+
+<h2 id="connection-string">Connection string</h2>
+<p>The <a href="https://github.com/go-sql-driver/mysql#dsn-data-source-name" rel="noopener">go-sql-driver/mysql</a> DSN format. The address must be TCP (the binlog protocol does not use Unix sockets); without a port, 3306 is used.</p>
+
+<pre><code class="language-text">cdc:change-me@tcp(db.internal:3306)/shop
+cdc:change-me@tcp(db.internal:3306)/shop?tls=true</code></pre>
+
+<p>The database comes from the task's <code>database</code> field, the connector's <code>database</code> field, or the DSN path, in that order. Without any: <code>no database: set source.database or put it in the dsn</code>. The service connects with UTC as the session time zone, so <code>TIMESTAMP</code> values match the binlog.</p>
+
+<h2 id="task-fields">Task fields</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Field</th><th>Default</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><code>database</code></td><td>connector or DSN</td><td>The database (schema) of the table.</td></tr>
+    <tr><td><code>table</code></td><td>required</td><td>The table whose rows become documents.</td></tr>
+    <tr><td><code>serverId</code></td><td>derived from the task id</td><td>The replica server id the task uses when reading the binlog. It must differ from the server's own <code>server-id</code> and from every other replica and task. The default is a stable hash of the task id between 1000 and 2<sup>31</sup>, so two tasks on one server do not disconnect each other.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="how-changes-are-applied">How changes are applied</h2>
+<ul>
+  <li><strong>Snapshot.</strong> Keyset pagination over the primary key, 5,000 rows per query. Tables without a primary key are read with a plain scan; they also need <code>mapping.primaryKey</code> so documents have an id.</li>
+  <li><strong>Inserts and updates</strong> become upserts, committed per transaction (at the <code>XID</code> event). An update that changes the primary key deletes the old document first.</li>
+  <li><strong>Deletes</strong> delete the document.</li>
+  <li><strong><code>TRUNCATE TABLE</code></strong> on the task's table holds the task unless <code>allowTruncate</code> is on.</li>
+  <li><strong>Other DDL</strong> on the table (<code>ALTER</code>, <code>RENAME</code>, …) makes the source reload the column list before decoding further rows.</li>
+  <li><strong>MariaDB JSON</strong> columns (stored as <code>LONGTEXT</code> with a <code>json_valid</code> check) are recognised and decoded as JSON.</li>
+</ul>
+
+<h2 id="positions-and-resume">Positions and resume</h2>
+<p>Positions are binlog coordinates <code>file:offset</code>, for example <code>mysql-bin.000003:1234</code>, taken right after each transaction's commit. The server keeps no per-replica state, so nothing needs cleaning up when a task is deleted. On resume the source checks that the binlog file still exists (<code>SHOW BINARY LOGS</code>); if it was purged, or the server answers with error 1236, the position is lost and the task resyncs automatically. Keep binlog retention longer than any planned downtime.</p>
+<p>GTIDs are not used: after a failover to another server the coordinates differ, and the task needs a resync (it detects a missing binlog file by itself; otherwise use <em>Resync</em>).</p>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Error</th><th>Fix</th></tr></thead>
+  <tbody>
+    <tr><td class="wrap"><code>read binlog position (the user needs REPLICATION CLIENT)</code></td><td>Grant <code>REPLICATION CLIENT ON *.*</code>.</td></tr>
+    <tr><td class="wrap"><code>binlog replication needs a tcp address</code></td><td>Use <code>@tcp(host:port)</code> in the DSN, not <code>@unix(…)</code>.</td></tr>
+    <tr><td class="wrap"><code>binlog mysql-bin.000042 was purged from the server</code></td><td>Handled automatically with a full resync. Raise binlog retention.</td></tr>
+    <tr><td class="wrap">A replica or another task disconnects when the task starts</td><td>Two binlog readers use the same server id. Set a unique <code>serverId</code>.</td></tr>
+    <tr><td class="wrap"><code>table shop.x does not exist (or the user cannot see it)</code></td><td>Check the database and table, and the <code>SELECT</code> grant.</td></tr>
+  </tbody>
+</table></div>
+</article>
+<nav class="pager" aria-label="Previous and next page">
+<a class="prev" href="source-postgres.html" rel="prev"><span class="p-label">Previous</span><span class="p-title">PostgreSQL</span></a>
+<a class="next" href="source-mongodb.html" rel="next"><span class="p-label">Next</span><span class="p-title">MongoDB</span></a>
+</nav>
+<footer class="site-footer">
+<p>Meili CDC user guide · last updated 2026-10-26 · <a href="https://github.com/ja7ad/meilisearch-cdc/edit/main/docs/guide/source-mysql.html" rel="noopener">Edit this page on GitHub</a></p>
+<p>meilisearch-cdc is open source. Meilisearch is a trademark of Meili SAS; this project is not affiliated with it.</p>
+</footer>
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+</body>
+</html>
