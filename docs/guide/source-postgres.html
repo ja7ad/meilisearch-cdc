@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PostgreSQL · Meili CDC Docs</title>
+<meta name="description" content="Capture PostgreSQL changes with logical replication (pgoutput): wal_level, REPLICA IDENTITY, replication slots, publications and grants.">
+<link rel="canonical" href="https://meilicdc.javad.dev/guide/source-postgres.html">
+<meta name="robots" content="index, follow">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15112A" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meili CDC">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="PostgreSQL · Meili CDC Docs">
+<meta property="og:description" content="Capture PostgreSQL changes with logical replication (pgoutput): wal_level, REPLICA IDENTITY, replication slots, publications and grants.">
+<meta property="og:url" content="https://meilicdc.javad.dev/guide/source-postgres.html">
+<meta property="og:image" content="https://meilicdc.javad.dev/img/og.png">
+<meta property="og:image:alt" content="Meili CDC: change data capture into Meilisearch">
+<meta property="article:modified_time" content="2026-10-26">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PostgreSQL · Meili CDC Docs">
+<meta name="twitter:description" content="Capture PostgreSQL changes with logical replication (pgoutput): wal_level, REPLICA IDENTITY, replication slots, publications and grants.">
+<meta name="twitter:image" content="https://meilicdc.javad.dev/img/og.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="assets/guide.css">
+<script>(function(){try{var t=localStorage.getItem('mcdc-guide-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<script src="assets/guide.js" defer></script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "TechArticle",
+   "headline": "PostgreSQL",
+   "description": "Capture PostgreSQL changes with logical replication (pgoutput): wal_level, REPLICA IDENTITY, replication slots, publications and grants.",
+   "dateModified": "2026-10-26",
+   "inLanguage": "en",
+   "url": "https://meilicdc.javad.dev/guide/source-postgres.html",
+   "mainEntityOfPage": "https://meilicdc.javad.dev/guide/source-postgres.html",
+   "image": "https://meilicdc.javad.dev/img/og.png",
+   "author": {
+    "@type": "Organization",
+    "name": "meilisearch-cdc contributors",
+    "url": "https://github.com/ja7ad/meilisearch-cdc"
+   },
+   "publisher": {
+    "@type": "Organization",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   },
+   "isPartOf": {
+    "@type": "WebSite",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Meili CDC",
+     "item": "https://meilicdc.javad.dev/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Docs",
+     "item": "https://meilicdc.javad.dev/guide/index.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Sources",
+     "item": "https://meilicdc.javad.dev/guide/sources.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 4,
+     "name": "PostgreSQL",
+     "item": "https://meilicdc.javad.dev/guide/source-postgres.html"
+    }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+<div class="topbar-inner">
+<button type="button" class="icon-btn menu-btn" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+<a class="brand" href="../" aria-label="Meili CDC home"><img src="assets/favicon.svg" alt="" width="30" height="30"><span>Meili CDC</span></a>
+<a class="brand-docs" href="index.html">Docs</a>
+<div class="search" role="search">
+<button type="button" class="icon-btn search-toggle" aria-controls="search-input" aria-expanded="false" aria-label="Search the guide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+<div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><label class="sr-only" for="search-input">Search the guide</label><input id="search-input" type="search" placeholder="Search the guide" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="search-panel" aria-autocomplete="list"><kbd aria-hidden="true">/</kbd></div>
+<div class="search-panel" id="search-panel" hidden></div>
+</div>
+<div class="top-actions">
+<a class="top-link hide-sm" href="../">Home</a>
+<a class="top-link hide-xs" href="../#download">Download</a>
+<button type="button" class="icon-btn theme-btn" aria-label="Toggle dark theme" aria-pressed="false"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+<a class="icon-btn" href="https://github.com/ja7ad/meilisearch-cdc" aria-label="meilisearch-cdc on GitHub" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg></a>
+</div>
+</div>
+</header>
+<div class="layout">
+<nav class="sidebar" id="sidebar" aria-label="Guide">
+<div class="nav-section"><p id="nav-s0">Getting started</p><ul aria-labelledby="nav-s0">
+<li><a href="index.html">Introduction</a></li>
+<li><a href="quick-start.html">Quick start</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s1">Deploy</p><ul aria-labelledby="nav-s1">
+<li><a href="installation.html">Install the binary</a></li>
+<li><a href="docker.html">Docker and Compose</a></li>
+<li><a href="kubernetes.html">Kubernetes</a></li>
+<li><a href="reverse-proxy.html">Reverse proxy and TLS</a></li>
+<li><a href="backup-upgrade.html">Backups and upgrades</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s2">Configure</p><ul aria-labelledby="nav-s2">
+<li><a href="configuration.html">Configuration reference</a></li>
+<li><a href="declarative-tasks.html">Declarative tasks file</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s3">Sources</p><ul aria-labelledby="nav-s3">
+<li><a href="sources.html">Sources and connectors</a></li>
+<li><a href="source-postgres.html" aria-current="page">PostgreSQL</a></li>
+<li><a href="source-mysql.html">MySQL and MariaDB</a></li>
+<li><a href="source-mongodb.html">MongoDB</a></li>
+<li><a href="source-dynamodb.html">DynamoDB</a></li>
+<li><a href="source-couchdb.html">CouchDB</a></li>
+<li><a href="source-sqlserver.html">SQL Server</a></li>
+<li><a href="source-cockroachdb.html">CockroachDB</a></li>
+<li><a href="source-kafka.html">Kafka (Debezium)</a></li>
+<li><a href="source-redis.html">Redis Streams</a></li>
+<li><a href="source-sqlpoll.html">SQL polling</a></li>
+<li><a href="source-webhook.html">Webhook (HTTP push)</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s4">Sync</p><ul aria-labelledby="nav-s4">
+<li><a href="destinations.html">Meilisearch destinations</a></li>
+<li><a href="tasks.html">Create a task</a></li>
+<li><a href="task-operations.html">Operate tasks</a></li>
+<li><a href="indexes.html">Index management</a></li>
+<li><a href="data-quality.html">Data quality</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s5">Operate</p><ul aria-labelledby="nav-s5">
+<li><a href="monitoring.html">Monitoring and metrics</a></li>
+<li><a href="alerts.html">Alerts and notifications</a></li>
+<li><a href="security.html">Team and security</a></li>
+<li><a href="mcp.html">AI agents (MCP)</a></li>
+<li><a href="cli.html">Admin CLI</a></li>
+<li><a href="pwa.html">Mobile and app install</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s6">Reference</p><ul aria-labelledby="nav-s6">
+<li><a href="api.html">REST API</a></li>
+<li><a href="performance.html">Performance and tuning</a></li>
+<li><a href="troubleshooting.html">Troubleshooting and FAQ</a></li>
+<li><a href="changelog.html">Changelog and upgrade notes</a></li>
+<li><a href="development.html">Development</a></li>
+</ul></div>
+</nav>
+<main id="content" class="content" tabindex="-1">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol>
+<li><a href="../">Meili CDC</a></li>
+<li><a href="index.html">Docs</a></li>
+<li><a href="sources.html">Sources</a></li>
+<li><span aria-current="page">PostgreSQL</span></li>
+</ol></nav>
+<article class="doc">
+<h1>PostgreSQL</h1>
+<p class="lead">The PostgreSQL source uses logical replication with the built-in <code>pgoutput</code> plugin: one replication slot and one publication per task, no extensions and no triggers.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+<h3 id="server-settings">Server settings</h3>
+<p>Logical replication must be enabled. Set it in <code>postgresql.conf</code> (or with <code>ALTER SYSTEM</code>) and <strong>restart</strong> the server:</p>
+
+<pre><code class="language-sql">ALTER SYSTEM SET wal_level = logical;
+-- Each running task holds one replication slot and, while streaming, one WAL sender.
+ALTER SYSTEM SET max_replication_slots = 10;   -- at least the number of tasks, plus other consumers
+ALTER SYSTEM SET max_wal_senders = 10;
+-- Optional safety net: cap the WAL a forgotten slot can retain (PostgreSQL 13+).
+ALTER SYSTEM SET max_slot_wal_keep_size = '20GB';</code></pre>
+
+<p>Check with <code>SHOW wal_level;</code>. If it is not <code>logical</code>, the task fails with:</p>
+
+<pre><code class="language-text">postgres: wal_level is "replica" but logical replication needs "logical"; set wal_level = logical in postgresql.conf (or ALTER SYSTEM SET wal_level = logical) and restart the server</code></pre>
+
+<p>On managed services the setting has another name: on Amazon RDS and Aurora set the parameter <code>rds.logical_replication = 1</code> in the parameter group; on Google Cloud SQL set the flag <code>cloudsql.logical_decoding = on</code>; on Azure Database for PostgreSQL set <code>wal_level = logical</code> in the server parameters. Each needs a restart.</p>
+
+<h3 id="table-requirements">Table requirements</h3>
+<ul>
+  <li>The table needs a <strong>primary key</strong>, or <code>REPLICA IDENTITY FULL</code>, so deletes carry the row's key. Without either the task fails: <code>table public.items has no primary key; add one or run ALTER TABLE "public"."items" REPLICA IDENTITY FULL so deletes can be captured</code>. With <code>REPLICA IDENTITY FULL</code> and no primary key, set <code>mapping.primaryKey</code> to the columns that identify a row.</li>
+  <li><code>REPLICA IDENTITY NOTHING</code> is refused (deletes would carry no key). Use <code>DEFAULT</code> or <code>FULL</code>.</li>
+  <li>Regular and partitioned tables are supported (<code>relkind</code> <code>r</code> and <code>p</code>); views are not.</li>
+</ul>
+
+<h3 id="a-dedicated-user">A dedicated user</h3>
+<p>The user needs the <code>REPLICATION</code> attribute (to create the slot and stream), <code>SELECT</code> on the table (for the snapshot), and either the right to create the publication or a publication created for it.</p>
+
+<pre><code class="language-sql">CREATE ROLE cdc WITH LOGIN REPLICATION PASSWORD 'change-me';
+GRANT CONNECT ON DATABASE shop TO cdc;
+GRANT USAGE ON SCHEMA public TO cdc;
+GRANT SELECT ON public.products TO cdc;</code></pre>
+
+<p>The publication: by default the task creates one named after itself with <code>CREATE PUBLICATION … FOR TABLE</code>, which PostgreSQL only allows to a user with <code>CREATE</code> on the database who <strong>owns the table</strong>. If the replication user does not own the table, create the publication yourself as the owner (or a superuser) and enter its name in the task's <em>Publication</em> field:</p>
+
+<pre><code class="language-sql">-- as the table owner
+CREATE PUBLICATION cdc_products FOR TABLE public.products;</code></pre>
+
+<p>A publication you name is never altered or dropped by the service; if it does not include the table, the task fails with the <code>ALTER PUBLICATION … ADD TABLE …</code> statement to run. On Amazon RDS, the replication attribute is granted with <code>GRANT rds_replication TO cdc;</code> instead of <code>REPLICATION</code>.</p>
+
+<h2 id="connection-string">Connection string</h2>
+<p>Any connection string the pgx driver accepts, as a URL or in key/value form:</p>
+
+<pre><code class="language-text">postgres://cdc:change-me@db.internal:5432/shop?sslmode=require
+host=db.internal port=5432 user=cdc password=change-me dbname=shop sslmode=require</code></pre>
+
+<p>The database is part of the connection string. The password is masked as <code>••••••</code> whenever the connector or task is shown.</p>
+
+<h2 id="task-fields">Task fields</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Field</th><th>Default</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><code>schema</code></td><td><code>public</code></td><td>Schema of the table.</td></tr>
+    <tr><td><code>table</code></td><td>required</td><td>The table whose rows become documents.</td></tr>
+    <tr><td><code>slot</code></td><td><code>cdc_&lt;task id&gt;</code></td><td>Replication slot name. The default is <code>cdc_</code> plus the task id in lower case with anything outside <code>a-z 0-9 _</code> replaced by <code>_</code>, cut to 63 bytes. Created when missing.</td></tr>
+    <tr><td><code>publication</code></td><td>same as the slot</td><td>Publication name. A generated publication is created (or the table added to it) automatically; a named one must already exist.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="how-changes-are-applied">How changes are applied</h2>
+<ul>
+  <li><strong>Snapshot.</strong> The table is read in chunks of 5,000 rows (in primary-key order when the table has a primary key). Changes during the copy are replayed afterwards from the slot.</li>
+  <li><strong>Inserts and updates</strong> become upserts. Changes are emitted per committed transaction, with the commit time used for lag.</li>
+  <li><strong>Primary key changes</strong> (an <code>UPDATE</code> of a key column) delete the old document and write the new one.</li>
+  <li><strong>Deletes</strong> delete the document by key.</li>
+  <li><strong><code>TRUNCATE</code></strong> holds the task unless <code>allowTruncate</code> is on, in which case the index is emptied.</li>
+  <li><strong>Unchanged TOAST values.</strong> PostgreSQL does not send large column values (TOASTed text, <code>jsonb</code>, <code>bytea</code> over about 2 kB) that an <code>UPDATE</code> did not change. Those columns are left out of the change. With the default <code>replace</code> write mode the document is replaced without them, so the field disappears from the index until the row is written again. For tables with large values that are updated without changing them, use <code>index.writeMode: upsert</code>, which merges fields into the existing document.</li>
+</ul>
+<p>Types are decoded from their text form: integers stay integers, <code>numeric</code> and floats become numbers, <code>json</code> and <code>jsonb</code> become nested objects, arrays become arrays, timestamps become times (formatted by <code>mapping.timeFormat</code>) and <code>bytea</code> becomes base64.</p>
+
+<h2 id="positions-and-resume">Positions and resume</h2>
+<p>Positions are WAL LSNs such as <code>16/B374D848</code>. Each change carries the end LSN of its transaction's commit, so a checkpoint always covers whole transactions. Once Meilisearch confirms a batch, the slot's confirmed position is advanced (status updates every 10 seconds, well within the default <code>wal_sender_timeout</code> of 60 s), which lets PostgreSQL recycle WAL.</p>
+<p>While a task is stopped, its slot keeps the WAL it has not confirmed, so nothing is lost, but WAL accumulates on the server. If the slot is invalidated (<code>max_slot_wal_keep_size</code> exceeded) or dropped, the task reports the position as lost and runs a full resync.</p>
+
+<h2 id="deleting-a-task">Deleting a task</h2>
+<p>When you delete a task with <em>Drop source replication objects</em> checked (the default in the dashboard, <code>dropSource=true</code> in the API), the service terminates the WAL sender still holding the slot, drops the slot, and drops the publication if it generated it. Without it, the slot stays and keeps retaining WAL.</p>
+<div class="callout warning"><p class="callout-title">Forgotten slots fill disks</p>
+<p>An unused logical replication slot prevents WAL cleanup forever. Find inactive slots with the query below and drop the ones no task uses.</p></div>
+
+<pre><code class="language-sql">SELECT slot_name, active, pg_size_pretty(pg_wal_lsn_diff(pg_current_wal_lsn(), confirmed_flush_lsn)) AS behind
+FROM pg_replication_slots WHERE slot_name LIKE 'cdc_%';
+SELECT pg_drop_replication_slot('cdc_old_task');</code></pre>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Error</th><th>Fix</th></tr></thead>
+  <tbody>
+    <tr><td class="wrap"><code>create replication slot "cdc_…" (the user needs the REPLICATION attribute and a free max_replication_slots entry)</code></td><td>Grant <code>REPLICATION</code>, or raise <code>max_replication_slots</code> (restart), or drop unused slots.</td></tr>
+    <tr><td class="wrap"><code>replication slot "cdc_…" is active for PID …</code></td><td>Another process (often a second installation or an old task with the same id) streams from the slot. Stop it, or give the task its own <code>slot</code>.</td></tr>
+    <tr><td class="wrap"><code>create publication "cdc_…" (the user needs CREATE on the database and ownership of the table)</code></td><td>Create the publication as the table owner and set the task's <code>publication</code>.</td></tr>
+    <tr><td class="wrap"><code>replication connect (the user needs the REPLICATION attribute)</code></td><td>Grant <code>REPLICATION</code> (or <code>rds_replication</code>) and check that <code>pg_hba.conf</code> allows the user to connect.</td></tr>
+    <tr><td class="wrap"><code>replication slot "cdc_…" was invalidated because its WAL was removed (max_slot_wal_keep_size)</code></td><td>Handled automatically with a full resync. Keep tasks running, or raise the limit.</td></tr>
+    <tr><td class="wrap"><code>table public.x does not exist (or is not visible to this user)</code></td><td>Check the schema and table name, and <code>USAGE</code> on the schema.</td></tr>
+  </tbody>
+</table></div>
+</article>
+<nav class="pager" aria-label="Previous and next page">
+<a class="prev" href="sources.html" rel="prev"><span class="p-label">Previous</span><span class="p-title">Sources and connectors</span></a>
+<a class="next" href="source-mysql.html" rel="next"><span class="p-label">Next</span><span class="p-title">MySQL and MariaDB</span></a>
+</nav>
+<footer class="site-footer">
+<p>Meili CDC user guide · last updated 2026-10-26 · <a href="https://github.com/ja7ad/meilisearch-cdc/edit/main/docs/guide/source-postgres.html" rel="noopener">Edit this page on GitHub</a></p>
+<p>meilisearch-cdc is open source. Meilisearch is a trademark of Meili SAS; this project is not affiliated with it.</p>
+</footer>
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+</body>
+</html>
