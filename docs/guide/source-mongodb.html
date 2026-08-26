@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MongoDB · Meili CDC Docs</title>
+<meta name="description" content="Capture MongoDB changes with change streams on a replica set or sharded cluster: connection string, _id handling, resume tokens and drops.">
+<link rel="canonical" href="https://meilicdc.javad.dev/guide/source-mongodb.html">
+<meta name="robots" content="index, follow">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15112A" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meili CDC">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="MongoDB · Meili CDC Docs">
+<meta property="og:description" content="Capture MongoDB changes with change streams on a replica set or sharded cluster: connection string, _id handling, resume tokens and drops.">
+<meta property="og:url" content="https://meilicdc.javad.dev/guide/source-mongodb.html">
+<meta property="og:image" content="https://meilicdc.javad.dev/img/og.png">
+<meta property="og:image:alt" content="Meili CDC: change data capture into Meilisearch">
+<meta property="article:modified_time" content="2026-10-26">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MongoDB · Meili CDC Docs">
+<meta name="twitter:description" content="Capture MongoDB changes with change streams on a replica set or sharded cluster: connection string, _id handling, resume tokens and drops.">
+<meta name="twitter:image" content="https://meilicdc.javad.dev/img/og.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="assets/guide.css">
+<script>(function(){try{var t=localStorage.getItem('mcdc-guide-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<script src="assets/guide.js" defer></script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "TechArticle",
+   "headline": "MongoDB",
+   "description": "Capture MongoDB changes with change streams on a replica set or sharded cluster: connection string, _id handling, resume tokens and drops.",
+   "dateModified": "2026-10-26",
+   "inLanguage": "en",
+   "url": "https://meilicdc.javad.dev/guide/source-mongodb.html",
+   "mainEntityOfPage": "https://meilicdc.javad.dev/guide/source-mongodb.html",
+   "image": "https://meilicdc.javad.dev/img/og.png",
+   "author": {
+    "@type": "Organization",
+    "name": "meilisearch-cdc contributors",
+    "url": "https://github.com/ja7ad/meilisearch-cdc"
+   },
+   "publisher": {
+    "@type": "Organization",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   },
+   "isPartOf": {
+    "@type": "WebSite",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Meili CDC",
+     "item": "https://meilicdc.javad.dev/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Docs",
+     "item": "https://meilicdc.javad.dev/guide/index.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Sources",
+     "item": "https://meilicdc.javad.dev/guide/sources.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 4,
+     "name": "MongoDB",
+     "item": "https://meilicdc.javad.dev/guide/source-mongodb.html"
+    }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+<div class="topbar-inner">
+<button type="button" class="icon-btn menu-btn" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+<a class="brand" href="../" aria-label="Meili CDC home"><img src="assets/favicon.svg" alt="" width="30" height="30"><span>Meili CDC</span></a>
+<a class="brand-docs" href="index.html">Docs</a>
+<div class="search" role="search">
+<button type="button" class="icon-btn search-toggle" aria-controls="search-input" aria-expanded="false" aria-label="Search the guide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+<div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><label class="sr-only" for="search-input">Search the guide</label><input id="search-input" type="search" placeholder="Search the guide" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="search-panel" aria-autocomplete="list"><kbd aria-hidden="true">/</kbd></div>
+<div class="search-panel" id="search-panel" hidden></div>
+</div>
+<div class="top-actions">
+<a class="top-link hide-sm" href="../">Home</a>
+<a class="top-link hide-xs" href="../#download">Download</a>
+<button type="button" class="icon-btn theme-btn" aria-label="Toggle dark theme" aria-pressed="false"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+<a class="icon-btn" href="https://github.com/ja7ad/meilisearch-cdc" aria-label="meilisearch-cdc on GitHub" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg></a>
+</div>
+</div>
+</header>
+<div class="layout">
+<nav class="sidebar" id="sidebar" aria-label="Guide">
+<div class="nav-section"><p id="nav-s0">Getting started</p><ul aria-labelledby="nav-s0">
+<li><a href="index.html">Introduction</a></li>
+<li><a href="quick-start.html">Quick start</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s1">Deploy</p><ul aria-labelledby="nav-s1">
+<li><a href="installation.html">Install the binary</a></li>
+<li><a href="docker.html">Docker and Compose</a></li>
+<li><a href="kubernetes.html">Kubernetes</a></li>
+<li><a href="reverse-proxy.html">Reverse proxy and TLS</a></li>
+<li><a href="backup-upgrade.html">Backups and upgrades</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s2">Configure</p><ul aria-labelledby="nav-s2">
+<li><a href="configuration.html">Configuration reference</a></li>
+<li><a href="declarative-tasks.html">Declarative tasks file</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s3">Sources</p><ul aria-labelledby="nav-s3">
+<li><a href="sources.html">Sources and connectors</a></li>
+<li><a href="source-postgres.html">PostgreSQL</a></li>
+<li><a href="source-mysql.html">MySQL and MariaDB</a></li>
+<li><a href="source-mongodb.html" aria-current="page">MongoDB</a></li>
+<li><a href="source-dynamodb.html">DynamoDB</a></li>
+<li><a href="source-couchdb.html">CouchDB</a></li>
+<li><a href="source-sqlserver.html">SQL Server</a></li>
+<li><a href="source-cockroachdb.html">CockroachDB</a></li>
+<li><a href="source-kafka.html">Kafka (Debezium)</a></li>
+<li><a href="source-redis.html">Redis Streams</a></li>
+<li><a href="source-sqlpoll.html">SQL polling</a></li>
+<li><a href="source-webhook.html">Webhook (HTTP push)</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s4">Sync</p><ul aria-labelledby="nav-s4">
+<li><a href="destinations.html">Meilisearch destinations</a></li>
+<li><a href="tasks.html">Create a task</a></li>
+<li><a href="task-operations.html">Operate tasks</a></li>
+<li><a href="indexes.html">Index management</a></li>
+<li><a href="data-quality.html">Data quality</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s5">Operate</p><ul aria-labelledby="nav-s5">
+<li><a href="monitoring.html">Monitoring and metrics</a></li>
+<li><a href="alerts.html">Alerts and notifications</a></li>
+<li><a href="security.html">Team and security</a></li>
+<li><a href="mcp.html">AI agents (MCP)</a></li>
+<li><a href="cli.html">Admin CLI</a></li>
+<li><a href="pwa.html">Mobile and app install</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s6">Reference</p><ul aria-labelledby="nav-s6">
+<li><a href="api.html">REST API</a></li>
+<li><a href="performance.html">Performance and tuning</a></li>
+<li><a href="troubleshooting.html">Troubleshooting and FAQ</a></li>
+<li><a href="changelog.html">Changelog and upgrade notes</a></li>
+<li><a href="development.html">Development</a></li>
+</ul></div>
+</nav>
+<main id="content" class="content" tabindex="-1">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol>
+<li><a href="../">Meili CDC</a></li>
+<li><a href="index.html">Docs</a></li>
+<li><a href="sources.html">Sources</a></li>
+<li><span aria-current="page">MongoDB</span></li>
+</ol></nav>
+<article class="doc">
+<h1>MongoDB</h1>
+<p class="lead">The MongoDB source watches one collection with a change stream and copies it with a collection scan. Each document's <code>_id</code> becomes the Meilisearch id.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+<p>Change streams need a <strong>replica set</strong> or a <strong>sharded cluster</strong>. A single-node replica set is enough:</p>
+
+<pre><code class="language-bash">mongod --replSet rs0 --bind_ip_all
+mongosh --eval 'rs.initiate()'</code></pre>
+
+<p>On a standalone server the task fails with: <code>mongodb: change streams need a replica set or sharded cluster; start mongod with --replSet and run rs.initiate() (a single node replica set is fine)</code>. MongoDB Atlas clusters are replica sets already.</p>
+
+<h3 id="a-dedicated-user">A dedicated user</h3>
+<p>Reading a collection and opening a change stream on it needs the <code>find</code> and <code>changeStream</code> actions on that collection; the built-in <code>read</code> role on the database grants both:</p>
+
+<pre><code class="language-javascript">use admin
+db.createUser({
+  user: "cdc",
+  pwd: "change-me",
+  roles: [{ role: "read", db: "shop" }]
+})</code></pre>
+
+<h2 id="connection-string">Connection string</h2>
+
+<pre><code class="language-text">mongodb://cdc:change-me@mongo1:27017,mongo2:27017/?replicaSet=rs0&amp;authSource=admin
+mongodb+srv://cdc:change-me@cluster0.example.mongodb.net/</code></pre>
+
+<p>The database is required: set it on the connector (the default database) or in the task, which overrides it. It can also be given in the connection string's path.</p>
+
+<h2 id="task-fields">Task fields</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><code>database</code></td><td>The database; overrides the connector's.</td></tr>
+    <tr><td><code>table</code></td><td>The collection to watch.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="how-changes-are-applied">How changes are applied</h2>
+<ul>
+  <li><strong>Schema.</strong> MongoDB has no fixed schema, so the field list shown in the wizard and the schema check is inferred from a <code>$sample</code> of 100 documents. The primary key is always <code>_id</code>.</li>
+  <li><strong>Ids.</strong> An <code>ObjectId</code> becomes its 24-character hex string. Other <code>_id</code> types are converted to a string that fits Meilisearch's id alphabet (see <a href="tasks.html#document-ids">document ids</a>). By default the id is written to the field <code>id</code> and <code>_id</code> is not copied; enable <em>Keep key columns</em> to keep it, or set the primary key field to another name.</li>
+  <li><strong>Values.</strong> Dates become times (formatted by <code>mapping.timeFormat</code>), <code>Decimal128</code> becomes a number, embedded documents and arrays stay nested.</li>
+  <li><strong>Inserts, updates and replaces</strong> are written with the full current document (the change stream uses <code>fullDocument: updateLookup</code>). A document deleted before the lookup is skipped; its delete follows.</li>
+  <li><strong>Deletes</strong> delete by <code>_id</code>.</li>
+  <li><strong>Collection drop, rename or database drop</strong> are treated as a truncate: the task is held unless <code>allowTruncate</code> is on. An <code>invalidate</code> event (after a drop or rename) also stops the stream with <code>change stream on … invalidated (collection dropped or renamed); recreate the task to resync</code>.</li>
+</ul>
+
+<h2 id="positions-and-resume">Positions and resume</h2>
+<p>Positions are change stream resume tokens in extended JSON, for example <code>{"_data":"8263F1…"}</code>. The task resumes right after the stored token. If the token has fallen off the oplog (<code>ChangeStreamHistoryLost</code>, error 286) or is invalid, the position is lost and the task resyncs automatically. Size the oplog to cover the longest time a task may be stopped.</p>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Error</th><th>Fix</th></tr></thead>
+  <tbody>
+    <tr><td class="wrap"><code>source.database is required (or put the database in the dsn path)</code></td><td>Set the database on the connector or the task.</td></tr>
+    <tr><td class="wrap"><code>change streams need a replica set</code></td><td>Run <code>mongod</code> with <code>--replSet</code> and <code>rs.initiate()</code>.</td></tr>
+    <tr><td class="wrap">Connection times out with a single-node replica set in Docker</td><td>The replica set advertises its member host name; it must resolve from the service. Use <code>?directConnection=true</code> or a host name both can reach.</td></tr>
+  </tbody>
+</table></div>
+</article>
+<nav class="pager" aria-label="Previous and next page">
+<a class="prev" href="source-mysql.html" rel="prev"><span class="p-label">Previous</span><span class="p-title">MySQL and MariaDB</span></a>
+<a class="next" href="source-dynamodb.html" rel="next"><span class="p-label">Next</span><span class="p-title">DynamoDB</span></a>
+</nav>
+<footer class="site-footer">
+<p>Meili CDC user guide · last updated 2026-10-26 · <a href="https://github.com/ja7ad/meilisearch-cdc/edit/main/docs/guide/source-mongodb.html" rel="noopener">Edit this page on GitHub</a></p>
+<p>meilisearch-cdc is open source. Meilisearch is a trademark of Meili SAS; this project is not affiliated with it.</p>
+</footer>
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+</body>
+</html>
