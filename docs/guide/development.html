@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Development · Meili CDC Docs</title>
+<meta name="description" content="Build meilisearch-cdc from source, run unit, integration, end-to-end and dashboard tests, the full GUI e2e environment and load tests.">
+<link rel="canonical" href="https://meilicdc.javad.dev/guide/development.html">
+<meta name="robots" content="index, follow">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15112A" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meili CDC">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Development · Meili CDC Docs">
+<meta property="og:description" content="Build meilisearch-cdc from source, run unit, integration, end-to-end and dashboard tests, the full GUI e2e environment and load tests.">
+<meta property="og:url" content="https://meilicdc.javad.dev/guide/development.html">
+<meta property="og:image" content="https://meilicdc.javad.dev/img/og.png">
+<meta property="og:image:alt" content="Meili CDC: change data capture into Meilisearch">
+<meta property="article:modified_time" content="2026-10-26">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Development · Meili CDC Docs">
+<meta name="twitter:description" content="Build meilisearch-cdc from source, run unit, integration, end-to-end and dashboard tests, the full GUI e2e environment and load tests.">
+<meta name="twitter:image" content="https://meilicdc.javad.dev/img/og.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="assets/guide.css">
+<script>(function(){try{var t=localStorage.getItem('mcdc-guide-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<script src="assets/guide.js" defer></script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "TechArticle",
+   "headline": "Development",
+   "description": "Build meilisearch-cdc from source, run unit, integration, end-to-end and dashboard tests, the full GUI e2e environment and load tests.",
+   "dateModified": "2026-10-26",
+   "inLanguage": "en",
+   "url": "https://meilicdc.javad.dev/guide/development.html",
+   "mainEntityOfPage": "https://meilicdc.javad.dev/guide/development.html",
+   "image": "https://meilicdc.javad.dev/img/og.png",
+   "author": {
+    "@type": "Organization",
+    "name": "meilisearch-cdc contributors",
+    "url": "https://github.com/ja7ad/meilisearch-cdc"
+   },
+   "publisher": {
+    "@type": "Organization",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   },
+   "isPartOf": {
+    "@type": "WebSite",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Meili CDC",
+     "item": "https://meilicdc.javad.dev/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Docs",
+     "item": "https://meilicdc.javad.dev/guide/index.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Reference",
+     "item": "https://meilicdc.javad.dev/guide/api.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 4,
+     "name": "Development",
+     "item": "https://meilicdc.javad.dev/guide/development.html"
+    }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+<div class="topbar-inner">
+<button type="button" class="icon-btn menu-btn" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+<a class="brand" href="../" aria-label="Meili CDC home"><img src="assets/favicon.svg" alt="" width="30" height="30"><span>Meili CDC</span></a>
+<a class="brand-docs" href="index.html">Docs</a>
+<div class="search" role="search">
+<button type="button" class="icon-btn search-toggle" aria-controls="search-input" aria-expanded="false" aria-label="Search the guide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+<div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><label class="sr-only" for="search-input">Search the guide</label><input id="search-input" type="search" placeholder="Search the guide" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="search-panel" aria-autocomplete="list"><kbd aria-hidden="true">/</kbd></div>
+<div class="search-panel" id="search-panel" hidden></div>
+</div>
+<div class="top-actions">
+<a class="top-link hide-sm" href="../">Home</a>
+<a class="top-link hide-xs" href="../#download">Download</a>
+<button type="button" class="icon-btn theme-btn" aria-label="Toggle dark theme" aria-pressed="false"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+<a class="icon-btn" href="https://github.com/ja7ad/meilisearch-cdc" aria-label="meilisearch-cdc on GitHub" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg></a>
+</div>
+</div>
+</header>
+<div class="layout">
+<nav class="sidebar" id="sidebar" aria-label="Guide">
+<div class="nav-section"><p id="nav-s0">Getting started</p><ul aria-labelledby="nav-s0">
+<li><a href="index.html">Introduction</a></li>
+<li><a href="quick-start.html">Quick start</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s1">Deploy</p><ul aria-labelledby="nav-s1">
+<li><a href="installation.html">Install the binary</a></li>
+<li><a href="docker.html">Docker and Compose</a></li>
+<li><a href="kubernetes.html">Kubernetes</a></li>
+<li><a href="reverse-proxy.html">Reverse proxy and TLS</a></li>
+<li><a href="backup-upgrade.html">Backups and upgrades</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s2">Configure</p><ul aria-labelledby="nav-s2">
+<li><a href="configuration.html">Configuration reference</a></li>
+<li><a href="declarative-tasks.html">Declarative tasks file</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s3">Sources</p><ul aria-labelledby="nav-s3">
+<li><a href="sources.html">Sources and connectors</a></li>
+<li><a href="source-postgres.html">PostgreSQL</a></li>
+<li><a href="source-mysql.html">MySQL and MariaDB</a></li>
+<li><a href="source-mongodb.html">MongoDB</a></li>
+<li><a href="source-dynamodb.html">DynamoDB</a></li>
+<li><a href="source-couchdb.html">CouchDB</a></li>
+<li><a href="source-sqlserver.html">SQL Server</a></li>
+<li><a href="source-cockroachdb.html">CockroachDB</a></li>
+<li><a href="source-kafka.html">Kafka (Debezium)</a></li>
+<li><a href="source-redis.html">Redis Streams</a></li>
+<li><a href="source-sqlpoll.html">SQL polling</a></li>
+<li><a href="source-webhook.html">Webhook (HTTP push)</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s4">Sync</p><ul aria-labelledby="nav-s4">
+<li><a href="destinations.html">Meilisearch destinations</a></li>
+<li><a href="tasks.html">Create a task</a></li>
+<li><a href="task-operations.html">Operate tasks</a></li>
+<li><a href="indexes.html">Index management</a></li>
+<li><a href="data-quality.html">Data quality</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s5">Operate</p><ul aria-labelledby="nav-s5">
+<li><a href="monitoring.html">Monitoring and metrics</a></li>
+<li><a href="alerts.html">Alerts and notifications</a></li>
+<li><a href="security.html">Team and security</a></li>
+<li><a href="mcp.html">AI agents (MCP)</a></li>
+<li><a href="cli.html">Admin CLI</a></li>
+<li><a href="pwa.html">Mobile and app install</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s6">Reference</p><ul aria-labelledby="nav-s6">
+<li><a href="api.html">REST API</a></li>
+<li><a href="performance.html">Performance and tuning</a></li>
+<li><a href="troubleshooting.html">Troubleshooting and FAQ</a></li>
+<li><a href="changelog.html">Changelog and upgrade notes</a></li>
+<li><a href="development.html" aria-current="page">Development</a></li>
+</ul></div>
+</nav>
+<main id="content" class="content" tabindex="-1">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol>
+<li><a href="../">Meili CDC</a></li>
+<li><a href="index.html">Docs</a></li>
+<li><a href="api.html">Reference</a></li>
+<li><span aria-current="page">Development</span></li>
+</ol></nav>
+<article class="doc">
+<h1>Development</h1>
+<p class="lead">meilisearch-cdc is written in Go with a dashboard in plain ES modules (Preact and htm, no build step), embedded in the binary. Tests range from unit tests to a full browser suite against every source.</p>
+
+<h2 id="build-from-source">Build from source</h2>
+<p>You need Go 1.27.3 or newer (see <code>go.mod</code>). The build is pure Go (no cgo), so it cross-compiles for every platform.</p>
+
+<pre><code class="language-bash">git clone https://github.com/ja7ad/meilisearch-cdc.git
+cd meilisearch-cdc
+make build                    # bin/meilisearch-cdc
+./bin/meilisearch-cdc version # prints "dev"
+make run                      # build and run</code></pre>
+
+<p>Release builds set the version with <code>-ldflags "-X main.version=v1.2.3"</code>. <code>cmd/meilisearch-cdc/default.pgo</code> is used automatically for profile-guided optimisation (see <a href="performance.html#pgo">PGO</a>).</p>
+
+<h2 id="repository-layout">Repository layout</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Path</th><th>Contents</th></tr></thead>
+  <tbody>
+    <tr><td><code>cmd/meilisearch-cdc</code></td><td>The entry point (service, <code>version</code>, <code>admin</code>).</td></tr>
+    <tr><td><code>internal/source/*</code></td><td>One package per source, behind a common interface (<code>Open → Schema → CurrentPosition → Snapshot → Stream → Ack → Close</code>).</td></tr>
+    <tr><td><code>internal/engine</code>, <code>internal/sink</code>, <code>internal/transform</code></td><td>Task supervision and pipelines, the Meilisearch writer, the row-to-document mapping.</td></tr>
+    <tr><td><code>internal/indexmgr</code>, <code>internal/diff</code></td><td>Index settings, drift, shadow rebuilds; schema check and diff.</td></tr>
+    <tr><td><code>internal/api</code>, <code>internal/auth</code>, <code>internal/mcpserver</code>, <code>internal/alerts</code>, <code>internal/notify</code></td><td>REST API, accounts, MCP, alert rules, email/Telegram/webhook delivery.</td></tr>
+    <tr><td><code>internal/admincli</code>, <code>internal/adminops</code></td><td>The operator CLI and the admin socket.</td></tr>
+    <tr><td><code>web/</code></td><td>The dashboard.</td></tr>
+    <tr><td><code>deploy/</code></td><td>The demo Compose stack and the full end-to-end environment.</td></tr>
+    <tr><td><code>test/</code></td><td>End-to-end, load (<code>bench</code>), integration and Playwright UI tests.</td></tr>
+    <tr><td><code>docs/</code></td><td>This website (GitHub Pages), <code>api.md</code>, <code>cli.md</code>, <code>e2e.md</code>, <code>performance.md</code>.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="tests">Tests</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Target</th><th>What it runs</th><th>Needs</th></tr></thead>
+  <tbody>
+    <tr><td><code>make test</code></td><td>Unit tests (<code>make test-race</code> with the race detector)</td><td>Go</td></tr>
+    <tr><td><code>make lint</code></td><td><code>gofmt</code> and <code>go vet</code> for every build tag</td><td>Go</td></tr>
+    <tr><td><code>make integration</code></td><td>Engine, API, auth, alerts, MCP, connectors and destinations against real services (<code>-tags integration</code>)</td><td>Docker</td></tr>
+    <tr><td><code>make e2e</code></td><td>Builds the binary and syncs PostgreSQL, MySQL, MariaDB, MongoDB, DynamoDB and Kafka end to end (<code>-tags e2e</code>)</td><td>Docker</td></tr>
+    <tr><td><code>make ui-test</code></td><td>Playwright dashboard tests against a mock API</td><td>Node.js</td></tr>
+    <tr><td><code>make ui-real</code></td><td>Playwright against the real service: single instance (<code>MEILI_URL</code>) and multi-instance destinations</td><td>Node.js, Docker</td></tr>
+    <tr><td><code>make bench</code></td><td>Micro benchmarks (transform, batching, encoder, writer)</td><td>Go</td></tr>
+    <tr><td><code>make load</code></td><td>End-to-end load tests with CPU and memory profiles (<code>BENCH_ROWS=…</code>)</td><td>Docker</td></tr>
+    <tr><td><code>make e2e-env</code> / <code>make ui-full</code></td><td>The full GUI end-to-end environment and suite, below</td><td>Docker, Node.js</td></tr>
+  </tbody>
+</table></div>
+<p>CI runs <code>make lint</code> with <code>go test -race ./...</code>, <code>make integration</code>, <code>make e2e</code> and <code>make ui-test</code> on every push and pull request.</p>
+
+<h2 id="e2e-environment">The full end-to-end environment</h2>
+<p><code>deploy/e2e/docker-compose.yml</code> starts every supported source, two Meilisearch instances and a mail catcher. It is used by the full browser suite and is handy for trying the service by hand.</p>
+<div class="table-wrap"><table>
+  <thead><tr><th>Container</th><th>Host port</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>PostgreSQL 16</td><td>15432</td><td><code>wal_level=logical</code></td></tr>
+    <tr><td>MySQL 8.4 / MariaDB 11</td><td>13306 / 13307</td><td>binlog <code>ROW</code> + <code>FULL</code></td></tr>
+    <tr><td>MongoDB 7</td><td>27018</td><td>replica set <code>rs0</code></td></tr>
+    <tr><td>DynamoDB Local</td><td>18000</td><td>streams</td></tr>
+    <tr><td>CouchDB 3</td><td>15984</td><td>admin / secret</td></tr>
+    <tr><td>SQL Server 2022</td><td>11433</td><td>Agent on, CDC enabled by the lab</td></tr>
+    <tr><td>CockroachDB 24.3</td><td>26258</td><td>insecure, rangefeeds enabled by the lab</td></tr>
+    <tr><td>Redpanda (Kafka)</td><td>19092</td><td></td></tr>
+    <tr><td>Redis 7</td><td>16379</td><td></td></tr>
+    <tr><td>Meilisearch ×2</td><td>17700, 17701</td><td>key <code>e2e-master-key</code></td></tr>
+    <tr><td>Mailpit</td><td>SMTP 11025, UI 18025</td><td>catches every email</td></tr>
+  </tbody>
+</table></div>
+
+<pre><code class="language-bash">make e2e-env                                   # start and wait for every container
+go run ./test/ui/lab serve -seed               # seed 300 products everywhere; :8799 changes data for the tests
+make build
+(set -a; . deploy/e2e/cdc.env; ./bin/meilisearch-cdc)   # http://127.0.0.1:8780, no MEILI_URL
+make ui-full                                   # or: cd test/ui &amp;&amp; SLOWMO=150 npx playwright test -c playwright.full.config.mjs --headed</code></pre>
+
+<p>The admin account and other test values are in <code>deploy/e2e/cdc.env</code>. <code>deploy/e2e/reset.sh</code> returns to a clean state (stop the service first): it removes the service data, the <code>e2e_*</code> indexes, inactive replication slots and Mailpit messages, and re-seeds every source. <code>make e2e-env-down</code> removes the containers and volumes.</p>
+<p>The suite covers destinations, every source (snapshot of 300 rows, then insert, update and delete), email, members and roles (including the API's 403s), MCP, alerts, every page and tab, the task options (modes, mapping, DLQ, delete guard, resyncs, diff and repair, batch actions, import and export) and every Meilisearch index setting. With <code>REAL_SMTP=1 ALERT_EMAIL=you@example.com</code> the email and alert specs send real mail through the SMTP server saved in Settings. Details: <code>docs/e2e.md</code>.</p>
+
+<h2 id="this-documentation">This documentation</h2>
+<p>The guide is plain HTML in <code>docs/guide/</code>. Each page's content is its <code>&lt;article class="doc"&gt;</code>; the head, navigation, breadcrumbs, pager, search index and <code>sitemap-pages.json</code> are regenerated from <code>docs/guide/assets/nav.js</code> by:</p>
+
+<pre><code class="language-bash">node docs/guide/build-search-index.mjs</code></pre>
+
+<p>Run it after adding or editing a page (add new pages to <code>nav.js</code> first). It needs Node.js 18 or newer and no dependencies.</p>
+</article>
+<nav class="pager" aria-label="Previous and next page">
+<a class="prev" href="changelog.html" rel="prev"><span class="p-label">Previous</span><span class="p-title">Changelog and upgrade notes</span></a>
+
+</nav>
+<footer class="site-footer">
+<p>Meili CDC user guide · last updated 2026-10-26 · <a href="https://github.com/ja7ad/meilisearch-cdc/edit/main/docs/guide/development.html" rel="noopener">Edit this page on GitHub</a></p>
+<p>meilisearch-cdc is open source. Meilisearch is a trademark of Meili SAS; this project is not affiliated with it.</p>
+</footer>
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+</body>
+</html>
