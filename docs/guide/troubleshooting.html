@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Troubleshooting and FAQ · Meili CDC Docs</title>
+<meta name="description" content="Fix common meilisearch-cdc errors: replication slots, binlog settings, replica sets, SQL Server Agent, safety holds, SMTP TLS and 409 conflicts.">
+<link rel="canonical" href="https://meilicdc.javad.dev/guide/troubleshooting.html">
+<meta name="robots" content="index, follow">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15112A" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Meili CDC">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="Troubleshooting and FAQ · Meili CDC Docs">
+<meta property="og:description" content="Fix common meilisearch-cdc errors: replication slots, binlog settings, replica sets, SQL Server Agent, safety holds, SMTP TLS and 409 conflicts.">
+<meta property="og:url" content="https://meilicdc.javad.dev/guide/troubleshooting.html">
+<meta property="og:image" content="https://meilicdc.javad.dev/img/og.png">
+<meta property="og:image:alt" content="Meili CDC: change data capture into Meilisearch">
+<meta property="article:modified_time" content="2026-10-26">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Troubleshooting and FAQ · Meili CDC Docs">
+<meta name="twitter:description" content="Fix common meilisearch-cdc errors: replication slots, binlog settings, replica sets, SQL Server Agent, safety holds, SMTP TLS and 409 conflicts.">
+<meta name="twitter:image" content="https://meilicdc.javad.dev/img/og.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="assets/guide.css">
+<script>(function(){try{var t=localStorage.getItem('mcdc-guide-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<script src="assets/guide.js" defer></script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "TechArticle",
+   "headline": "Troubleshooting and FAQ",
+   "description": "Fix common meilisearch-cdc errors: replication slots, binlog settings, replica sets, SQL Server Agent, safety holds, SMTP TLS and 409 conflicts.",
+   "dateModified": "2026-10-26",
+   "inLanguage": "en",
+   "url": "https://meilicdc.javad.dev/guide/troubleshooting.html",
+   "mainEntityOfPage": "https://meilicdc.javad.dev/guide/troubleshooting.html",
+   "image": "https://meilicdc.javad.dev/img/og.png",
+   "author": {
+    "@type": "Organization",
+    "name": "meilisearch-cdc contributors",
+    "url": "https://github.com/ja7ad/meilisearch-cdc"
+   },
+   "publisher": {
+    "@type": "Organization",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   },
+   "isPartOf": {
+    "@type": "WebSite",
+    "name": "Meili CDC",
+    "url": "https://meilicdc.javad.dev/"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Meili CDC",
+     "item": "https://meilicdc.javad.dev/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Docs",
+     "item": "https://meilicdc.javad.dev/guide/index.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Reference",
+     "item": "https://meilicdc.javad.dev/guide/api.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 4,
+     "name": "Troubleshooting and FAQ",
+     "item": "https://meilicdc.javad.dev/guide/troubleshooting.html"
+    }
+   ]
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<a class="skip-link" href="#content">Skip to content</a>
+<header class="topbar">
+<div class="topbar-inner">
+<button type="button" class="icon-btn menu-btn" aria-controls="sidebar" aria-expanded="false" aria-label="Open navigation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+<a class="brand" href="../" aria-label="Meili CDC home"><img src="assets/favicon.svg" alt="" width="30" height="30"><span>Meili CDC</span></a>
+<a class="brand-docs" href="index.html">Docs</a>
+<div class="search" role="search">
+<button type="button" class="icon-btn search-toggle" aria-controls="search-input" aria-expanded="false" aria-label="Search the guide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+<div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><label class="sr-only" for="search-input">Search the guide</label><input id="search-input" type="search" placeholder="Search the guide" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="search-panel" aria-autocomplete="list"><kbd aria-hidden="true">/</kbd></div>
+<div class="search-panel" id="search-panel" hidden></div>
+</div>
+<div class="top-actions">
+<a class="top-link hide-sm" href="../">Home</a>
+<a class="top-link hide-xs" href="../#download">Download</a>
+<button type="button" class="icon-btn theme-btn" aria-label="Toggle dark theme" aria-pressed="false"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+<a class="icon-btn" href="https://github.com/ja7ad/meilisearch-cdc" aria-label="meilisearch-cdc on GitHub" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg></a>
+</div>
+</div>
+</header>
+<div class="layout">
+<nav class="sidebar" id="sidebar" aria-label="Guide">
+<div class="nav-section"><p id="nav-s0">Getting started</p><ul aria-labelledby="nav-s0">
+<li><a href="index.html">Introduction</a></li>
+<li><a href="quick-start.html">Quick start</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s1">Deploy</p><ul aria-labelledby="nav-s1">
+<li><a href="installation.html">Install the binary</a></li>
+<li><a href="docker.html">Docker and Compose</a></li>
+<li><a href="kubernetes.html">Kubernetes</a></li>
+<li><a href="reverse-proxy.html">Reverse proxy and TLS</a></li>
+<li><a href="backup-upgrade.html">Backups and upgrades</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s2">Configure</p><ul aria-labelledby="nav-s2">
+<li><a href="configuration.html">Configuration reference</a></li>
+<li><a href="declarative-tasks.html">Declarative tasks file</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s3">Sources</p><ul aria-labelledby="nav-s3">
+<li><a href="sources.html">Sources and connectors</a></li>
+<li><a href="source-postgres.html">PostgreSQL</a></li>
+<li><a href="source-mysql.html">MySQL and MariaDB</a></li>
+<li><a href="source-mongodb.html">MongoDB</a></li>
+<li><a href="source-dynamodb.html">DynamoDB</a></li>
+<li><a href="source-couchdb.html">CouchDB</a></li>
+<li><a href="source-sqlserver.html">SQL Server</a></li>
+<li><a href="source-cockroachdb.html">CockroachDB</a></li>
+<li><a href="source-kafka.html">Kafka (Debezium)</a></li>
+<li><a href="source-redis.html">Redis Streams</a></li>
+<li><a href="source-sqlpoll.html">SQL polling</a></li>
+<li><a href="source-webhook.html">Webhook (HTTP push)</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s4">Sync</p><ul aria-labelledby="nav-s4">
+<li><a href="destinations.html">Meilisearch destinations</a></li>
+<li><a href="tasks.html">Create a task</a></li>
+<li><a href="task-operations.html">Operate tasks</a></li>
+<li><a href="indexes.html">Index management</a></li>
+<li><a href="data-quality.html">Data quality</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s5">Operate</p><ul aria-labelledby="nav-s5">
+<li><a href="monitoring.html">Monitoring and metrics</a></li>
+<li><a href="alerts.html">Alerts and notifications</a></li>
+<li><a href="security.html">Team and security</a></li>
+<li><a href="mcp.html">AI agents (MCP)</a></li>
+<li><a href="cli.html">Admin CLI</a></li>
+<li><a href="pwa.html">Mobile and app install</a></li>
+</ul></div>
+<div class="nav-section"><p id="nav-s6">Reference</p><ul aria-labelledby="nav-s6">
+<li><a href="api.html">REST API</a></li>
+<li><a href="performance.html">Performance and tuning</a></li>
+<li><a href="troubleshooting.html" aria-current="page">Troubleshooting and FAQ</a></li>
+<li><a href="changelog.html">Changelog and upgrade notes</a></li>
+<li><a href="development.html">Development</a></li>
+</ul></div>
+</nav>
+<main id="content" class="content" tabindex="-1">
+<nav class="breadcrumbs" aria-label="Breadcrumb"><ol>
+<li><a href="../">Meili CDC</a></li>
+<li><a href="index.html">Docs</a></li>
+<li><a href="api.html">Reference</a></li>
+<li><span aria-current="page">Troubleshooting and FAQ</span></li>
+</ol></nav>
+<article class="doc">
+<h1>Troubleshooting and FAQ</h1>
+<p class="lead">Start with the task's status and its <em>Logs</em> tab: errors name the setting to change. This page collects the common ones.</p>
+
+<h2 id="where-to-look">Where to look</h2>
+<ol class="steps">
+  <li><strong>The task's state.</strong> <code>failed</code> is a configuration problem (fix and start again); <code>retrying</code> is transient and resolves itself; <code>held</code> is a safety guard waiting for you.</li>
+  <li><strong>The task's Logs tab</strong> and the error under its status.</li>
+  <li><strong>The service log</strong> (<code>journalctl -u meilisearch-cdc</code>, <code>docker logs cdc</code>); set <code>CDC_LOG_LEVEL=debug</code> for more.</li>
+  <li><strong>Test connection</strong> in the task wizard, and the connector's last test.</li>
+</ol>
+
+<h2 id="sources">Source errors</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Message (excerpt)</th><th>Cause and fix</th></tr></thead>
+  <tbody>
+    <tr><td class="wrap"><code>postgres: wal_level is "replica" but logical replication needs "logical"</code></td><td>Set <code>wal_level = logical</code> and restart PostgreSQL. <a href="source-postgres.html">PostgreSQL</a>.</td></tr>
+    <tr><td class="wrap"><code>create replication slot … (the user needs the REPLICATION attribute and a free max_replication_slots entry)</code></td><td>Grant <code>REPLICATION</code>; raise <code>max_replication_slots</code>; drop unused <code>cdc_*</code> slots.</td></tr>
+    <tr><td class="wrap"><code>replication slot "cdc_…" is active for PID …</code></td><td>Another consumer (often a second installation or a duplicate task id) holds the slot. Stop it or use another <code>slot</code>.</td></tr>
+    <tr><td class="wrap"><code>has no primary key; add one or run ALTER TABLE … REPLICA IDENTITY FULL</code></td><td>Add a primary key, or set REPLICA IDENTITY FULL and <code>mapping.primaryKey</code>.</td></tr>
+    <tr><td class="wrap"><code>mysql: binlog_format is MIXED but change capture needs ROW</code> / <code>binlog_row_image is MINIMAL …</code> / <code>binary logging is disabled</code></td><td>Fix the server config and persist it. <a href="source-mysql.html">MySQL</a>.</td></tr>
+    <tr><td class="wrap"><code>(grant REPLICATION SLAVE, REPLICATION CLIENT ON *.*)</code></td><td>Grant the replication privileges to the CDC user.</td></tr>
+    <tr><td class="wrap"><code>mongodb: change streams need a replica set or sharded cluster</code></td><td>Start <code>mongod --replSet rs0</code> and run <code>rs.initiate()</code>. <a href="source-mongodb.html">MongoDB</a>.</td></tr>
+    <tr><td class="wrap"><code>sqlserver: SQL Server Agent is stopped, so the CDC capture job does not run</code></td><td>Start the Agent (<code>MSSQL_AGENT_ENABLED=true</code> in containers). <a href="source-sqlserver.html">SQL Server</a>.</td></tr>
+    <tr><td class="wrap"><code>change data capture is not enabled for database …</code> / <code>is not tracked by change data capture</code></td><td>Run the printed <code>sp_cdc_enable_db</code> / <code>sp_cdc_enable_table</code>.</td></tr>
+    <tr><td class="wrap"><code>dynamodb: table … has no stream</code></td><td>Enable a stream with <code>NEW_AND_OLD_IMAGES</code>. <a href="source-dynamodb.html">DynamoDB</a>.</td></tr>
+    <tr><td class="wrap"><code>cockroachdb: changefeeds need rangefeeds …</code></td><td><code>SET CLUSTER SETTING kv.rangefeed.enabled = true</code> as an admin.</td></tr>
+    <tr><td class="wrap"><code>kafka: topic "…" does not exist</code></td><td>Use the exact Debezium topic name.</td></tr>
+    <tr><td class="wrap"><code>sqlpoll: source.cursorColumn is required</code></td><td>Choose a cursor column. <a href="source-sqlpoll.html">SQL polling</a>.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="position-lost">"source position lost … starting a full resync"</h2>
+<p>Not an error to fix: the stored position no longer exists on the source (a purged binlog, an invalidated or dropped replication slot, an oplog that rolled over, an expired DynamoDB shard, a trimmed Redis stream, SQL Server change rows removed by cleanup, a position older than CockroachDB's GC window). The task copies everything again, with zero-downtime resync if enabled. If it happens often, keep tasks running or extend the source's log retention.</p>
+
+<h2 id="held">The task is held</h2>
+<p>A safety guard refused a risky batch; nothing was applied.</p>
+<ul>
+  <li><code>safety hold: a single batch would delete 5000 of 8000 documents (62% &gt; 20% limit)</code>: check whether the source really deleted those rows. If yes, raise <code>maxDeleteRatio</code> (or set it to 0) and <em>Resume</em>, or <em>Resync</em>.</li>
+  <li><code>safety hold: the source table was truncated; enable safety.allowTruncate or resync the task</code>: decide whether the index should be emptied too.</li>
+</ul>
+<p>See <a href="tasks.html#safety">safety guards</a>.</p>
+
+<h2 id="meilisearch">Meilisearch errors</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Message (excerpt)</th><th>Cause and fix</th></tr></thead>
+  <tbody>
+    <tr><td class="wrap"><code>index primary key mismatch: index "x" uses "sku" but the task writes "id" …</code></td><td>Use another index, change <code>mapping.primaryKeyField</code>, or resync with zero-downtime enabled. <a href="indexes.html#primary-key-guard">Primary key guard</a>.</td></tr>
+    <tr><td class="wrap"><code>task "x" already writes index "y" with primary key "z"</code> (409)</td><td>Two tasks on one index must use the same primary key field.</td></tr>
+    <tr><td class="wrap"><code>invalid_api_key</code>, <code>missing_authorization_header</code>, HTTP 401/403</td><td>Fix the destination's API key and its permissions. <a href="destinations.html#api-key-permissions">API key permissions</a>.</td></tr>
+    <tr><td class="wrap"><code>no Meilisearch destination is configured: add one first</code></td><td>Add a destination, or set <code>MEILI_URL</code>.</td></tr>
+    <tr><td>Documents in the DLQ with <code>invalid_document_id</code>, <code>invalid_document_geo_field</code>…</td><td>See <a href="data-quality.html#dead-letter-queue">Dead letter queue</a>.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="single-instance-409">409 "single instance mode: MEILI_URL is set …"</h2>
+<p>With <code>MEILI_URL</code> set, the service writes only to that instance, and creating, deleting or switching destinations is refused. Unset <code>MEILI_URL</code> and restart to manage destinations in the dashboard. See <a href="configuration.html#single-instance-mode">single-instance mode</a>.</p>
+
+<h2 id="smtp">Email does not send</h2>
+<div class="table-wrap"><table>
+  <thead><tr><th>Message (excerpt)</th><th>Fix</th></tr></thead>
+  <tbody>
+    <tr><td class="wrap"><code>the server sent no greeting: it probably expects TLS from the start; use port 465 with TLS, or check the port</code></td><td>Port 465 needs TLS mode (or <code>auto</code>).</td></tr>
+    <tr><td class="wrap"><code>the server does not speak TLS on this port; use STARTTLS on port 587</code></td><td>Use port 587 with STARTTLS (or <code>auto</code>).</td></tr>
+    <tr><td class="wrap"><code>the server does not support STARTTLS, so the password would be sent in plain text; use port 465 with TLS</code></td><td>Use TLS, or a relay without authentication with mode <code>none</code>.</td></tr>
+    <tr><td>Links in emails point to <code>http://127.0.0.1:8080</code></td><td>Set the public URL in Settings → Email or <code>CDC_PUBLIC_URL</code>.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="dashboard">Dashboard problems</h2>
+<ul>
+  <li><strong>"Offline" in the top bar behind a proxy</strong>: the proxy buffers Server-Sent Events. See <a href="reverse-proxy.html">Reverse proxy and TLS</a>.</li>
+  <li><strong><code>403 cross-origin request refused</code> on every save</strong>: the proxy changes the <code>Host</code> header; forward it unchanged.</li>
+  <li><strong>Signed out after a restart</strong>: sessions survive restarts (they are stored); check that the data directory is persistent.</li>
+  <li><strong><code>429 too many attempts</code></strong>: wait 15 minutes or restart the service; behind a proxy enable <code>CDC_TRUST_PROXY</code> so one IP does not stand for everyone.</li>
+  <li><strong>Forgot the admin password</strong>: <code>meilisearch-cdc admin users reset-password --email … --generate</code>. See <a href="cli.html#recovery">recovery recipes</a>.</li>
+</ul>
+
+<h2 id="startup">The service does not start</h2>
+<ul>
+  <li><strong>The database is locked</strong>: another process (a second instance, or the CLI working offline) has <code>cdc.db</code> open. Run one instance per data directory.</li>
+  <li><strong><code>cannot decrypt secret</code> / <code>value was encrypted with a key that is not configured</code></strong>: the key changed. Provide the old key as <code>CDC_SECRET_KEY</code>, or as <code>CDC_SECRET_KEY_PREVIOUS</code> to rotate. See <a href="security.html#key-rotation">key rotation</a>.</li>
+  <li><strong><code>task …: …</code> then exit</strong>: the declarative tasks file has an error. See <a href="declarative-tasks.html">Declarative tasks file</a>.</li>
+  <li><strong>Permission denied on <code>/data</code></strong> in Docker: a bind mount not writable by uid 65532. See <a href="docker.html">Docker</a>.</li>
+</ul>
+
+<h2 id="faq">FAQ</h2>
+<dl>
+  <dt>Does it need Kafka or Debezium?</dt>
+  <dd>No. Most sources are read directly. Kafka is one optional source, for databases only Debezium supports.</dd>
+  <dt>Can one table feed several Meilisearch instances?</dt>
+  <dd>Yes: create one task per destination on the same connector and table. For PostgreSQL each task has its own slot.</dd>
+  <dt>Can several tables feed one index?</dt>
+  <dd>Yes, with the same primary key field and the <code>upsert</code> write mode, so each task merges its fields. Static fields help tell sources apart.</dd>
+  <dt>What delivery guarantee does it give?</dt>
+  <dd>At-least-once with idempotent writes: a change may be applied twice after a crash, never lost, and applying it twice gives the same document.</dd>
+  <dt>Can I run two replicas for high availability?</dt>
+  <dd>No. The state store is single-writer; run one instance and let your orchestrator restart it. Checkpoints make restarts cheap.</dd>
+  <dt>Does it change my database?</dt>
+  <dd>Only for PostgreSQL (a replication slot and, unless you name one, a publication per task) and CockroachDB (it may enable <code>kv.rangefeed.enabled</code> if allowed). Deleting a PostgreSQL task with <em>drop source objects</em> removes them.</dd>
+  <dt>How do I move an installation to another server?</dt>
+  <dd>Stop it, copy the data directory (with <code>secret.key</code>, or keep the same <code>CDC_SECRET_KEY</code>), start it there. See <a href="backup-upgrade.html">Backups</a>.</dd>
+</dl>
+</article>
+<nav class="pager" aria-label="Previous and next page">
+<a class="prev" href="performance.html" rel="prev"><span class="p-label">Previous</span><span class="p-title">Performance and tuning</span></a>
+<a class="next" href="changelog.html" rel="next"><span class="p-label">Next</span><span class="p-title">Changelog and upgrade notes</span></a>
+</nav>
+<footer class="site-footer">
+<p>Meili CDC user guide · last updated 2026-10-26 · <a href="https://github.com/ja7ad/meilisearch-cdc/edit/main/docs/guide/troubleshooting.html" rel="noopener">Edit this page on GitHub</a></p>
+<p>meilisearch-cdc is open source. Meilisearch is a trademark of Meili SAS; this project is not affiliated with it.</p>
+</footer>
+</main>
+<aside class="toc" aria-label="On this page"></aside>
+</div>
+</body>
+</html>
