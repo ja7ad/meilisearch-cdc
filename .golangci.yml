@@ -1,0 +1,10 @@
+version: "2"
+linters:
+  default: standard
+  exclusions:
+    rules:
+      # Best-effort cleanup and terminal output: nothing useful to do on error.
+      - linters: [errcheck]
+        text: "Error return value of `.*\\.(Close|Flush|Rollback|Disconnect|Terminate|Serve)` is not checked|Error return value of `(os\\.RemoveAll|fmt\\.Fprint(f|ln)?|unix\\.IoctlSetTermios)` is not checked"
+      - path: (_test\.go|^test/)
+        linters: [errcheck]
