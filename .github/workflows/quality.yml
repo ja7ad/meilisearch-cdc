@@ -1,0 +1,58 @@
+# Fast static checks and unit tests (no Docker): formatting, vet, golangci-lint,
+# gosec and the race-enabled unit tests. Run the same locally with `make check`.
+name: quality
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GO_VERSION: "1.27.3"
+
+jobs:
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: {go-version: "${{ env.GO_VERSION }}"}
+      - name: gofmt
+        run: |
+          out="$(gofmt -l .)"
+          if [ -n "$out" ]; then echo "Not formatted:"; echo "$out"; exit 1; fi
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: {go-version: "${{ env.GO_VERSION }}"}
+      - uses: golangci/golangci-lint-action@v8
+        with:
+          version: latest
+      - run: make lint
+
+  gosec:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: {go-version: "${{ env.GO_VERSION }}"}
+      - run: go install github.com/securego/gosec/v2/cmd/gosec@latest
+      - run: gosec -quiet ./...
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: {go-version: "${{ env.GO_VERSION }}"}
+      - run: go test -race -count=1 ./...
