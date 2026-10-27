@@ -153,7 +153,7 @@ code { background: var(--surface-3); padding: .1em .38em; border-radius: 5px; }
 .brand-text b { font-size: 16px; letter-spacing: -.02em; }
 .brand-text small { color: var(--text-3); font-size: 11.5px; }
 .logo-mark { flex: none; filter: drop-shadow(0 3px 8px rgba(255, 78, 98, .25)); }
-.nav-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; }
+.nav-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
 .nav-item {
   position: relative; display: flex; align-items: center; gap: 12px; padding: 9px 12px; border-radius: 10px;
   color: var(--text-2); font-weight: 520; text-decoration: none !important; white-space: nowrap;
@@ -176,7 +176,7 @@ code { background: var(--surface-3); padding: .1em .38em; border-radius: 5px; }
 .shell.is-collapsed .sidebar-cta { padding: 0; width: 44px; margin: 0 auto; gap: 0; }
 .shell.is-collapsed .collapse-btn { justify-content: center; gap: 0; }
 .sidebar-version { text-align: center; font-size: 11px; color: var(--muted-text); font-variant-numeric: tabular-nums; letter-spacing: .02em; }
-.sidebar-foot { margin-top: auto; display: flex; flex-direction: column; gap: 6px; }
+.sidebar-foot { flex: none; margin-top: auto; padding-top: 8px; display: flex; flex-direction: column; gap: 6px; }
 .sidebar-cta { justify-content: flex-start; padding-left: 14px; }
 .collapse-btn { justify-content: flex-start; color: var(--text-3); }
 
