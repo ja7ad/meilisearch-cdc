@@ -6,10 +6,10 @@ WORKDIR /src
 COPY go.mod go.sum ./
 RUN --mount=type=cache,target=/go/pkg/mod go mod download
 COPY . .
-ARG VERSION=dev
+ARG VERSION=v1.0.0
 ARG TARGETOS TARGETARCH
 RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build \
-    CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -trimpath -ldflags "-s -w -X main.version=${VERSION}" -o /out/meilisearch-cdc ./cmd/meilisearch-cdc
+    CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -trimpath -ldflags "-s -w -X github.com/ja7ad/meilisearch-cdc/internal/version.Version=${VERSION}" -o /out/meilisearch-cdc ./cmd/meilisearch-cdc
 
 FROM gcr.io/distroless/static-debian12:nonroot
 COPY --from=build /out/meilisearch-cdc /usr/local/bin/meilisearch-cdc

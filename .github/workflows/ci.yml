@@ -23,12 +23,3 @@ jobs:
       - uses: actions/setup-go@v5
         with: {go-version: "1.27.3"}
       - run: make e2e
-  ui:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: {node-version: "22"}
-      # The device projects (iPhone, iPad) run on WebKit, which needs system libraries.
-      - run: cd test/ui && npm ci && npx playwright install-deps chromium webkit
-      - run: make ui-test

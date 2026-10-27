@@ -4483,7 +4483,7 @@ make build                    # bin/meilisearch-cdc
 make run                      # build and run
 ```
 
-Release builds set the version with `-ldflags "-X main.version=v1.2.3"`. `cmd/meilisearch-cdc/default.pgo` is used automatically for profile-guided optimisation (see [PGO](https://meilicdc.javad.dev/guide/performance.html#pgo)).
+Release builds set the version with `-ldflags "-X github.com/ja7ad/meilisearch-cdc/internal/version.Version=v1.2.3"`. `cmd/meilisearch-cdc/default.pgo` is used automatically for profile-guided optimisation (see [PGO](https://meilicdc.javad.dev/guide/performance.html#pgo)).
 
 ## Repository layout
 

@@ -12,6 +12,7 @@ import (
 	"github.com/ja7ad/meilisearch-cdc/internal/audit"
 	"github.com/ja7ad/meilisearch-cdc/internal/auth"
 	"github.com/ja7ad/meilisearch-cdc/internal/notify"
+	"github.com/ja7ad/meilisearch-cdc/internal/version"
 )
 
 type credentials struct {
@@ -85,7 +86,7 @@ func (s *Server) accountRoutes(h route, _ *http.ServeMux) {
 		if err != nil {
 			return nil, err
 		}
-		out := map[string]any{"setupRequired": !has, "smtpConfigured": s.Notify.EmailConfigured(), "passwordLogin": true}
+		out := map[string]any{"setupRequired": !has, "smtpConfigured": s.Notify.EmailConfigured(), "passwordLogin": true, "version": version.Version}
 		// Deployment details only for signed in users.
 		if auth.FromContext(r.Context()) != nil {
 			dests, _ := s.eng.Destinations().List()

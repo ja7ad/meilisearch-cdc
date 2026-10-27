@@ -12,14 +12,12 @@ import (
 	"github.com/ja7ad/meilisearch-cdc/internal/app"
 	"github.com/ja7ad/meilisearch-cdc/internal/config"
 	_ "github.com/ja7ad/meilisearch-cdc/internal/source/all"
+	"github.com/ja7ad/meilisearch-cdc/internal/version"
 )
-
-// version is set at build time with -ldflags "-X main.version=...".
-var version = "dev"
 
 func main() {
 	if len(os.Args) > 1 && (os.Args[1] == "version" || os.Args[1] == "-version" || os.Args[1] == "--version") {
-		fmt.Println(version)
+		fmt.Println(version.Version)
 		return
 	}
 	if len(os.Args) > 1 && os.Args[1] == "admin" {
@@ -30,7 +28,7 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(2)
 	}
-	log := app.NewLogger(cfg).With("version", version)
+	log := app.NewLogger(cfg).With("version", version.Version)
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 	a, err := app.New(cfg, log)

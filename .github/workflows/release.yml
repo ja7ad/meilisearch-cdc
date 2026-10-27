@@ -49,7 +49,7 @@ jobs:
           name="meilisearch-cdc_${GITHUB_REF_NAME#v}_${GOOS}_${GOARCH}"
           ext=""; [ "$GOOS" = windows ] && ext=".exe"
           mkdir -p "dist/$name"
-          go build -trimpath -ldflags "-s -w -X main.version=${GITHUB_REF_NAME}" \
+          go build -trimpath -ldflags "-s -w -X github.com/ja7ad/meilisearch-cdc/internal/version.Version=${GITHUB_REF_NAME}" \
             -o "dist/$name/meilisearch-cdc$ext" ./cmd/meilisearch-cdc
           cp README.md "dist/$name/"
           mkdir -p "dist/$name/docs" && cp docs/api.md docs/cli.md "dist/$name/docs/"

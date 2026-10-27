@@ -177,7 +177,7 @@ export function createAccounts({ send, err, readBody, broadcast, tasks, adminTok
   // ---------------------------------------------------------------- public auth endpoints
   async function publicAuth(req, res, parts, M) {
     const [, b, c] = parts;
-    if (b === 'config' && M === 'GET') return send(res, 200, { setupRequired: A.users.length === 0, smtpConfigured: smtpConfigured(), telegramConfigured: telegramConfigured(), passwordLogin: true, ...extraConfig() }), true;
+    if (b === 'config' && M === 'GET') return send(res, 200, { setupRequired: A.users.length === 0, smtpConfigured: smtpConfigured(), telegramConfigured: telegramConfigured(), passwordLogin: true, version: "v1.0.0", ...extraConfig() }), true;
     if (b === 'setup' && M === 'POST') {
       if (A.users.length) return err(res, 409, 'setup is already complete'), true;
       const x = await readBody(req) || {};

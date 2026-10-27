@@ -50,3 +50,8 @@ test.describe('navigation', () => {
     await expect(page.locator('.shell')).not.toHaveClass(/is-collapsed/);
   });
 });
+
+test('the sidebar footer shows the version', async ({ page }) => {
+  await open(page, '#/overview', 'Overview');
+  await expect(page.getByTestId('app-version')).toHaveText(/^v\d+\.\d+\.\d+/);
+});

@@ -175,6 +175,7 @@ code { background: var(--surface-3); padding: .1em .38em; border-radius: 5px; }
 .shell.is-collapsed .nav-item { justify-content: center; padding: 10px; gap: 0; }
 .shell.is-collapsed .sidebar-cta { padding: 0; width: 44px; margin: 0 auto; gap: 0; }
 .shell.is-collapsed .collapse-btn { justify-content: center; gap: 0; }
+.sidebar-version { text-align: center; font-size: 11px; color: var(--muted-text); font-variant-numeric: tabular-nums; letter-spacing: .02em; }
 .sidebar-foot { margin-top: auto; display: flex; flex-direction: column; gap: 6px; }
 .sidebar-cta { justify-content: flex-start; padding-left: 14px; }
 .collapse-btn { justify-content: flex-start; color: var(--text-3); }

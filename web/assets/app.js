@@ -148,6 +148,7 @@ function Sidebar({ route, collapsed, onCollapse, drawer, onNavigate }) {
       <button type="button" class="btn btn-ghost collapse-btn" onClick=${onCollapse} aria-label=${collapsed ? 'Expand sidebar' : 'Collapse sidebar'} aria-expanded=${!collapsed}>
         <${Icon} name=${collapsed ? 'chevron-right' : 'chevron-left'} /><span class="nav-label">Collapse</span>
       </button>
+      ${auth.config && auth.config.version && html`<div class="sidebar-version nav-label" data-testid="app-version" title="meilisearch-cdc version">${auth.config.version}</div>`}
     </div>
   </nav>`;
 }
