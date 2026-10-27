@@ -1510,3 +1510,15 @@ html { -webkit-tap-highlight-color: transparent; }
 .details-block > summary { cursor: pointer; font-weight: 600; font-size: 13.5px; color: var(--accent-text, var(--text)); }
 .details-block[open] > summary { margin-bottom: 8px; }
 .details-block .copy-field.is-multiline pre { white-space: pre; overflow-x: auto; font-size: 12px; }
+
+/* Documentation help links: a quiet "?" that lifts to the primary colour on hover/focus. */
+.title-row { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.help-link {
+  display: inline-flex; align-items: center; justify-content: center; flex: none; width: 26px; height: 26px; border-radius: 50%;
+  color: var(--muted-text); opacity: .75; text-decoration: none; transition: color .15s, background-color .15s, opacity .15s, transform .15s var(--ease);
+}
+.help-link:hover { color: var(--primary); background: var(--surface-2); opacity: 1; transform: scale(1.08); }
+.help-link:active { transform: scale(.96); }
+.card-head h2 .help-link, .card-head h3 .help-link { width: 22px; height: 22px; margin-left: -2px; }
+.card-head .help-link .icon { color: inherit; }
+@media (prefers-reduced-motion: reduce) { .help-link { transition: none; } .help-link:hover { transform: none; } }

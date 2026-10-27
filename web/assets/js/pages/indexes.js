@@ -119,7 +119,7 @@ function GroupedIndexes({ instance, dests }) {
   const def = (dests.find((d) => d.isDefault) || dests[0] || {}).id;
   const totalDocs = groups.reduce((a, g) => a + g.indexes.reduce((x, i) => x + i.numberOfDocuments, 0), 0);
   return html`
-    <${PageHeader} title="Indexes" subtitle=${data ? html`<${Counter} value=${totalDocs} format=${fmtCompact} /> documents in ${groups.reduce((a, g) => a + g.indexes.length, 0)} indexes across ${groups.length} Meilisearch instances.` : 'Indexes of every Meilisearch instance.'}
+    <${PageHeader} title="Indexes" doc="indexes" subtitle=${data ? html`<${Counter} value=${totalDocs} format=${fmtCompact} /> documents in ${groups.reduce((a, g) => a + g.indexes.length, 0)} indexes across ${groups.length} Meilisearch instances.` : 'Indexes of every Meilisearch instance.'}
       actions=${can('index.write') && html`<${Button} icon="swap" onClick=${() => setModal('swap')} disabled=${!data}>Swap</${Button}>
         <${Button} kind="primary" icon="plus" class="keep-label" onClick=${() => setModal('create')}>Create index</${Button}>`} />
     <div class="toolbar">
@@ -163,7 +163,7 @@ function FlatIndexes() {
   const list = useMemo(() => (data || []).filter((i) => !q || i.uid.toLowerCase().includes(q.toLowerCase())).sort((a, b) => a.uid.localeCompare(b.uid)), [data, q]);
   const total = (data || []).reduce((a, i) => a + i.numberOfDocuments, 0);
   return html`
-    <${PageHeader} title="Indexes" children=${html`<${ScopeBadge} />`} subtitle=${data ? html`<${Counter} value=${total} format=${fmtCompact} /> documents across ${data.length} Meilisearch indexes.` : 'Meilisearch indexes and the tasks that write to them.'}
+    <${PageHeader} title="Indexes" doc="indexes" children=${html`<${ScopeBadge} />`} subtitle=${data ? html`<${Counter} value=${total} format=${fmtCompact} /> documents across ${data.length} Meilisearch indexes.` : 'Meilisearch indexes and the tasks that write to them.'}
       actions=${can('index.write') && html`<${Button} icon="swap" onClick=${() => setModal('swap')} disabled=${!data || data.length < 1}>Swap</${Button}>
         <${Button} kind="primary" icon="plus" class="keep-label" onClick=${() => setModal('create')}>Create index</${Button}>`} />
     <div class="toolbar"><div class="input-icon"><${Icon} name="search" size=${16} /><input class="input" type="search" placeholder="Filter indexes" aria-label="Filter indexes" value=${q} onInput=${(e) => setQ(e.currentTarget.value)} /></div></div>
@@ -183,6 +183,6 @@ export function IndexesPage({ instance = '' }) {
   const dests = useDestinations();
   const [mode, setMode] = useState(null);
   useEffect(() => { if (dests) setMode(!singleDestination() && dests.length > 1 ? 'grouped' : 'flat'); }, [dests && dests.length]);
-  if (!mode) return html`<${PageHeader} title="Indexes" />${skeletonGrid()}`;
+  if (!mode) return html`<${PageHeader} title="Indexes" doc="indexes" />${skeletonGrid()}`;
   return mode === 'grouped' ? html`<${GroupedIndexes} instance=${instance} dests=${dests} />` : html`<${FlatIndexes} />`;
 }

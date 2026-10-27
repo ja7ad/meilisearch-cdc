@@ -288,7 +288,7 @@ export function AlertsPage() {
   const admin = can('alerts.write');
 
   return html`
-    <${PageHeader} title="Alerts" subtitle="Get notified by email, Telegram or webhook when pipelines fail, lag or reject documents."
+    <${PageHeader} title="Alerts" doc="alerts" subtitle="Get notified by email, Telegram or webhook when pipelines fail, lag or reject documents."
       actions=${admin && channels.data && !noChannel && html`<${Button} kind="primary" icon="plus" class="keep-label" onClick=${() => setEditing('new')} data-testid="new-rule">New rule</${Button}>`} />
     ${noChannel && html`<section class="card channel-gate" data-testid="channel-gate" aria-labelledby="gate-title">
       <div class="gate-illu" aria-hidden="true"><span class="gate-bell"><${Icon} name="bell" size=${30} /></span><span class="gate-ring"></span></div>

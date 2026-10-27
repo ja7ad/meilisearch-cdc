@@ -7,6 +7,7 @@ import { SourceIcon } from '../components.js';
 import { useFetch } from '../hooks.js';
 import { navigate } from '../router.js';
 import { Icon } from '../icons.js';
+import { HelpLink } from '../docs.js';
 import { Alert, Button, Empty, ErrorBox, Field, Modal, PageHeader, Skeleton, SkeletonRows, StateBadge, Tag, confirmDialog, toast, toastError } from '../ui.js';
 import { SOURCES, debounce, fmtInt, sourceInfo, timeAgo } from '../util.js';
 
@@ -62,7 +63,7 @@ export function ConnectorEditor({ open, connector, onClose, onSaved }) {
     } catch (e) { setErr(e); setBusy(''); }
   };
   const show = (k) => (tried ? errs[k] : '');
-  return html`<${Modal} open=${open} onClose=${onClose} title=${editing ? `Edit ${connector.name}` : 'New connector'} size="lg"
+  return html`<${Modal} open=${open} onClose=${onClose} title=${editing ? `Edit ${connector.name}` : 'New connector'} size="lg" help=${{ doc: 'connectors', source: f.type, label: `${f.type ? sourceInfo(f.type).label : 'Connector'} documentation` }}
     footer=${html`${can('connector.test') && html`<${Button} icon="plug" loading=${busy === 'test'} onClick=${runTest} disabled=${!f.type} data-testid="connector-test-btn">Test connection</${Button}>`}
       <span class="grow"></span><${Button} onClick=${onClose}>Cancel</${Button}>
       <${Button} kind="primary" icon="check" loading=${busy === 'save'} onClick=${save} data-testid="connector-save">${editing ? 'Save connector' : 'Create connector'}</${Button}>`}>
@@ -140,7 +141,7 @@ export function ConnectorsPage() {
     && (!q || `${c.name} ${c.description} ${(c.tags || []).join(' ')} ${connectionHost(c.type, c.config)}`.toLowerCase().includes(q.toLowerCase()))), [data, q, type]);
   const types = useMemo(() => [...new Set((data || []).map((c) => c.type))], [data]);
   return html`
-    <${PageHeader} title="Connectors" subtitle="Connection settings and credentials stored once and reused by many tasks. Rotating a password restarts the tasks that use it."
+    <${PageHeader} title="Connectors" doc="connectors" subtitle="Connection settings and credentials stored once and reused by many tasks. Rotating a password restarts the tasks that use it."
       actions=${can('connector.write') && html`<${Button} kind="primary" icon="plus" class="keep-label" onClick=${() => setEditing('new')} data-testid="new-connector">New connector</${Button}>`} />
     <div class="toolbar" role="search">
       <div class="input-icon"><${Icon} name="search" size=${16} /><input class="input" type="search" placeholder="Search name, host, tag…" aria-label="Search connectors" value=${q} onInput=${(e) => setQ(e.currentTarget.value)} /></div>
@@ -200,7 +201,7 @@ export function ConnectorDetailPage({ id }) {
     <a class="back-link" href="#/connectors"><${Icon} name="arrow-left" size=${15} />Connectors</a>
     <header class="detail-head" style="margin-top:10px">
       <div class="detail-title"><${SourceIcon} type=${c.type} size="lg" />
-        <div style="min-width:0"><h1>${c.name}</h1>
+        <div style="min-width:0"><div class="title-row"><h1>${c.name}</h1><${HelpLink} source=${c.type} label=${`${s.label} documentation`} /></div>
           <div class="detail-meta"><span>${s.label}</span><span class="mono">${connectionHost(c.type, c.config)}</span>${(c.tags || []).map((t) => html`<${Tag}>${t}</${Tag}>`)}<span>updated ${timeAgo(c.updatedAt)}</span></div>
           ${c.description && html`<p class="muted" style="margin-top:6px">${c.description}</p>`}</div></div>
       <div class="btn-group">

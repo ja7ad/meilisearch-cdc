@@ -3,6 +3,7 @@ import { html, useEffect, useLayoutEffect, useState } from '../../vendor/htm-pre
 import { api } from '../api.js';
 import { ROLES, auth, initials, passwordStrength } from '../auth.js';
 import { useFetch } from '../hooks.js';
+import { HelpLink } from '../docs.js';
 import { Icon } from '../icons.js';
 import { Alert, Button, CopyField, Empty, ErrorBox, Field, Modal, RoleBadge, SkeletonRows, Tag, confirmDialog, toast, toastError } from '../ui.js';
 import { PasswordField } from './auth.js';
@@ -141,7 +142,7 @@ export function UsersTab() {
   const list = users.data || [];
   return html`<div class="stack tab-panel">
     <section class="card">
-      <div class="card-head"><h2><${Icon} name="users" />Users <span class="count-pill">${list.length}</span></h2>
+      <div class="card-head"><h2><${Icon} name="users" />Users <span class="count-pill">${list.length}</span><${HelpLink} doc="users" label="Users and roles documentation" /></h2>
         <div class="btn-group"><${Button} icon="send" onClick=${() => setModal('invite')} data-testid="invite-user">Invite user</${Button}>
           <${Button} kind="primary" icon="plus" onClick=${() => setModal('add')} data-testid="add-user">Add user</${Button}></div></div>
       <${ErrorBox} error=${users.error && !users.data && users.error} onRetry=${() => users.reload()} />

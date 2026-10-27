@@ -3,6 +3,7 @@ import { html, useEffect, useLayoutEffect, useMemo, useState } from '../../vendo
 import { api } from '../api.js';
 import { ROLES } from '../auth.js';
 import { useFetch } from '../hooks.js';
+import { HelpLink } from '../docs.js';
 import { Icon } from '../icons.js';
 import { Alert, Button, CopyField, Empty, ErrorBox, Field, Modal, RoleBadge, Skeleton, SkeletonRows, Tag, Toggle, confirmDialog, toast, toastError } from '../ui.js';
 import { fmtTime, isZeroTime, timeAgo } from '../util.js';
@@ -169,7 +170,7 @@ export function McpTab() {
   const risky = data.tools.filter((t) => t.mutating && draft.viewer.tools.includes(t.name));
   return html`<div class="stack tab-panel" data-testid="mcp-tab">
     <section class="card">
-      <div class="card-head"><h2><${Icon} name="robot" />MCP server</h2>
+      <div class="card-head"><h2><${Icon} name="robot" />MCP server<${HelpLink} doc="mcp" label="MCP documentation" /></h2>
         <${Toggle} id="mcp-enabled" label=${data.enabled ? 'Enabled' : 'Disabled'} checked=${data.enabled} onChange=${toggleEnabled} /></div>
       <div class="card-body stack">
         <p class="muted">Lets AI assistants (Claude, IDE agents and other MCP clients) inspect and operate meilisearch-cdc over the Model Context Protocol (Streamable HTTP). Every call is checked against the token's role and written to the audit log.</p>

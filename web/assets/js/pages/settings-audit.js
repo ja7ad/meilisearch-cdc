@@ -2,6 +2,7 @@
 import { html, useMemo, useState } from '../../vendor/htm-preact.js';
 import { api } from '../api.js';
 import { useFetch } from '../hooks.js';
+import { HelpLink } from '../docs.js';
 import { Icon } from '../icons.js';
 import { Button, Empty, ErrorBox, SkeletonRows } from '../ui.js';
 import { fmtTime, timeAgo } from '../util.js';
@@ -18,7 +19,7 @@ export function AuditTab() {
   const rows = useMemo(() => (data || []).filter((e) => (!action || e.action === action) && (!user || e.userEmail === user)
     && (!q || `${e.target} ${e.details} ${e.ip}`.toLowerCase().includes(q.toLowerCase()))), [data, action, user, q]);
   return html`<section class="card tab-panel" data-testid="audit-tab">
-    <div class="card-head"><h2><${Icon} name="history" />Audit log</h2>
+    <div class="card-head"><h2><${Icon} name="history" />Audit log<${HelpLink} doc="audit" label="Audit log documentation" /></h2>
       <${Button} size="sm" kind="ghost" icon="restart" loading=${loading} onClick=${() => reload()} aria-label="Refresh audit log">Refresh</${Button}></div>
     <div class="card-body toolbar" style="margin:0;padding-bottom:0">
       <select class="select" aria-label="Filter by action" value=${action} onChange=${(e) => setAction(e.currentTarget.value)} data-testid="audit-action">

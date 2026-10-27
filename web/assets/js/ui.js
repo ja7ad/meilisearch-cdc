@@ -2,6 +2,7 @@
 // animated counters, progress bars, tabs, empty states, JSON viewer.
 import { html, render, useEffect, useLayoutEffect, useRef, useState } from '../vendor/htm-preact.js';
 import { Icon } from './icons.js';
+import { HelpLink } from './docs.js';
 import { useTween } from './hooks.js';
 import { cls, copyText, fmtInt, pretty, reducedMotion, stateInfo } from './util.js';
 
@@ -140,11 +141,11 @@ export function Stat({ label, children, hint }) {
   return html`<div class="stat"><div class="stat-label">${label}</div><div class="stat-value">${children}</div>${hint && html`<div class="stat-hint">${hint}</div>`}</div>`;
 }
 
-export function PageHeader({ title, subtitle, actions, back, children }) {
+export function PageHeader({ title, subtitle, actions, back, children, doc, docSource }) {
   return html`<header class="page-header">
     <div class="page-header-main">
       ${back && html`<a class="back-link" href=${back.href}><${Icon} name="arrow-left" size=${15} />${back.label}</a>`}
-      <h1>${title}</h1>
+      ${doc || docSource ? html`<div class="title-row"><h1>${title}</h1><${HelpLink} doc=${doc} source=${docSource} label=${`${typeof title === 'string' ? title : 'This page'} documentation`} /></div>` : html`<h1>${title}</h1>`}
       ${subtitle && html`<p class="page-subtitle">${subtitle}</p>`}
       ${children}
     </div>
@@ -175,7 +176,7 @@ export function Portal({ children }) {
 
 let modalSeq = 0;
 /** Modal keeps itself mounted for the exit animation. Esc and backdrop close it. */
-export function Modal({ open, onClose, title, children, footer, size = 'md', dismissable = true }) {
+export function Modal({ open, onClose, title, children, footer, size = 'md', dismissable = true, help }) {
   const [mounted, setMounted] = useState(open);
   const [closing, setClosing] = useState(false);
   const box = useRef(null);
@@ -223,6 +224,7 @@ export function Modal({ open, onClose, title, children, footer, size = 'md', dis
     <div class=${`modal modal-${size}`} role="dialog" aria-modal="true" aria-labelledby=${titleId} ref=${box} tabindex="-1">
       <header class="modal-header">
         <h2 id=${titleId}>${title}</h2>
+        ${help && html`<${HelpLink} doc=${help.doc} source=${help.source} label=${help.label} />`}
         ${dismissable && html`<button type="button" class="btn btn-ghost btn-icon modal-close" aria-label="Close dialog" onClick=${onClose}><${Icon} name="x" /></button>`}
       </header>
       <div class="modal-body">${children}</div>

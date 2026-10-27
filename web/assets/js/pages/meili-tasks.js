@@ -63,7 +63,7 @@ export function MeiliTasksPage({ destination, embedded, initialTypes = [] }) {
     ${embedded ? html`<div class="row-between" style="margin-bottom:12px"><p class="muted">This instance's task queue. CDC writes carry customMetadata so you can trace them to a pipeline.</p>
         <div class="row"><${Toggle} id="mt-auto" label="Auto refresh" checked=${auto} onChange=${setAuto} />
         <${Button} icon="restart" onClick=${() => { setPages([]); reload(); }} aria-label="Refresh">Refresh</${Button}></div></div>`
-      : html`<${PageHeader} title="Meilisearch tasks" children=${html`<${ScopeBadge} />`} subtitle="The Meilisearch task queue. CDC writes carry customMetadata so you can trace them to a pipeline."
+      : html`<${PageHeader} title="Meilisearch tasks" doc="meili-tasks" children=${html`<${ScopeBadge} />`} subtitle="The Meilisearch task queue. CDC writes carry customMetadata so you can trace them to a pipeline."
       actions=${html`<${Toggle} id="mt-auto" label="Auto refresh" checked=${auto} onChange=${setAuto} />
         <${Button} icon="restart" onClick=${() => { setPages([]); reload(); }} aria-label="Refresh">Refresh</${Button}>`} />`}
     <div class="toolbar">

@@ -113,7 +113,7 @@ function DestinationEditor({ open, dest, onClose, onSaved }) {
       destinationsChanged(); onSaved(v); onClose();
     } catch (e) { setErr(e); setBusy(''); }
   };
-  return html`<${Modal} open=${open} onClose=${onClose} title=${editing ? `Edit ${dest.name}` : 'New destination'} size="md"
+  return html`<${Modal} open=${open} onClose=${onClose} title=${editing ? `Edit ${dest.name}` : 'New destination'} size="md" help=${{ doc: 'destinations', label: 'Destinations documentation' }}
     footer=${html`${can('connector.test') && html`<${Button} icon="plug" loading=${busy === 'test'} onClick=${runTest} data-testid="destination-test-btn">Test connection</${Button}>`}
       <span class="grow"></span><${Button} onClick=${onClose}>Cancel</${Button}>
       <${Button} kind="primary" icon="check" loading=${busy === 'save'} onClick=${save} data-testid="destination-save">${editing ? 'Save' : 'Add destination'}</${Button}>`}>
@@ -200,7 +200,7 @@ export function DestinationsPage() {
   const single = singleDestination();
   useEffect(() => { const on = () => reload(true); window.addEventListener('cdc:destinations', on); return () => window.removeEventListener('cdc:destinations', on); }, []);
   return html`
-    <${PageHeader} title="Destinations" subtitle="Meilisearch instances the tasks write to. Fan out by creating several tasks on the same table with different destinations."
+    <${PageHeader} title="Destinations" doc="destinations" subtitle="Meilisearch instances the tasks write to. Fan out by creating several tasks on the same table with different destinations."
       actions=${!single && can('index.write') && html`<${Button} kind="primary" icon="plus" class="keep-label" onClick=${() => setEditing('new')} data-testid="new-destination">New destination</${Button}>`} />
     ${single && html`<div style="margin-bottom:16px"><${Alert} tone="info" title="Single destination" data-testid="single-note">Pinned by MEILI_URL — unset it to manage several Meilisearch instances here.</${Alert}></div>`}
     <${ErrorBox} error=${error && !data && error} onRetry=${() => reload()} />

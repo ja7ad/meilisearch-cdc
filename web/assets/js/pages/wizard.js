@@ -688,7 +688,7 @@ export function WizardPage({ id, preset }) {
   }[cur.id];
 
   return html`
-    <${PageHeader} title=${isEdit ? `Edit ${s.name || id}` : 'New task'} back=${isEdit ? { href: `#/tasks/${encodeURIComponent(id)}/config`, label: 'Back to task' } : { href: '#/tasks', label: 'Tasks' }}
+    <${PageHeader} title=${isEdit ? `Edit ${s.name || id}` : 'New task'} doc="wizard" docSource=${(s.source && s.source.type) || undefined} back=${isEdit ? { href: `#/tasks/${encodeURIComponent(id)}/config`, label: 'Back to task' } : { href: '#/tasks', label: 'Tasks' }}
       subtitle=${isEdit ? 'Saving restarts the task if it is running. Masked secrets are kept unless you replace them.' : 'Connect a source, shape documents and choose the Meilisearch index to keep in sync.'} />
     <div class="wizard">
       <ol class="steps" aria-label="Steps">

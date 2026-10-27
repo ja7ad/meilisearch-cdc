@@ -116,7 +116,7 @@ export function TasksPage() {
   const stateOpts = Object.keys(STATES).filter((s) => s !== 'running');
 
   return html`
-    <${PageHeader} title="Tasks" subtitle="Each task captures changes from one source table and keeps a Meilisearch index in sync."
+    <${PageHeader} title="Tasks" doc="tasks" subtitle="Each task captures changes from one source table and keeps a Meilisearch index in sync."
       actions=${html`
         ${can('task.import') && html`<input type="file" accept="application/json,.json" ref=${fileRef} class="sr-only" onChange=${doImport} aria-label="Import tasks JSON file" tabindex="-1" />`}
         ${can('task.import') && html`<${Button} icon="upload" onClick=${() => fileRef.current.click()} title="Import tasks from JSON">Import</${Button}>`}

@@ -9,6 +9,7 @@ import { useFetch } from '../hooks.js';
 import { navigate } from '../router.js';
 import { setTheme, useTheme } from '../theme.js';
 import { Icon, Logo } from '../icons.js';
+import { HelpLink } from '../docs.js';
 import { Alert, Button, ErrorBox, Forbidden, PageHeader, Skeleton, Tabs, Toggle, toast, toastError } from '../ui.js';
 import { fmtBytes, fmtInt, lsSet, timeAgo } from '../util.js';
 import { UsersTab } from './settings-users.js';
@@ -66,7 +67,7 @@ function UpdatesCard() {
       toast(l ? { tone: 'info', title: `Version ${l.tag} is available` } : { tone: 'ok', title: 'You are up to date' });
     } catch (e) { toastError(e, 'Update check failed'); } finally { setBusy(false); }
   };
-  return html`<section class="card" data-testid="updates-card"><div class="card-head"><h2><${Icon} name="restart" />Updates</h2></div>
+  return html`<section class="card" data-testid="updates-card"><div class="card-head"><h2><${Icon} name="restart" />Updates<${HelpLink} doc="updates" label="Installation and upgrades documentation" /></h2></div>
     <div class="card-body stack">
       <${Toggle} label="Check for updates in the background" hint="Asks api.github.com for the latest release while the dashboard is open. Stored in this browser."
         checked=${u.prefs.enabled} onChange=${(v) => setUpdatePrefs({ enabled: v })} id="upd-enabled" />
@@ -105,7 +106,7 @@ export function SettingsPage({ tab = 'general' }) {
   const allowed = tabs.some((t) => t.id === tab);
   const Panel = { general: GeneralTab, users: UsersTab, email: EmailTab, telegram: TelegramTab, mcp: McpTab, audit: AuditTab }[known ? tab : 'general'];
   return html`
-    <${PageHeader} title="Settings" subtitle=${can('users') ? 'Instance controls, team access, notifications and AI management.' : 'Dashboard preferences and Meilisearch instance information.'} />
+    <${PageHeader} title="Settings" doc="settings" subtitle=${can('users') ? 'Instance controls, team access, notifications and AI management.' : 'Dashboard preferences and Meilisearch instance information.'} />
     ${tabs.length > 1 && html`<${Tabs} tabs=${tabs} active=${known ? tab : 'general'} label="Settings sections" onChange=${(t) => navigate(`#/settings${t === 'general' ? '' : `/${t}`}`)} />`}
     <div role="tabpanel" aria-labelledby=${`tab-${known ? tab : 'general'}`} key=${tab}>
       ${allowed || !known ? html`<${Panel} />` : html`<${Forbidden} role="admin" what=${`the ${known.label} settings`} />`}

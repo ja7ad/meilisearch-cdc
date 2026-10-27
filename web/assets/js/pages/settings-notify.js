@@ -2,6 +2,7 @@
 import { html, useEffect, useLayoutEffect, useState } from '../../vendor/htm-preact.js';
 import { api } from '../api.js';
 import { useFetch } from '../hooks.js';
+import { HelpLink } from '../docs.js';
 import { Icon } from '../icons.js';
 import { Alert, Button, ErrorBox, Field, Skeleton, toast } from '../ui.js';
 
@@ -79,7 +80,7 @@ export function EmailTab() {
   };
   return html`<div class="grid notify-grid tab-panel">
     <form class="card" onSubmit=${save} data-testid="smtp-form" novalidate>
-      <div class="card-head"><h2><${Icon} name="mail" />SMTP server</h2><${StatusTag} on=${data.configured} /></div>
+      <div class="card-head"><h2><${Icon} name="mail" />SMTP server<${HelpLink} doc="notify" label="Email alerts documentation" /></h2><${StatusTag} on=${data.configured} /></div>
       <div class="card-body stack">
         <p class="muted">Used for password resets, invitations and alert emails. Leave the host empty to disable email.</p>
         <${ErrorBox} error=${saveErr} />
@@ -142,7 +143,7 @@ export function TelegramTab() {
   };
   return html`<div class="grid notify-grid tab-panel">
     <form class="card" onSubmit=${save} data-testid="telegram-form" novalidate>
-      <div class="card-head"><h2><${Icon} name="telegram" />Telegram bot</h2><${StatusTag} on=${data.configured} label=${data.botName ? `@${data.botName}` : 'Configured'} /></div>
+      <div class="card-head"><h2><${Icon} name="telegram" />Telegram bot<${HelpLink} doc="notify" label="Telegram alerts documentation" /></h2><${StatusTag} on=${data.configured} label=${data.botName ? `@${data.botName}` : 'Configured'} /></div>
       <div class="card-body stack">
         <${ErrorBox} error=${saveErr} />
         <${Field} label="Bot token" htmlFor="tg-token" hint=${token === MASK ? 'Stored. Leave as is to keep it, or clear it to disable Telegram.' : 'Looks like 123456789:AA… — validated with getMe when saved.'}>

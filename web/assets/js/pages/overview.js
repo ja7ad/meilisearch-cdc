@@ -133,7 +133,7 @@ export function OverviewPage() {
   }), [tasks.data, lv.taskSeq]);
 
   return html`
-    <${PageHeader} title="Overview" subtitle="Live state of every change-data-capture pipeline feeding Meilisearch."
+    <${PageHeader} title="Overview" doc="overview" subtitle="Live state of every change-data-capture pipeline feeding Meilisearch."
       actions=${html`<a class="btn btn-secondary" href="#/tasks"><${Icon} name="tasks" /><span>All tasks</span></a>
         ${can('task.create') && html`<a class="btn btn-primary keep-label" href="#/tasks/new"><${Icon} name="plus" /><span>New task</span></a>`}`} />
     <${GettingStarted} />
