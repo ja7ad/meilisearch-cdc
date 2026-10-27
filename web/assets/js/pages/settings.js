@@ -15,6 +15,7 @@ import { UsersTab } from './settings-users.js';
 import { EmailTab, TelegramTab } from './settings-notify.js';
 import { McpTab } from './settings-mcp.js';
 import { AuditTab } from './settings-audit.js';
+import { UPDATE_HOURS, checkForUpdate, setUpdatePrefs, useUpdate } from '../updates.js';
 
 function AppearanceCard() {
   const t = useTheme();
@@ -55,11 +56,35 @@ function InstancesCard() {
   </section>`;
 }
 
+function UpdatesCard() {
+  const u = useUpdate();
+  const [busy, setBusy] = useState(false);
+  const check = async () => {
+    setBusy(true);
+    try {
+      const l = await checkForUpdate();
+      toast(l ? { tone: 'info', title: `Version ${l.tag} is available` } : { tone: 'ok', title: 'You are up to date' });
+    } catch (e) { toastError(e, 'Update check failed'); } finally { setBusy(false); }
+  };
+  return html`<section class="card" data-testid="updates-card"><div class="card-head"><h2><${Icon} name="restart" />Updates</h2></div>
+    <div class="card-body stack">
+      <${Toggle} label="Check for updates in the background" hint="Asks api.github.com for the latest release while the dashboard is open. Stored in this browser."
+        checked=${u.prefs.enabled} onChange=${(v) => setUpdatePrefs({ enabled: v })} id="upd-enabled" />
+      <label class="field"><span class="field-label">Check every</span>
+        <select class="select" aria-label="Update check frequency" value=${u.prefs.hours} disabled=${!u.prefs.enabled} data-testid="update-hours"
+          onChange=${(e) => setUpdatePrefs({ hours: Number(e.currentTarget.value) })}>
+          ${UPDATE_HOURS.map((h) => html`<option value=${h}>${h === 1 ? 'hour' : `${h} hours`}</option>`)}</select></label>
+      ${u.latest && html`<${Alert} tone="info" title=${`Version ${u.latest.tag} is available`}><a href=${u.latest.url} target="_blank" rel="noopener">View release</a></${Alert}>`}
+      <div><${Button} icon="restart" loading=${busy} onClick=${check}>Check now</${Button}>
+        ${u.prefs.last > 0 && html`<span class="subtle" style="margin-left:10px;font-size:12.5px">Last checked ${timeAgo(new Date(u.prefs.last).toISOString())}</span>`}</div>
+    </div></section>`;
+}
+
 function GeneralTab() {
   return html`<div class="tab-panel">
     <div class="grid grid-2 stagger" style="align-items:start">
       <div class="stack"><${AppearanceCard} /><${InstancesCard} /></div>
-      <div class="stack"><${ServiceCard} /></div>
+      <div class="stack"><${ServiceCard} /><${UpdatesCard} /></div>
     </div>
   </div>`;
 }

@@ -24,6 +24,7 @@ import { MeiliTasksPage } from './js/pages/meili-tasks.js';
 import { ConnectorDetailPage, ConnectorsPage } from './js/pages/connectors.js';
 import { AlertsPage } from './js/pages/alerts.js';
 import { SettingsPage } from './js/pages/settings.js';
+import { useUpdate, useUpdateChecker } from './js/updates.js';
 
 const NAV = [
   { id: 'overview', label: 'Overview', icon: 'overview', href: '#/overview', match: ['overview'] },
@@ -285,6 +286,18 @@ const loginHash = (cur = currentHash()) => {
   return PUBLIC_PAGES.has(page) ? '#/login' : `#/login?next=${encodeURIComponent(cur)}`;
 };
 
+function UpdateModal() {
+  useUpdateChecker();
+  const u = useUpdate();
+  const cur = auth.config && auth.config.version;
+  return html`<${Modal} open=${u.prompt} onClose=${u.dismiss} title="New version available"
+    footer=${html`<${Button} kind="ghost" onClick=${u.dismiss} data-testid="update-no">No</${Button}>
+      <${Button} kind="primary" icon="arrow-right" data-testid="update-yes" onClick=${() => { window.open(u.latest.url, '_blank', 'noopener'); u.dismiss(); }}>Yes, update</${Button}>`}>
+    ${u.latest && html`<p>Meili CDC <b>${u.latest.tag}</b> is available${cur ? html` (you are running <span class="mono">${cur}</span>)` : ''}.</p>
+      <p class="muted">Update now? The GitHub release page opens in a new tab so you can download it.</p>`}
+  </${Modal}>`;
+}
+
 function Shell({ m, reloadKey }) {
   const [collapsed, setCollapsed] = useState(lsGet('cdc.sidebar') === 'collapsed');
   const [drawer, setDrawer] = useState(false);
@@ -325,6 +338,7 @@ function Shell({ m, reloadKey }) {
         <div class="page" key=${pageKey}><${Page} m=${m} /></div>
       </main>
     </div>
+    <${UpdateModal} />
   </div>`;
 }
 

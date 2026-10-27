@@ -276,7 +276,7 @@ func (s *Server) routes() {
 			switch r.URL.Path {
 			case "/", "/index.html":
 				w.Header().Set("Cache-Control", "no-cache")
-				w.Header().Set("Content-Security-Policy", "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'")
+				w.Header().Set("Content-Security-Policy", "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.github.com; worker-src 'self'; manifest-src 'self'")
 			case "/sw.js":
 				s.serviceWorker(w, r)
 				return
