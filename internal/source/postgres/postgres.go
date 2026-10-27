@@ -181,7 +181,7 @@ func (s *Source) loadColumns(ctx context.Context) error {
 		}
 	}
 	s.pk = s.pk[:0]
-	for i := int32(1); i <= int32(len(pk)); i++ {
+	for i := int32(1); i <= int32(len(pk)); i++ { // #nosec G115 -- number of key columns is small
 		s.pk = append(s.pk, pk[i])
 	}
 

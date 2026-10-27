@@ -119,7 +119,7 @@ func (s *Source) Open(ctx context.Context) error {
 }
 
 func (s *Source) loadColumns(ctx context.Context) error {
-	rows, err := s.db.QueryContext(ctx, "SELECT * FROM "+s.table+" WHERE 1 = 0")
+	rows, err := s.db.QueryContext(ctx, "SELECT * FROM "+s.table+" WHERE 1 = 0") // #nosec G202 -- table name is the configured, validated identifier
 	if err != nil {
 		return source.Permanent(fmt.Errorf("sqlpoll: cannot read table %s: %w", s.table, err))
 	}

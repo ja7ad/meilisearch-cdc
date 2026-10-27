@@ -205,12 +205,12 @@ func (s *Server) guard(pattern string, fn http.HandlerFunc) http.HandlerFunc {
 }
 
 func (s *Server) setSession(w http.ResponseWriter, r *http.Request, token string) {
-	http.SetCookie(w, &http.Cookie{Name: sessionCookie, Value: token, Path: "/", HttpOnly: true, Secure: s.secure(r),
+	http.SetCookie(w, &http.Cookie{Name: sessionCookie, Value: token, Path: "/", HttpOnly: true, Secure: s.secure(r), // #nosec G124 -- Secure follows the request scheme (TLS or trusted proxy)
 		SameSite: http.SameSiteLaxMode, MaxAge: int(auth.SessionTTL.Seconds())})
 }
 
 func (s *Server) clearSession(w http.ResponseWriter, r *http.Request) {
-	http.SetCookie(w, &http.Cookie{Name: sessionCookie, Value: "", Path: "/", HttpOnly: true, Secure: s.secure(r),
+	http.SetCookie(w, &http.Cookie{Name: sessionCookie, Value: "", Path: "/", HttpOnly: true, Secure: s.secure(r), // #nosec G124 -- Secure follows the request scheme (TLS or trusted proxy)
 		SameSite: http.SameSiteLaxMode, MaxAge: -1})
 }
 

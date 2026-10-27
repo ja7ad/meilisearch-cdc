@@ -210,7 +210,7 @@ func (s *Source) Stream(ctx context.Context, from model.Position, emit source.Em
 					return err
 				}
 				id, _ := parseID(m.ID)
-				ev := model.Event{Op: ch.op, Row: ch.row, Position: model.Position(m.ID), Time: time.UnixMilli(int64(id.ms)).UTC()}
+				ev := model.Event{Op: ch.op, Row: ch.row, Position: model.Position(m.ID), Time: time.UnixMilli(int64(id.ms)).UTC()} // #nosec G115 -- millisecond part of a Redis stream id fits int64
 				batch = append(batch, ev)
 				last = id
 			}

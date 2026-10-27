@@ -255,9 +255,14 @@ func TestPurgeCheckpointsRestartsRunningTasks(t *testing.T) {
 	assert.Equal(t, model.StateRunning, v.Desired, "the task keeps running")
 	logs := f.d.Engine.Logs(id, 0)
 	require.NotEmpty(t, logs)
+	before := time.Now()
 	n := f.do(adminops.Request{Command: adminops.Purge, Scopes: []string{"logs"}}).Purged[0].Count
 	assert.NotZero(t, n)
-	assert.Empty(t, f.d.Engine.Logs("", 0))
+	// The running task keeps logging (its Meilisearch is unreachable and it
+	// retries), so entries written after the purge are fine; older ones are not.
+	for _, l := range f.d.Engine.Logs("", 0) {
+		assert.False(t, l.Time.Before(before), "log from before the purge survived: %s", l.Message)
+	}
 }
 
 func TestUserCommandsAndOwnerRules(t *testing.T) {

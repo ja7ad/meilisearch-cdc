@@ -122,7 +122,7 @@ func env(k, def string) string {
 // secrets), so secrets need not live in the environment.
 func envSecret(k, def string) string {
 	if path := os.Getenv(k + "_FILE"); path != "" {
-		if raw, err := os.ReadFile(path); err == nil { // #nosec G304 -- operator-supplied *_FILE path
+		if raw, err := os.ReadFile(path); err == nil { // #nosec G304 G703 -- operator-supplied *_FILE path
 			return strings.TrimRight(string(raw), "\r\n")
 		}
 	}

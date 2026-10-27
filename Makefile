@@ -26,7 +26,7 @@ e2e:
 
 # Dashboard tests (Playwright). UI_BASE_URL=http://localhost:8080 targets a real server.
 ui-test:
-	cd test/ui && npm ci && npx playwright install chromium && npx playwright test
+	cd test/ui && npm ci && npx playwright install chromium webkit && npx playwright test
 
 # Dashboard tests against the real service, Meilisearch and a SQLite source.
 ui-real:
@@ -67,7 +67,8 @@ lint:
 	$(GO) vet -tags bench ./test/bench/
 
 gosec:
-	gosec -quiet ./...
+	# G104 (unhandled errors) is covered by errcheck in golangci-lint, which knows the best-effort calls.
+	gosec -quiet -exclude=G104 ./...
 
 golangci:
 	golangci-lint run ./...

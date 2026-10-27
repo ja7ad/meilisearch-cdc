@@ -138,7 +138,7 @@ func main() {
 		srv := &http.Server{Addr: *addr, Handler: handler(), ReadHeaderTimeout: 10 * time.Second}
 		log.Fatal(srv.ListenAndServe())
 	default:
-		log.Fatalf("unknown command %q", os.Args[1])
+		log.Fatalf("unknown command %q", os.Args[1]) // #nosec G706 -- test lab, fixed message
 	}
 }
 
@@ -309,10 +309,10 @@ func sqlSource(name, driver, dsn string, sc schema, ph func(int) []string, prepa
 		once.Do(func() { db, err = sql.Open(driver, dsn) })
 		return db, err
 	}
-	insertSQL := fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s)", sc.table, strings.Join(cols, ", "), strings.Join(ph(len(cols)), ", "))
+	insertSQL := fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s)", sc.table, strings.Join(cols, ", "), strings.Join(ph(len(cols)), ", ")) // #nosec G201 -- table name comes from the lab's own fixtures
 	p := ph(4)
-	updateSQL := fmt.Sprintf("UPDATE %s SET name = %s, updated_at = %s, version = version + 1, price = price + %s WHERE id = %s", sc.table, p[0], p[1], p[2], p[3])
-	deleteSQL := fmt.Sprintf("DELETE FROM %s WHERE id = %s", sc.table, ph(1)[0])
+	updateSQL := fmt.Sprintf("UPDATE %s SET name = %s, updated_at = %s, version = version + 1, price = price + %s WHERE id = %s", sc.table, p[0], p[1], p[2], p[3]) // #nosec G201 -- table name comes from the lab's own fixtures
+	deleteSQL := fmt.Sprintf("DELETE FROM %s WHERE id = %s", sc.table, ph(1)[0])                                                                                    // #nosec G201 -- table name comes from the lab's own fixtures
 	return source{
 		name: name,
 		seed: func(ctx context.Context) error {

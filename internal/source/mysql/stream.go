@@ -269,7 +269,7 @@ func (st *binlogStream) columnsFor(ctx context.Context, tm *replication.TableMap
 			st.dirty = false
 		}
 		cols, _ := st.src.snapshotColumns()
-		if names := tm.ColumnNameString(); len(names) == int(tm.ColumnCount) {
+		if names := tm.ColumnNameString(); len(names) == int(tm.ColumnCount) { // #nosec G115 -- column counts are small
 			byName := make(map[string]column, len(cols))
 			for _, c := range cols {
 				byName[c.name] = c
@@ -289,7 +289,7 @@ func (st *binlogStream) columnsFor(ctx context.Context, tm *replication.TableMap
 			}
 			continue
 		}
-		if len(cols) == int(tm.ColumnCount) {
+		if len(cols) == int(tm.ColumnCount) { // #nosec G115 -- column counts are small
 			return cols, nil
 		}
 	}

@@ -187,7 +187,7 @@ func convert(c column, v any, fromBinlog bool) (any, error) {
 			if i, ok := asInt(v); ok {
 				var names []string
 				for bit, name := range c.values {
-					if uint64(i)&(1<<uint(bit)) != 0 {
+					if uint64(i)&(1<<uint(bit)) != 0 { // #nosec G115 -- bit pattern of the signed value is intended
 						names = append(names, name)
 					}
 				}
@@ -252,19 +252,19 @@ func convertInt(c column, v any, fromBinlog bool) (any, error) {
 	case uint:
 		u = uint64(t)
 	case int8:
-		u = uint64(uint8(t))
+		u = uint64(uint8(t)) // #nosec G115 -- bit pattern of the signed value is intended
 	case int16:
-		u = uint64(uint16(t))
+		u = uint64(uint16(t)) // #nosec G115 -- bit pattern of the signed value is intended
 	case int32:
 		if c.dataType == "mediumint" {
-			u = uint64(uint32(t) & 0xFFFFFF)
+			u = uint64(uint32(t) & 0xFFFFFF) // #nosec G115 -- bit pattern of the signed value is intended
 		} else {
-			u = uint64(uint32(t))
+			u = uint64(uint32(t)) // #nosec G115 -- bit pattern of the signed value is intended
 		}
 	case int64:
-		u = uint64(t)
+		u = uint64(t) // #nosec G115 -- bit pattern of the signed value is intended
 	case int:
-		u = uint64(t)
+		u = uint64(t) // #nosec G115 -- bit pattern of the signed value is intended
 	default:
 		p, err := strconv.ParseUint(text(v), 10, 64)
 		if err != nil {

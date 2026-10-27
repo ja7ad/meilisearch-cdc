@@ -29,4 +29,6 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: {node-version: "22"}
+      # The device projects (iPhone, iPad) run on WebKit, which needs system libraries.
+      - run: cd test/ui && npm ci && npx playwright install-deps chromium webkit
       - run: make ui-test
